@@ -1,0 +1,25 @@
+---
+import KeyTile from "./KeyTile.astro";
+
+const { keys } = Astro.props;
+---
+
+<div class="key-row">
+  <slot name="enter-key" />
+
+  {keys.map((char: string) => (
+    <KeyTile>{char}</KeyTile>
+  ))}
+
+  <slot name="delete-key" />
+</div>
+
+<style>
+  .key-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    padding: 2px 0;
+  }
+</style>

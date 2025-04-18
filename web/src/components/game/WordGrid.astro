@@ -1,0 +1,27 @@
+---
+import WordRow from "./wordgrid/WordRow.astro";
+
+
+---
+
+<div class="word-grid">
+  <WordRow></WordRow>
+  <WordRow></WordRow>
+  <WordRow></WordRow>
+  <WordRow></WordRow>
+  <WordRow></WordRow>
+  <WordRow></WordRow>
+</div>
+
+<style>
+  .word-grid {
+    display: flex;
+    flex-direction: column;
+    background-color: dimgray;
+    border: 2px solid orange;
+    width: fit-content;
+    height: fit-content;
+    padding: .5rem;
+    margin: auto;
+  }
+</style>

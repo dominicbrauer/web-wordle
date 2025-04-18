@@ -1,0 +1,30 @@
+---
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={[ 'key-tile', className]}>
+  <slot />
+</div>
+
+<style>
+  .key-tile {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5em;
+    padding: .5rem;
+    margin: 0 2px;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+  }
+
+  .enter-key {
+    font-size: 1em;
+  }
+
+  .delete-key, .enter-key {
+    width: 4.5rem;
+  }
+</style>

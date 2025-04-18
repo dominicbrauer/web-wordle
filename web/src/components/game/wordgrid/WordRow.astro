@@ -1,0 +1,25 @@
+---
+import CharTile from "./CharTile.astro";
+
+
+---
+
+<div class="word-row">
+  <CharTile></CharTile>
+  <CharTile></CharTile>
+  <CharTile></CharTile>
+  <CharTile></CharTile>
+  <CharTile></CharTile>
+</div>
+
+<style>
+  .word-row {
+    display: flex;
+    flex-direction: row;
+    background-color: brown;
+    width: fit-content;
+    padding: .5rem 1rem;
+    margin: .25rem 0;
+    border: 2px solid yellow;
+  }
+</style>

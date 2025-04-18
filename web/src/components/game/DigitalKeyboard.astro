@@ -1,0 +1,32 @@
+---
+import KeyRow from "./keyboard/KeyRow.astro";
+import KeyTile from "./keyboard/KeyTile.astro";
+import DeleteIcon from "../../../public/delete.svg";
+
+const firstRow = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
+const secondRow = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
+const thirdRow = ['Z', 'X', 'C', 'V', 'B', 'N', 'M'];
+---
+
+<div class="keyboard-container">
+  <KeyRow keys={ firstRow }></KeyRow>
+  <KeyRow keys={ secondRow }></KeyRow>
+  <KeyRow keys={ thirdRow }>
+    <KeyTile slot="enter-key" class="enter-key">
+      ENTER
+    </KeyTile>
+    <KeyTile slot="delete-key" class="delete-key">
+      <DeleteIcon class="delete-icon" />
+    </KeyTile>
+  </KeyRow>
+</div>
+
+<style>
+  .keyboard-container {
+    margin: 2rem auto;
+    width: fit-content;
+    border: 2px solid black;
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+  }
+</style>
