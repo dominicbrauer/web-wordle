@@ -1,15 +1,17 @@
 package com.dominicbrauer.web_wordle_tim24.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dominicbrauer.web_wordle_tim24.model.GameSession;
 import com.dominicbrauer.web_wordle_tim24.service.GameService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api")
@@ -36,32 +38,36 @@ public class GameController {
 
 
   @GetMapping("/new-game")
-  public ResponseEntity<GameSession> initNewGame() {
-    GameSession newGame = new GameSession(
-      "running",
-      this.gameService.rndmWord(),
-      0,
-      null
-    );
-    return ResponseEntity.ok(newGame);
+  public ResponseEntity<String> initNewGame(@RequestParam String username, HttpSession session) {
+    // Benutzername in der Session speichern
+    session.setAttribute("username", username);
+        
+    // Optional: Weitere Sitzungsdaten, z.B. der Fortschritt des Spiels
+    session.setAttribute("gameSessionId", "game-12345");
+
+    return ResponseEntity.ok("Success.");
   }
 
 
-  @PostMapping("/game")
-  public ResponseEntity<GameSession> handleGame(@RequestBody GameSession gameRequest) {
-    if (!gameRequest.status().equals("new_game")) {
-      return ResponseEntity.notFound().build();
-    }
-    GameSession newGame = new GameSession(
-      "running",
-      this.gameService.rndmWord(),
-      0,
-      null
-    );
-    return ResponseEntity.ok(newGame);
+  @GetMapping("/showGame")
+  public List<String> showGame(HttpSession session) {
+    // Daten aus der Session abrufen
+    String username = (String) session.getAttribute("username");
+    String gameSessionId = (String) session.getAttribute("gameSessionId");
+    
+    // Verwende die Daten, um den Spieler fortzusetzen
+    // z.B. Spielstatus anzeigen oder fortsetzen
+    
+    return List.of(username, gameSessionId, session.getId());
   }
 
 
-  
-  
+  @GetMapping("/endGame")
+  public String endGame(HttpSession session) {
+    // Sitzung invalidieren (beenden)
+    session.invalidate();
+    
+    return "redirect:/home"; // Weiterleitung zur Startseite
+  }
+
 }
