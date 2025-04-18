@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'AtkinsonHyperlegibleMono';
+  src: url('/fonts/AtkinsonHyperlegibleMono-VariableFont_wght.ttf') format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background-color: rgb(33, 34, 49);
+  --text-color: rgb(230, 238, 238);
+}
+
+* {
+  color: var(--text-color);
+  font-family: 'AtkinsonHyperlegibleMono', sans-serif;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+}

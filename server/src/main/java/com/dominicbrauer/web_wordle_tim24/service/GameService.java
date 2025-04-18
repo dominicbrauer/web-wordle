@@ -11,4 +11,12 @@ public class GameService {
     this.randomWordApiService = randomWordApiService;
   }
 
+  /**
+   * 
+   * @return Random word from ApiService
+   */
+  public String rndmWord() {
+    return this.randomWordApiService.fetchRandomWord();
+  }
+
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 public record Guess(
   String guess,  
-  int guessNumber,
   boolean was_correct,
   List<Char> character_info
 ) {}
