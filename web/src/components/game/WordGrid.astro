@@ -16,11 +16,130 @@ import WordRow from "./wordgrid/WordRow.astro";
     display: flex;
     flex-direction: column;
     background-color: var(--background-color);
-    border: .25rem solid var(--dark-accent-color);
     width: fit-content;
     height: fit-content;
-    padding: .5rem;
     margin: auto;
-    border-radius: 1rem;
   }
 </style>
+
+<script>
+  import { KEYBOARD_KEYS } from "../../lib/constants";
+  import { gameSession } from "../../scripts/requestGameSession";
+
+  const pageBody = document?.querySelector('body') as HTMLBodyElement;
+  const charTiles = document?.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
+
+
+  class Cursor {
+    public x: number = 0;
+    public y: number = gameSession.guesses_used;
+    public selfSet: boolean = false;
+    public oob: boolean = false; // oob: out of bounds
+
+    public getPos(): number {
+      return this.x + 5 * this.y;
+    }
+  }
+  
+
+  /**
+   * Activates the current row based on `cursor.y`
+   * and deactivates all other rows.
+   */
+  function shiftRow(): void {
+    charTiles.forEach(tile => {
+      tile.classList.remove('active-row');
+    });
+    for (let idx = 0; idx < 5; idx++) {
+      charTiles[cursor.y * 5 + idx].classList.add('active-row');
+    }
+  }
+
+
+  function validKeyInput(key: string): boolean {
+    let found: boolean = false;
+    KEYBOARD_KEYS.push(['ENTER', 'BACKSPACE']);
+    KEYBOARD_KEYS?.forEach(row => {
+      if (row.includes(key)) found = true;
+    });
+    return found;
+  }
+
+
+  function addSelectionClass(): void {
+    charTiles[cursor.getPos()].classList.add('char-tile-selected');
+  }
+  function removeSelectionClass(): void {
+    charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+  }
+
+
+  function handleKeyboardInput(key: string): void {
+    switch(key) {
+      case 'ENTER': handleEnterInput(); break;
+      case 'BACKSPACE': handleBackspaceInput(); break;
+      default: handleCharacterInput(key); break;
+    }
+    cursor.selfSet = false;
+  }
+
+
+  function handleEnterInput(): void {
+    console.log("Enter");
+  }
+
+
+  function handleBackspaceInput(): void {
+    if (cursor.x < 1) return;
+    if ((cursor.selfSet && charTiles[cursor.getPos()].innerText !== '') || cursor.oob) {
+      cursor.oob = false;
+      charTiles[cursor.getPos()].innerText = '';
+      addSelectionClass();
+    } else {
+      charTiles[cursor.getPos()-1].innerText = '';
+      if (cursor.x > 0) {
+        removeSelectionClass();
+        cursor.x--;
+        addSelectionClass();
+      }
+    }
+  }
+
+
+  function handleCharacterInput(key: string): void {
+    if (cursor.oob) return;
+    charTiles[cursor.getPos()].innerText = key.toUpperCase();
+    if (cursor.x <= 3) {
+      removeSelectionClass();
+      cursor.x++;
+      addSelectionClass();
+    } else {
+      cursor.oob = true;
+      removeSelectionClass();
+    }
+  }
+
+
+  pageBody?.addEventListener('keydown', (event) => {
+    const keyInput: string = event.key.toUpperCase();
+    if (!validKeyInput(keyInput)) return;
+    handleKeyboardInput(keyInput);
+  });
+
+
+  const cursor: Cursor = new Cursor();
+  shiftRow(); // Set active word row based on GameSession
+  charTiles[cursor.getPos()].classList.add('char-tile-selected'); // Init cursor selection
+
+  charTiles?.forEach((tile, idx) => {
+    if (!tile.classList.contains('active-row')) return;
+    tile?.addEventListener('click', () => {
+      cursor.selfSet = true;
+      cursor.oob = false;
+      removeSelectionClass();
+      cursor.x = idx % 5;
+      cursor.y = Math.floor(idx / 5);
+      addSelectionClass();
+    });
+  });
+</script>
