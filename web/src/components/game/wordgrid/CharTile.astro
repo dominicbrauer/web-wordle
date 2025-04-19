@@ -3,7 +3,7 @@
 ---
 
 <div class="char-tile">
-  <slot name="char-slot" />
+
 </div>
 
 <style>
@@ -18,5 +18,11 @@
     justify-content: center;
     align-items: center;
     margin: .25rem;
+  }
+
+  .char-tile-selected,
+  .char-tile:hover {
+    border-color: var(--light-accent-color);
+    cursor: pointer;
   }
 </style>

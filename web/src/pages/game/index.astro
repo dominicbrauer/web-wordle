@@ -10,16 +10,96 @@ import Layout from "../../layouts/Layout.astro"
   <DigitalKeyboard></DigitalKeyboard>
 </Layout>
 <script>
-  const pageBody = document.querySelector('body') as HTMLBodyElement;
-  const anyCharTile = document.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
+  import { KEYBOARD_KEYS } from "../../lib/constants";
 
-  // interface pos {
-  //   x: number;
-  //   y: number;
-  // }
+  const pageBody = document?.querySelector('body') as HTMLBodyElement;
+  const charTiles = document?.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
 
-  pageBody?.addEventListener('keypress', (event) => {
-    console.log(event.key);
-    anyCharTile[5].innerText = "E";
+  class Cursor {
+    public x: number = 0;
+    public y: number = 0;
+    public selfSet: boolean = false;
+    public oob: boolean = false; // oob: out of bounds
+
+    public getPos(): number {
+      return this.x + 5 * this.y;
+    }
+  }
+  const cursor: Cursor = new Cursor();
+
+  function validKeyInput(key: string): boolean {
+    let found: boolean = false;
+    KEYBOARD_KEYS.push(['ENTER', 'BACKSPACE']);
+    KEYBOARD_KEYS?.forEach(row => {
+      if (row.includes(key)) {
+        found = true;
+      }
+    });
+    return found;
+  }
+
+  
+
+  function handleKeyboardInput(key: string) {
+    switch(key) {
+      case 'ENTER': {
+        if (cursor.x < 5) {
+          console.log("Word incomplete!");
+          break;
+        }
+        console.log("Enter");
+        break;
+      }
+      case 'BACKSPACE': {
+        if (cursor.x < 1) {
+          console.log("Nothing to delete!");
+          break;
+        }
+        if (cursor.selfSet) {
+          charTiles[cursor.getPos()].innerText = '';
+        }
+        charTiles[cursor.getPos()-1].innerText = '';
+        if (cursor.x > 0) {
+          charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+          cursor.x--;
+          charTiles[cursor.getPos()].classList.add('char-tile-selected');
+        }
+        break;
+      }
+      default: {
+        if (cursor.oob) {
+          break;
+        }
+        charTiles[cursor.getPos()].innerText = key.toUpperCase();
+        if (cursor.x <= 3) {
+          charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+          cursor.x++;
+          charTiles[cursor.getPos()].classList.add('char-tile-selected');
+        } else {
+          cursor.oob = true;
+        }
+      }
+    }
+    console.log("X: " + cursor.x + " Y: " + cursor.y);
+    cursor.selfSet = false;
+  }
+
+  pageBody?.addEventListener('keydown', (event) => {
+    const keyInput: string = event.key.toUpperCase();
+    if (!validKeyInput(keyInput)) {
+      return;
+    }
+    handleKeyboardInput(keyInput);
+  });
+
+  charTiles?.forEach((tile, idx) => {
+    tile?.addEventListener('click', () => {
+      cursor.selfSet = true;
+      cursor.oob = false;
+      charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+      cursor.x = idx % 5;
+      cursor.y = Math.floor(idx / 5);
+      charTiles[cursor.getPos()].classList.add('char-tile-selected');
+    });
   });
 </script>

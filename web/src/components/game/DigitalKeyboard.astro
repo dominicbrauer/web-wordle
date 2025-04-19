@@ -1,17 +1,15 @@
 ---
 import KeyRow from "./keyboard/KeyRow.astro";
 import KeyTile from "./keyboard/KeyTile.astro";
-import DeleteIcon from "../../../public/icons/delete.svg";
+import DeleteIcon from "../../assets/icons/delete.svg";
 
-const firstRow = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
-const secondRow = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
-const thirdRow = ['Z', 'X', 'C', 'V', 'B', 'N', 'M'];
+import { KEYBOARD_KEYS } from "../../lib/constants";
 ---
 
 <div class="keyboard-container">
-  <KeyRow keys={ firstRow }></KeyRow>
-  <KeyRow keys={ secondRow }></KeyRow>
-  <KeyRow keys={ thirdRow }>
+  <KeyRow keys={ KEYBOARD_KEYS[0] }></KeyRow>
+  <KeyRow keys={ KEYBOARD_KEYS[1] }></KeyRow>
+  <KeyRow keys={ KEYBOARD_KEYS[2] }>
     <KeyTile slot="enter-key" class="enter-key">
       ENTER
     </KeyTile>
