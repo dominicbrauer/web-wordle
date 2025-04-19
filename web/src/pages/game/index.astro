@@ -15,6 +15,7 @@ import Layout from "../../layouts/Layout.astro"
   const pageBody = document?.querySelector('body') as HTMLBodyElement;
   const charTiles = document?.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
 
+
   class Cursor {
     public x: number = 0;
     public y: number = 0;
@@ -26,6 +27,8 @@ import Layout from "../../layouts/Layout.astro"
     }
   }
   const cursor: Cursor = new Cursor();
+  charTiles[0].classList.add('char-tile-selected');
+
 
   function validKeyInput(key: string): boolean {
     let found: boolean = false;
@@ -38,31 +41,26 @@ import Layout from "../../layouts/Layout.astro"
     return found;
   }
 
-  
 
   function handleKeyboardInput(key: string) {
     switch(key) {
       case 'ENTER': {
-        if (cursor.x < 5) {
-          console.log("Word incomplete!");
-          break;
-        }
         console.log("Enter");
         break;
       }
       case 'BACKSPACE': {
-        if (cursor.x < 1) {
-          console.log("Nothing to delete!");
-          break;
-        }
-        if (cursor.selfSet) {
+        if (cursor.x < 1) break;
+        if ((cursor.selfSet && charTiles[cursor.getPos()].innerText != '') || cursor.oob) {
+          cursor.oob = false;
           charTiles[cursor.getPos()].innerText = '';
-        }
-        charTiles[cursor.getPos()-1].innerText = '';
-        if (cursor.x > 0) {
-          charTiles[cursor.getPos()].classList.remove('char-tile-selected');
-          cursor.x--;
           charTiles[cursor.getPos()].classList.add('char-tile-selected');
+        } else {
+          charTiles[cursor.getPos()-1].innerText = '';
+          if (cursor.x > 0) {
+            charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+            cursor.x--;
+            charTiles[cursor.getPos()].classList.add('char-tile-selected');
+          }
         }
         break;
       }
@@ -77,12 +75,14 @@ import Layout from "../../layouts/Layout.astro"
           charTiles[cursor.getPos()].classList.add('char-tile-selected');
         } else {
           cursor.oob = true;
+          charTiles[cursor.getPos()].classList.remove('char-tile-selected');
         }
       }
     }
     console.log("X: " + cursor.x + " Y: " + cursor.y);
     cursor.selfSet = false;
   }
+
 
   pageBody?.addEventListener('keydown', (event) => {
     const keyInput: string = event.key.toUpperCase();
@@ -91,6 +91,7 @@ import Layout from "../../layouts/Layout.astro"
     }
     handleKeyboardInput(keyInput);
   });
+
 
   charTiles?.forEach((tile, idx) => {
     tile?.addEventListener('click', () => {
