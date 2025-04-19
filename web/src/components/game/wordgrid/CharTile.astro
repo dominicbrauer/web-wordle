@@ -2,18 +2,21 @@
 
 ---
 
-<div class="word-tile">
-  Tile
+<div class="char-tile">
+  <slot name="char-slot" />
 </div>
 
 <style>
-  .word-tile {
+  .char-tile {
     width: 4rem;
     height: 4rem;
-    background-color: blue;
-    border: 2px solid lime;
+    font-size: 2.25em;
+    background-color: var(--background-color);
+    border: 4px solid var(--dark-accent-color);
+    border-radius: .5rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: .25rem;
   }
 </style>

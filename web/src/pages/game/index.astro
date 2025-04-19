@@ -9,4 +9,17 @@ import Layout from "../../layouts/Layout.astro"
   <WordGrid></WordGrid>
   <DigitalKeyboard></DigitalKeyboard>
 </Layout>
-<script></script>
+<script>
+  const pageBody = document.querySelector('body') as HTMLBodyElement;
+  const anyCharTile = document.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
+
+  // interface pos {
+  //   x: number;
+  //   y: number;
+  // }
+
+  pageBody?.addEventListener('keypress', (event) => {
+    console.log(event.key);
+    anyCharTile[5].innerText = "E";
+  });
+</script>
