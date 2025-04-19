@@ -2,15 +2,34 @@
 import DigitalKeyboard from "../../components/game/DigitalKeyboard.astro"
 import WordGrid from "../../components/game/WordGrid.astro"
 import Layout from "../../layouts/Layout.astro"
-
 ---
 
 <Layout>
-  <WordGrid></WordGrid>
-  <DigitalKeyboard></DigitalKeyboard>
+  <WordGrid />
+  <DigitalKeyboard />
 </Layout>
+
 <script>
   import { KEYBOARD_KEYS } from "../../lib/constants";
+  import type { Scoring, Char, Guess, GameSession } from "../../lib/gameSession";
+
+
+  const gameSession: GameSession = await (async function requestGameSession(): Promise<GameSession> {
+    const response = await fetch('http://localhost:8080/api/start-game', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    return await response.json() as GameSession;
+  })();
+
+
 
   const pageBody = document?.querySelector('body') as HTMLBodyElement;
   const charTiles = document?.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
@@ -18,7 +37,7 @@ import Layout from "../../layouts/Layout.astro"
 
   class Cursor {
     public x: number = 0;
-    public y: number = 0;
+    public y: number = gameSession.guesses_used;
     public selfSet: boolean = false;
     public oob: boolean = false; // oob: out of bounds
 
@@ -27,7 +46,22 @@ import Layout from "../../layouts/Layout.astro"
     }
   }
   const cursor: Cursor = new Cursor();
-  charTiles[0].classList.add('char-tile-selected');
+  charTiles[cursor.getPos()].classList.add('char-tile-selected');
+
+
+  /**
+   * Activates the current row based on `cursor.y`.
+   * This also deactivates all other rows.
+   */
+  function shiftRow() {
+    charTiles.forEach(tile => {
+      tile.classList.remove('active-row');
+    });
+    for (let idx = 0; idx < 5; idx++) {
+      charTiles[cursor.y * 5 + idx].classList.add('active-row');
+    }
+  }
+  shiftRow();
 
 
   function validKeyInput(key: string): boolean {
@@ -42,6 +76,14 @@ import Layout from "../../layouts/Layout.astro"
   }
 
 
+  function addSelectionClass() {
+    charTiles[cursor.getPos()].classList.add('char-tile-selected');
+  }
+  function removeSelectionClass() {
+    charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+  }
+
+
   function handleKeyboardInput(key: string) {
     switch(key) {
       case 'ENTER': {
@@ -53,13 +95,13 @@ import Layout from "../../layouts/Layout.astro"
         if ((cursor.selfSet && charTiles[cursor.getPos()].innerText != '') || cursor.oob) {
           cursor.oob = false;
           charTiles[cursor.getPos()].innerText = '';
-          charTiles[cursor.getPos()].classList.add('char-tile-selected');
+          addSelectionClass();
         } else {
           charTiles[cursor.getPos()-1].innerText = '';
           if (cursor.x > 0) {
-            charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+            removeSelectionClass();
             cursor.x--;
-            charTiles[cursor.getPos()].classList.add('char-tile-selected');
+            addSelectionClass();
           }
         }
         break;
@@ -70,12 +112,12 @@ import Layout from "../../layouts/Layout.astro"
         }
         charTiles[cursor.getPos()].innerText = key.toUpperCase();
         if (cursor.x <= 3) {
-          charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+          removeSelectionClass();
           cursor.x++;
-          charTiles[cursor.getPos()].classList.add('char-tile-selected');
+          addSelectionClass();
         } else {
           cursor.oob = true;
-          charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+          removeSelectionClass();
         }
       }
     }
@@ -94,13 +136,15 @@ import Layout from "../../layouts/Layout.astro"
 
 
   charTiles?.forEach((tile, idx) => {
-    tile?.addEventListener('click', () => {
-      cursor.selfSet = true;
-      cursor.oob = false;
-      charTiles[cursor.getPos()].classList.remove('char-tile-selected');
-      cursor.x = idx % 5;
-      cursor.y = Math.floor(idx / 5);
-      charTiles[cursor.getPos()].classList.add('char-tile-selected');
-    });
+    if (tile.classList.contains('active-row')) {
+      tile?.addEventListener('click', () => {
+        cursor.selfSet = true;
+        cursor.oob = false;
+        removeSelectionClass();
+        cursor.x = idx % 5;
+        cursor.y = Math.floor(idx / 5);
+        addSelectionClass();
+      });
+    }
   });
 </script>

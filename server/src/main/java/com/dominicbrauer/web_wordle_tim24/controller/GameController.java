@@ -1,7 +1,5 @@
 package com.dominicbrauer.web_wordle_tim24.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dominicbrauer.web_wordle_tim24.model.GameSession;
 import com.dominicbrauer.web_wordle_tim24.service.GameService;
 
 import jakarta.servlet.http.HttpSession;
@@ -37,28 +36,25 @@ public class GameController {
   }
 
 
-  @GetMapping("/new-game")
-  public ResponseEntity<String> initNewGame(@RequestParam String username, HttpSession session) {
-    // Benutzername in der Session speichern
-    session.setAttribute("username", username);
-        
-    // Optional: Weitere Sitzungsdaten, z.B. der Fortschritt des Spiels
-    session.setAttribute("gameSessionId", "game-12345");
+  @GetMapping("/start-game")
+  public ResponseEntity<GameSession> initNewGame(HttpSession session) {
+    if (!session.isNew()) {
+      return ResponseEntity.ok((GameSession) session.getAttribute("gameSession"));
+    }
 
-    return ResponseEntity.ok("Success.");
+    GameSession newGameSession = gameService.createNewGameSession();
+
+    session.setAttribute("solutionWord", gameService.rndmWord());
+    session.setAttribute("gameSession", newGameSession);
+    return ResponseEntity.ok(newGameSession);
   }
 
 
-  @GetMapping("/showGame")
-  public List<String> showGame(HttpSession session) {
-    // Daten aus der Session abrufen
-    String username = (String) session.getAttribute("username");
-    String gameSessionId = (String) session.getAttribute("gameSessionId");
+  @GetMapping("/current-word")
+  public ResponseEntity<String> showGame(HttpSession session) {
+    String word = (String) session.getAttribute("solutionWord");
     
-    // Verwende die Daten, um den Spieler fortzusetzen
-    // z.B. Spielstatus anzeigen oder fortsetzen
-    
-    return List.of(username, gameSessionId, session.getId());
+    return ResponseEntity.ok("Your current word: " + word);
   }
 
 
