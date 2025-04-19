@@ -3,12 +3,13 @@ package com.dominicbrauer.web_wordle_tim24.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dominicbrauer.web_wordle_tim24.model.GameSession;
 import com.dominicbrauer.web_wordle_tim24.service.GameService;
+import com.dominicbrauer.web_wordle_tim24.service.GuessFeedbackService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -17,9 +18,11 @@ import jakarta.servlet.http.HttpSession;
 public class GameController {
 
   private final GameService gameService;
+  private final GuessFeedbackService guessFeedbackService;
 
-  public GameController(GameService gameService) {
+  public GameController(GameService gameService, GuessFeedbackService guessFeedbackService) {
     this.gameService = gameService;
+    this.guessFeedbackService = guessFeedbackService;
   }
 
 
@@ -30,9 +33,11 @@ public class GameController {
 
 
   @PostMapping("/guess")
-  public String submitGuess(@RequestParam String guess) {
-    System.out.println(guess);
-    return "Your guess is: " + guess;
+  public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {
+    GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
+    
+    session.setAttribute("gameSession", updatedGameSession);
+    return ResponseEntity.ok(updatedGameSession);
   }
 
 
@@ -47,23 +52,6 @@ public class GameController {
     session.setAttribute("solutionWord", gameService.rndmWord());
     session.setAttribute("gameSession", newGameSession);
     return ResponseEntity.ok(newGameSession);
-  }
-
-
-  @GetMapping("/current-word")
-  public ResponseEntity<String> showGame(HttpSession session) {
-    String word = (String) session.getAttribute("solutionWord");
-    
-    return ResponseEntity.ok("Your current word: " + word);
-  }
-
-
-  @GetMapping("/endGame")
-  public String endGame(HttpSession session) {
-    // Sitzung invalidieren (beenden)
-    session.invalidate();
-    
-    return "redirect:/home"; // Weiterleitung zur Startseite
   }
 
 }

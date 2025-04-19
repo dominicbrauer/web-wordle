@@ -3,12 +3,12 @@ import WordRow from "./wordgrid/WordRow.astro";
 ---
 
 <div class="word-grid">
-  <WordRow></WordRow>
-  <WordRow></WordRow>
-  <WordRow></WordRow>
-  <WordRow></WordRow>
-  <WordRow></WordRow>
-  <WordRow></WordRow>
+  <WordRow />
+  <WordRow />
+  <WordRow />
+  <WordRow />
+  <WordRow />
+  <WordRow />
 </div>
 
 <style>
@@ -40,7 +40,7 @@ import WordRow from "./wordgrid/WordRow.astro";
       return this.x + 5 * this.y;
     }
   }
-  
+
 
   /**
    * Activates the current row based on `cursor.y`
