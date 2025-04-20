@@ -36,7 +36,7 @@ public class GuessFeedbackService {
   public GameSession updateGameState(GameSession gameSession, HttpSession session) {
     String solutionWord = (String) session.getAttribute("solutionWord");
     String currentGuessString = gameSession.current_guess();
-    char[] currentGuess = gameSession.current_guess().toCharArray();
+    char[] currentGuess = currentGuessString.toCharArray();
 
     if (!validateWordApiService.valid(currentGuessString)) {
       return gameSession;
@@ -56,13 +56,20 @@ public class GuessFeedbackService {
       );
       character_list.add(character);
     }
+
     List<Guess> guesses = new ArrayList<>();
+    if (gameSession.guesses() != null) {
+      for (Guess previousGuess : gameSession.guesses()) {
+        guesses.add(previousGuess);
+      }
+    }
     Guess guess = new Guess(
       currentGuessString,
       currentGuessString.equals(solutionWord),
       character_list
     );
     guesses.add(guess);
+
     GameSession responseGameSession = new GameSession(
       "running",
       gameSession.guesses_used() + 1,

@@ -24,7 +24,8 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 <script>
   import { KEYBOARD_KEYS } from "../../lib/constants";
-  import { gameSession } from "../../scripts/requestGameSession";
+  import type { GameSession } from "../../lib/gameSession";
+  import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
 
   const pageBody = document?.querySelector('body') as HTMLBodyElement;
@@ -85,13 +86,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
-  function handleEnterInput(): void {
-    console.log("Enter");
-  }
-
-
   function handleBackspaceInput(): void {
-    if (cursor.x < 1) return;
     if ((cursor.selfSet && charTiles[cursor.getPos()].innerText !== '') || cursor.oob) {
       cursor.oob = false;
       charTiles[cursor.getPos()].innerText = '';
@@ -121,6 +116,46 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
+  async function handleEnterInput(): Promise<void> {
+    const characters: string[] = [];
+    for (let i: number = 0; i < 5; i++) {
+      let idx: number = cursor.y * 5 + i;
+      characters.push(charTiles[idx].innerText);
+    }
+    if (characters.includes('')) {
+      // Invalid Enter handling...
+      console.log("Not all characters are set!");
+      return;
+    }
+    const word: string = characters.join('').toLowerCase();
+    gameSession.current_guess = word;
+    gameSession.status = "submit-guess";
+    gameSession.current_guess_valid = false;
+    gameSession = await guessRequest(gameSession);
+    updateGameState();
+  }
+
+
+  function updateGameState(): void {
+    charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+    cursor = new Cursor();
+    shiftRow(); // Set active word row based on GameSession
+    charTiles[cursor.getPos()].classList.add('char-tile-selected'); // Init cursor selection
+
+    charTiles?.forEach((tile, idx) => {
+    if (!tile.classList.contains('active-row')) return;
+      tile?.addEventListener('click', () => {
+        cursor.selfSet = true;
+        cursor.oob = false;
+        removeSelectionClass();
+        cursor.x = idx % 5;
+        cursor.y = Math.floor(idx / 5);
+        addSelectionClass();
+      });
+    });
+  }
+
+
   pageBody?.addEventListener('keydown', (event) => {
     const keyInput: string = event.key.toUpperCase();
     if (!validKeyInput(keyInput)) return;
@@ -128,19 +163,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   });
 
 
-  const cursor: Cursor = new Cursor();
-  shiftRow(); // Set active word row based on GameSession
-  charTiles[cursor.getPos()].classList.add('char-tile-selected'); // Init cursor selection
-
-  charTiles?.forEach((tile, idx) => {
-    if (!tile.classList.contains('active-row')) return;
-    tile?.addEventListener('click', () => {
-      cursor.selfSet = true;
-      cursor.oob = false;
-      removeSelectionClass();
-      cursor.x = idx % 5;
-      cursor.y = Math.floor(idx / 5);
-      addSelectionClass();
-    });
-  });
+  let gameSession: GameSession = await requestGameSession();
+  let cursor: Cursor = new Cursor();
+  updateGameState();
 </script>
