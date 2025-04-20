@@ -1,13 +1,13 @@
 import type { GameSession } from "../lib/gameSession";
 
-async function guessRequest(gameSession: GameSession): Promise<GameSession> {
-  const response = await fetch('http://localhost:8080/api/start-game', {
+export async function guessRequest(gameSession: GameSession): Promise<GameSession> {
+  const response = await fetch('http://localhost:8080/api/guess', {
     method: 'POST',
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: ""
+    body: JSON.stringify(gameSession),
   });
 
   if (!response.ok) {

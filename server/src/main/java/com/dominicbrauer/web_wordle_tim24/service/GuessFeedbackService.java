@@ -1,7 +1,6 @@
 package com.dominicbrauer.web_wordle_tim24.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +14,12 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class GuessFeedbackService {
+
+  private final ValidateWordApiService validateWordApiService;
+
+  public GuessFeedbackService(ValidateWordApiService validateWordApiService) {
+    this.validateWordApiService = validateWordApiService;
+  }
 
   public boolean correctIdx(char guessChar, char solutionChar) {
     return guessChar == solutionChar;
@@ -30,7 +35,12 @@ public class GuessFeedbackService {
    */
   public GameSession updateGameState(GameSession gameSession, HttpSession session) {
     String solutionWord = (String) session.getAttribute("solutionWord");
+    String currentGuessString = gameSession.current_guess();
     char[] currentGuess = gameSession.current_guess().toCharArray();
+
+    if (!validateWordApiService.valid(currentGuessString)) {
+      return gameSession;
+    }
 
     List<Char> character_list = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
@@ -48,15 +58,16 @@ public class GuessFeedbackService {
     }
     List<Guess> guesses = new ArrayList<>();
     Guess guess = new Guess(
-      Arrays.toString(currentGuess),
-      Arrays.toString(currentGuess).equals(solutionWord),
+      currentGuessString,
+      currentGuessString.equals(solutionWord),
       character_list
     );
     guesses.add(guess);
     GameSession responseGameSession = new GameSession(
       "running",
       gameSession.guesses_used() + 1,
-      Arrays.toString(currentGuess),
+      currentGuessString,
+      true,
       guesses
     );
 

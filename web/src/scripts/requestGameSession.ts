@@ -5,7 +5,7 @@ export const gameSession: GameSession = await (async function requestGameSession
     method: 'GET',
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     }
   });
 

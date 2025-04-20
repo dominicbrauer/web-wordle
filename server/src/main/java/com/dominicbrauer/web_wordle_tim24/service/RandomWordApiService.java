@@ -28,13 +28,11 @@ public class RandomWordApiService {
     null,
     new ParameterizedTypeReference<List<String>>() {}
     );
-
     List<String> list = response.getBody();
 
-    if (list != null && !list.isEmpty()) {
-      return list.get(0);
-    }
-    return "WORD_ERR";
+    if (list == null || list.isEmpty()) return "WORD_ERR";
+
+    return list.get(0);
   }
   
 }

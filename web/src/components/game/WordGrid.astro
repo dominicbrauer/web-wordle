@@ -25,6 +25,7 @@ import WordRow from "./wordgrid/WordRow.astro";
 <script>
   import { KEYBOARD_KEYS } from "../../lib/constants";
   import { gameSession } from "../../scripts/requestGameSession";
+  import { guessRequest } from "../../scripts/guessRequest";
 
   const pageBody = document?.querySelector('body') as HTMLBodyElement;
   const charTiles = document?.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;

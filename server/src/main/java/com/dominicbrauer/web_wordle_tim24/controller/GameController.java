@@ -28,14 +28,15 @@ public class GameController {
 
   @GetMapping
   public ResponseEntity<String> index() {
+    System.out.println(gameService.validateWord("apfel"));
     return ResponseEntity.ok("API is working! 🔤");
   }
 
 
   @PostMapping("/guess")
-  public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {
+  public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {    
     GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
-    
+
     session.setAttribute("gameSession", updatedGameSession);
     return ResponseEntity.ok(updatedGameSession);
   }

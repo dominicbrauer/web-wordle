@@ -6,5 +6,6 @@ public record GameSession(
   String status,
   int guesses_used,
   String current_guess,
+  boolean current_guess_valid,
   List<Guess> guesses
 ) {}
