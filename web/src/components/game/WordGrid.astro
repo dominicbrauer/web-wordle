@@ -24,12 +24,14 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 <script>
   import { KEYBOARD_KEYS } from "../../lib/constants";
-  import type { GameSession } from "../../lib/gameSession";
+  import type { GameSession, Guess, Char, Scoring } from "../../lib/gameSession";
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
+  import { range } from "../../lib/helpers";
 
-  const pageBody = document?.querySelector('body') as HTMLBodyElement;
-  const charTiles = document?.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
+  const charTiles = document.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
+  const charTileLabels = document.querySelectorAll('.char-tile-label') as NodeListOf<HTMLSpanElement>;
+  const pageBody = document.querySelector('body') as HTMLBodyElement;
 
 
   class Cursor {
@@ -38,8 +40,16 @@ import WordRow from "./wordgrid/WordRow.astro";
     public selfSet: boolean = false;
     public oob: boolean = false; // oob: out of bounds
 
+    public coordToIdx(x: number = this.x, y: number = this.y): number {
+      return y * 5 + x;
+    }
+
+    public idxToCoord(idx: number): number[] {
+      return [idx % 5, Math.floor(idx / 5)];
+    }
+
     public getPos(): number {
-      return this.x + 5 * this.y;
+      return this.coordToIdx();
     }
   }
 
@@ -50,11 +60,22 @@ import WordRow from "./wordgrid/WordRow.astro";
    */
   function shiftRow(): void {
     charTiles.forEach(tile => {
-      tile.classList.remove('active-row');
+      tile.classList.remove('active');
     });
-    for (let idx = 0; idx < 5; idx++) {
-      charTiles[cursor.y * 5 + idx].classList.add('active-row');
+    for (const i of range(5)) {
+      charTiles[cursor.coordToIdx(i, undefined)].classList.add('active');
     }
+
+    charTiles?.forEach((tile, idx) => {
+      tile.addEventListener('click', () => {
+        if (!tile.classList.contains('active')) return;
+        cursor.selfSet = true;
+        cursor.oob = false;
+        removeSelectionClass();
+        [cursor.x, cursor.y] = cursor.idxToCoord(idx);
+        addSelectionClass();
+      });
+    });
   }
 
 
@@ -69,10 +90,10 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 
   function addSelectionClass(): void {
-    charTiles[cursor.getPos()].classList.add('char-tile-selected');
+    charTiles[cursor.getPos()]?.classList.add('char-tile-selected');
   }
   function removeSelectionClass(): void {
-    charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+    charTiles[cursor.getPos()]?.classList.remove('char-tile-selected');
   }
 
 
@@ -87,12 +108,12 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 
   function handleBackspaceInput(): void {
-    if ((cursor.selfSet && charTiles[cursor.getPos()].innerText !== '') || cursor.oob) {
+    if (cursor.selfSet || charTileLabels[cursor.getPos()].textContent !== '' || cursor.oob) {
       cursor.oob = false;
-      charTiles[cursor.getPos()].innerText = '';
+      charTileLabels[cursor.getPos()].textContent = '';
       addSelectionClass();
     } else {
-      charTiles[cursor.getPos()-1].innerText = '';
+      charTileLabels[cursor.getPos()-1].textContent = '';
       if (cursor.x > 0) {
         removeSelectionClass();
         cursor.x--;
@@ -104,7 +125,7 @@ import WordRow from "./wordgrid/WordRow.astro";
 
   function handleCharacterInput(key: string): void {
     if (cursor.oob) return;
-    charTiles[cursor.getPos()].innerText = key.toUpperCase();
+    charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
     if (cursor.x <= 3) {
       removeSelectionClass();
       cursor.x++;
@@ -118,9 +139,9 @@ import WordRow from "./wordgrid/WordRow.astro";
 
   async function handleEnterInput(): Promise<void> {
     const characters: string[] = [];
-    for (let i: number = 0; i < 5; i++) {
-      let idx: number = cursor.y * 5 + i;
-      characters.push(charTiles[idx].innerText);
+    for (const i of range(5)) {
+      const divText: string | null = charTileLabels[cursor.coordToIdx(i, undefined)].textContent;
+      characters.push(divText !== null ? divText : "");
     }
     if (characters.includes('')) {
       // Invalid Enter handling...
@@ -137,21 +158,15 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 
   function updateGameState(): void {
-    charTiles[cursor.getPos()].classList.remove('char-tile-selected');
+    removeSelectionClass();
     cursor = new Cursor();
     shiftRow(); // Set active word row based on GameSession
-    charTiles[cursor.getPos()].classList.add('char-tile-selected'); // Init cursor selection
+    addSelectionClass(); // Init cursor selection
 
-    charTiles?.forEach((tile, idx) => {
-    if (!tile.classList.contains('active-row')) return;
-      tile?.addEventListener('click', () => {
-        cursor.selfSet = true;
-        cursor.oob = false;
-        removeSelectionClass();
-        cursor.x = idx % 5;
-        cursor.y = Math.floor(idx / 5);
-        addSelectionClass();
-      });
+    gameSession?.guesses?.forEach((guess, rowIdx) => {
+      for (const i of range(5)) {
+        charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
+      }
     });
   }
 
