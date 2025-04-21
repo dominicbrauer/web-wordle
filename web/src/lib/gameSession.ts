@@ -1,11 +1,6 @@
-export interface Scoring {
-  in_word: boolean;
-  correct_idx: boolean;
-}
-
 export interface Char {
   character: string;
-  scoring: Scoring;
+  scoring: string;
 }
 
 export interface Guess {

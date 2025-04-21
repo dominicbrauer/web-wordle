@@ -28,7 +28,6 @@ public class GameController {
 
   @GetMapping
   public ResponseEntity<String> index() {
-    System.out.println(gameService.validateWord("apfel"));
     return ResponseEntity.ok("API is working! 🔤");
   }
 

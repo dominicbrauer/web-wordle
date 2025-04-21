@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.dominicbrauer.web_wordle_tim24.model.Char;
 import com.dominicbrauer.web_wordle_tim24.model.GameSession;
 import com.dominicbrauer.web_wordle_tim24.model.Guess;
-import com.dominicbrauer.web_wordle_tim24.model.Scoring;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -16,21 +15,45 @@ import jakarta.servlet.http.HttpSession;
 public class GuessFeedbackService {
 
   private final ValidateWordApiService validateWordApiService;
-
   public GuessFeedbackService(ValidateWordApiService validateWordApiService) {
     this.validateWordApiService = validateWordApiService;
   }
 
-  public boolean correctIdx(char guessChar, char solutionChar) {
-    return guessChar == solutionChar;
+
+  public String[] handleCharCheck(char[] guess, char[] solution) {
+    String[] colors = new String[5];
+    boolean[] matched = new boolean[5];
+
+    for (int i = 0; i < 5; i++) {
+      if (guess[i] == solution[i]) {
+        colors[i] = "green";
+        matched[i] = true;
+        guess[i] = ' ';
+      }
+    }
+
+    for (int i = 0; i < 5; i++) {
+      if (colors[i] != null) continue;
+
+      for (int j = 0; j < 5; j++) {
+        if (!matched[j] && guess[i] == solution[j]) {
+          colors[i] = "yellow";
+          matched[j] = true;
+          break;
+        }
+      }
+      if (colors[i] == null) {
+        colors[i] = "gray";
+      }
+    }
+    return colors;
   }
 
-  public boolean inWord(char guessChar, String solutionWord) {
-    return solutionWord.contains(String.valueOf(guessChar));
-  }
 
   /**
    * Evaluates the GameSession object
+   * @param gameSession Current players GameSession
+   * @param session Current players HttpSession
    * @return Random five-letter word from API
    */
   public GameSession updateGameState(GameSession gameSession, HttpSession session) {
@@ -43,16 +66,12 @@ public class GuessFeedbackService {
     }
 
     List<Char> character_list = new ArrayList<>();
+    String[] colors = this.handleCharCheck(currentGuess, solutionWord.toCharArray());
+
     for (int i = 0; i < 5; i++) {
-      char guessChar = currentGuess[i];
-      char solutionChar = solutionWord.toCharArray()[i];
-      Scoring scoring = new Scoring(
-        this.inWord(guessChar, solutionWord),
-        this.correctIdx(guessChar, solutionChar)
-      );
       Char character = new Char(
-        guessChar,
-        scoring
+        currentGuess[i],
+        colors[i]
       );
       character_list.add(character);
     }
