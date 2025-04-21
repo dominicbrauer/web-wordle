@@ -24,6 +24,23 @@ import Layout from "../../layouts/Layout.astro"
   const pageBody = document.querySelector('body') as HTMLBodyElement;
   const cursor: Cursor = new Cursor(0, gameSession.guesses_used, false, false);
 
+
+  /*          */
+  const myWord: string = "Bubi";
+
+  const event = new CustomEvent("amogus", {
+    detail: { message: myWord }
+  });
+
+  window.addEventListener("amogus", (e) => {
+    const customEvent = e as CustomEvent;
+    console.log(customEvent.detail.message); // "Hello from Component A"
+  });
+  
+  window.dispatchEvent(event);
+  /*          */
+
+
   /**
    * Activates the current row based on `cursor.y`
    * and deactivates all other rows.
