@@ -42,22 +42,44 @@ import WordRow from "./wordgrid/WordRow.astro";
   const cursor: Cursor = new Cursor(0, 0, false, false);
 
 
-  // Initialize the word grid after a window reload
+  ////////// Event Listeners //////////
+  // Initializes the word grid after a window reload
   // and only after the data fetching is complete.
   window.addEventListener("gamePageLoaded", () => {
     initGameState();
   });
 
+
+  // Connection to exchange the gameSession after each fetch
   window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
+  
     gameSession = event.detail.gameSession;
     updateGameState();
   });
 
+
+  // Exchanges the read keyboard key
   window.addEventListener("keyInput", (e) => {
     const event = e as CustomEvent;
+
     handleKeyboardInput(event.detail.keyInput);
   });
+
+
+  // Makes every char tile clickable
+  charTiles?.forEach((tile, idx) => {
+    tile.addEventListener('click', () => {
+      if (!tile.classList.contains('active')) return;
+
+      cursor.selfSet = true;
+      cursor.oob = false;
+      cursor.removeSelection(charTiles);
+      [cursor.x, cursor.y] = cursor.idxToCoord(idx);
+      cursor.addSelection(charTiles);
+    });
+  });
+  ////////// Event Listeners //////////
 
 
   /**
@@ -67,20 +89,14 @@ import WordRow from "./wordgrid/WordRow.astro";
     for (const i of range(gameSession.guesses_used)) {
       for (const j of range(5)) {
         const charScoring = gameSession.guesses[i].character_info[j].scoring;
-        switch(charScoring) {
-          case "green": {
-            charTiles[cursor.coordToIdx(j, i)].classList.add('char-feedback-green');
-            break;
-          }
-          case "yellow": {
-            charTiles[cursor.coordToIdx(j, i)].classList.add('char-feedback-yellow');
-            break;
-          }
-          default: {
-            charTiles[cursor.coordToIdx(j, i)].classList.add('char-feedback-gray');
-            break;
-          }
-        }
+        const tile = charTiles[cursor.coordToIdx(j, i)];
+
+        const classMap: Record<string, string> = {
+          green: 'char-feedback-green',
+          yellow: 'char-feedback-yellow',
+        };
+
+        tile.classList.add(classMap[charScoring] || 'char-feedback-gray');
       }
     }
   }
@@ -171,7 +187,7 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 
   /**
-   * Dispatch event to fetch guessRequest
+   * Dispatch an event to fetch a guessRequest.
    * @param word Five-letter word guess
    */
   function sendWord(word: string): void {
@@ -191,30 +207,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     cursor.oob = false;
     cursor.addSelection(charTiles);
     charHighlighting();
-  }
-
-
-  function updateGameState(): void {
-    // if (gameSession.current_guess_valid) {
-    //   document.querySelector('word-grid')?.classList.add('game-won');
-    //   return;
-    // }
-    // if (gameSession.guesses_used > 5) {
-    //   document.querySelector('word-grid')?.classList.add('game-lost');
-    //   return;
-    // }
-
-    if (!gameSession.current_guess_valid) {
-      
-    } else {
-      cursor.removeSelection(charTiles);
-      cursor.x = 0;
-      cursor.y = gameSession.guesses_used;
-      cursor.oob = false;
-      cursor.addSelection(charTiles);
-      charHighlighting();
-      shiftRow();
-    }
+    shiftRow();
 
     gameSession?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(5)) {
@@ -224,14 +217,23 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
-  charTiles?.forEach((tile, idx) => {
-    tile.addEventListener('click', () => {
-      if (!tile.classList.contains('active')) return;
-      cursor.selfSet = true;
-      cursor.oob = false;
-      cursor.removeSelection(charTiles);
-      [cursor.x, cursor.y] = cursor.idxToCoord(idx);
-      cursor.addSelection(charTiles);
-    });
-  });
+  function updateGameState(): void {
+    // Correct guess: Win
+    if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
+      document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-won');
+      return;
+    }
+    
+    // No guesses left: Lose
+    if (gameSession.guesses_used > 5) {
+      document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-lost');
+      return;
+    }
+
+    if (!gameSession.current_guess_valid) {
+      // Invalid guess logic
+    } else {
+      initGameState();
+    }
+  }
 </script>
