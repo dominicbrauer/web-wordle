@@ -20,6 +20,14 @@ import WordRow from "./wordgrid/WordRow.astro";
     height: fit-content;
     margin: auto;
   }
+
+  .game-won {
+    border: 4px solid lime;
+  }
+
+  .game-lost {
+    border: 4px solid red;
+  }
 </style>
 
 <script>
@@ -27,20 +35,17 @@ import WordRow from "./wordgrid/WordRow.astro";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
 
-  const charTiles = document.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
-  const charTileLabels = document.querySelectorAll('.char-tile-label') as NodeListOf<HTMLSpanElement>;
+  const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
+  const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
 
   let gameSession: GameSession;
-  let cursor: Cursor;
+  const cursor: Cursor = new Cursor(0, 0, false, false);
 
-
-  window.addEventListener("gameStateUpdate", (e) => {
+  window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
-    console.log("mogus mogus");
     gameSession = event.detail.gameSession;
-    cursor = new Cursor(0, gameSession.guesses_used, false, false);
+    updateGameState();
   });
-
 
   window.addEventListener("keyInput", (e) => {
     const event = e as CustomEvent;
@@ -48,6 +53,9 @@ import WordRow from "./wordgrid/WordRow.astro";
   });
 
 
+  /**
+   * 
+   */
   function addSelectionClass(): void {
     charTiles[cursor.getPos()]?.classList.add('char-tile-selected');
   }
@@ -163,8 +171,6 @@ import WordRow from "./wordgrid/WordRow.astro";
 
     const word: string = characters.join('').toLowerCase();
     sendWord(word);
-  
-    updateGameState();
   }
 
 
@@ -183,14 +189,25 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 
   function updateGameState(): void {
+    // if (gameSession.current_guess_valid) {
+    //   document.querySelector('word-grid')?.classList.add('game-won');
+    //   return;
+    // }
+    // if (gameSession.guesses_used > 5) {
+    //   document.querySelector('word-grid')?.classList.add('game-lost');
+    //   return;
+    // }
+
+    console.log("This is sus!");
+    
     removeSelectionClass();
     cursor.x = 0;
     cursor.y = gameSession.guesses_used;
     cursor.selfSet = false;
     cursor.oob = false;
+    charHighlighting();
     shiftRow();
     addSelectionClass();
-    charHighlighting();
 
     gameSession?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(5)) {
@@ -211,5 +228,5 @@ import WordRow from "./wordgrid/WordRow.astro";
     });
   });
 
-  updateGameState();
+  // updateGameState();
 </script>

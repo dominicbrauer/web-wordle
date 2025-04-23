@@ -42,7 +42,7 @@ import Layout from "../../layouts/Layout.astro"
    * 
    */
   function updateGameState(): void {
-    const event = new CustomEvent("gameStateUpdate", {
+    const event = new CustomEvent("transmitCurrentGameState", {
       detail: {
         gameSession: gameSession,
       }
@@ -72,6 +72,7 @@ import Layout from "../../layouts/Layout.astro"
     gameSession.current_guess_valid = false;
 
     gameSession = await guessRequest(gameSession);
+    updateGameState();
   });
 
 
