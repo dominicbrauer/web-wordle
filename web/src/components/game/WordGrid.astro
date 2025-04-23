@@ -23,5 +23,193 @@ import WordRow from "./wordgrid/WordRow.astro";
 </style>
 
 <script>
+  import { Cursor } from "../../lib/cursor";
+  import type { GameSession } from "../../lib/gameSession";
+  import { range } from "../../lib/helpers";
 
+  const charTiles = document.querySelectorAll('.char-tile') as NodeListOf<HTMLDivElement>;
+  const charTileLabels = document.querySelectorAll('.char-tile-label') as NodeListOf<HTMLSpanElement>;
+
+  let gameSession: GameSession;
+  let cursor: Cursor;
+
+
+  window.addEventListener("gameStateUpdate", (e) => {
+    const event = e as CustomEvent;
+    console.log("mogus mogus");
+    gameSession = event.detail.gameSession;
+    cursor = new Cursor(0, gameSession.guesses_used, false, false);
+  });
+
+
+  window.addEventListener("keyInput", (e) => {
+    const event = e as CustomEvent;
+    handleKeyboardInput(event.detail.keyInput);
+  });
+
+
+  function addSelectionClass(): void {
+    charTiles[cursor.getPos()]?.classList.add('char-tile-selected');
+  }
+  function removeSelectionClass(): void {
+    charTiles[cursor.getPos()]?.classList.remove('char-tile-selected');
+  }
+
+
+  /**
+   * Color codes the character tiles in the word grid.
+   */
+  function charHighlighting(): void {
+    for (const i of range(gameSession.guesses_used)) {
+      for (const j of range(5)) {
+        const charScoring = gameSession.guesses[i].character_info[j].scoring;
+        switch(charScoring) {
+          case "green": {
+            charTiles[cursor.coordToIdx(j, i)].classList.add('char-feedback-green');
+            break;
+          }
+          case "yellow": {
+            charTiles[cursor.coordToIdx(j, i)].classList.add('char-feedback-yellow');
+            break;
+          }
+          default: {
+            charTiles[cursor.coordToIdx(j, i)].classList.add('char-feedback-gray');
+            break;
+          }
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Activates the current row based on `cursor.y`
+   * and deactivates all other ones.
+   */
+  function shiftRow(): void {
+    charTiles.forEach(tile => {
+      tile.classList.remove('active');
+    });
+    for (const i of range(5)) {
+      charTiles[cursor.coordToIdx(i, undefined)].classList.add('active');
+    }
+  }
+
+
+  /**
+   * Redirects a keyboard input based on its type.
+   * @param key A keyboard key
+   */
+  function handleKeyboardInput(key: string): void {
+    switch(key) {
+      case 'ENTER': handleEnterInput(); break;
+      case 'BACKSPACE': handleBackspaceInput(); break;
+      default: handleCharacterInput(key); break;
+    }
+    cursor.selfSet = false;
+  }
+
+
+  /**
+   * Performs character removal if possible.
+   */
+  function handleBackspaceInput(): void {
+    if (cursor.selfSet || charTileLabels[cursor.getPos()].textContent !== '' || cursor.oob) {
+      cursor.oob = false;
+      charTileLabels[cursor.getPos()].textContent = '';
+      addSelectionClass();
+    } else if (cursor.x > 0) {
+      charTileLabels[cursor.getPos()-1].textContent = '';
+      removeSelectionClass();
+      cursor.x--;
+      addSelectionClass();
+    }
+  }
+
+
+  /**
+   * Inserts a keyboard key into the word grid.
+   * @param key 
+   */
+  function handleCharacterInput(key: string): void {
+    if (cursor.oob) return;
+    charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
+    if (cursor.x <= 3) {
+      removeSelectionClass();
+      cursor.x++;
+      addSelectionClass();
+    } else {
+      cursor.oob = true;
+      removeSelectionClass();
+    }
+  }
+
+
+  /**
+   * Reads a word input in the current row and transmits it in a dispatch event.
+   */
+  function handleEnterInput(): void {
+    const characters: string[] = [];
+
+    for (const i of range(5)) {
+      const divText: string | null = charTileLabels[cursor.coordToIdx(i, undefined)].textContent;
+      characters.push(divText !== null ? divText : '');
+    }
+    if (characters.includes('')) {
+      // Invalid Enter handling...
+      console.log("Not all characters are set!");
+      return;
+    }
+
+    const word: string = characters.join('').toLowerCase();
+    sendWord(word);
+  
+    updateGameState();
+  }
+
+
+  /**
+   * Dispatch event to fetch guessRequest
+   * @param word Five-letter word guess
+   */
+  function sendWord(word: string): void {
+    const event = new CustomEvent("guessRequest", {
+      detail: {
+        word: word,
+      }
+    });
+    window.dispatchEvent(event);
+  }
+
+
+  function updateGameState(): void {
+    removeSelectionClass();
+    cursor.x = 0;
+    cursor.y = gameSession.guesses_used;
+    cursor.selfSet = false;
+    cursor.oob = false;
+    shiftRow();
+    addSelectionClass();
+    charHighlighting();
+
+    gameSession?.guesses?.forEach((guess, rowIdx) => {
+      for (const i of range(5)) {
+        charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
+      }
+    });
+  }
+
+
+  charTiles?.forEach((tile, idx) => {
+    tile.addEventListener('click', () => {
+      if (!tile.classList.contains('active')) return;
+      cursor.selfSet = true;
+      cursor.oob = false;
+      removeSelectionClass();
+      [cursor.x, cursor.y] = cursor.idxToCoord(idx);
+      addSelectionClass();
+    });
+  });
+
+  updateGameState();
 </script>
