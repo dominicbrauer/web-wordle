@@ -1,9 +1,9 @@
 ---
-const { class: className, ...rest } = Astro.props;
+const { class: className } = Astro.props;
 ---
 
 <div class:list={[ 'key-tile', className]}>
-  <slot />
+  <span class="key-tile-label"><slot /></span>
 </div>
 
 <style>
@@ -20,11 +20,27 @@ const { class: className, ...rest } = Astro.props;
     border-radius: 4px;
   }
 
+  .key-tile:hover {
+    background-color: darkgray;
+    transform: scale(0.98);
+  }
+
+  .key-tile:active {
+    transform: scale(0.9);
+  }
+
   .enter-key {
     font-size: 1em;
   }
 
-  .delete-key, .enter-key {
+  .delete-key,
+  .enter-key {
     width: 4.5rem;
+  }
+
+  .delete-key .key-tile-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

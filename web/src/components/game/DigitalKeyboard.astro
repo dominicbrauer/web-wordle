@@ -30,5 +30,31 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
 </style>
 
 <script>
+  import type { GameSession } from "../../lib/gameSession";
+
+  const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
+  let gameSession: GameSession;
   
+  window.addEventListener("transmitCurrentGameState", (e) => {
+    const event = e as CustomEvent;
+
+    gameSession = event.detail.gameSession;
+  });
+
+  keyTiles.forEach(keyTile => {
+    keyTile.addEventListener('click', () => {
+      const key = (() => {
+        if (keyTile.classList.contains('enter-key')) return "ENTER";
+        if (keyTile.classList.contains('delete-key')) return "BACKSPACE";
+        return keyTile.firstElementChild?.textContent;
+      })();
+      
+      const event = new CustomEvent("keyInput", {
+        detail: {
+          keyInput: key,
+        }
+      });
+      window.dispatchEvent(event);
+    })
+  });
 </script>

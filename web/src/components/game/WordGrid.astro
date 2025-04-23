@@ -180,7 +180,7 @@ import WordRow from "./wordgrid/WordRow.astro";
       console.log("Not all characters are set!");
       return;
     }
-
+    
     const word: string = characters.join('').toLowerCase();
     sendWord(word);
   }
@@ -219,9 +219,11 @@ import WordRow from "./wordgrid/WordRow.astro";
 
   function updateGameState(): void {
     // Correct guess: Win
-    if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
-      document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-won');
-      return;
+    if (gameSession.guesses_used > 0) {
+      if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
+        document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-won');
+        return;
+      }
     }
     
     // No guesses left: Lose
