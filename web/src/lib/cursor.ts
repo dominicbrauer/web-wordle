@@ -22,4 +22,12 @@ export class Cursor {
   public getPos(): number {
     return this.coordToIdx();
   }
+
+  public addSelection(tiles: NodeListOf<HTMLDivElement>): void {
+    tiles[this.getPos()]?.classList.add('char-tile-selected');
+  }
+
+  public removeSelection(tiles: NodeListOf<HTMLDivElement>): void {
+    tiles[this.getPos()]?.classList.remove('char-tile-selected');
+  }
 }

@@ -21,6 +21,9 @@ import Layout from "../../layouts/Layout.astro"
   const pageBody = document.querySelector('body') as HTMLBodyElement;
 
 
+  
+
+
   /**
    * Validates an input key
    * @param key - keyboard key
@@ -77,4 +80,6 @@ import Layout from "../../layouts/Layout.astro"
 
 
   updateGameState();
+  console.log("Completed loading!");
+  window.dispatchEvent(new CustomEvent("gamePageLoaded"));
 </script>

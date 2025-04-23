@@ -41,6 +41,13 @@ import WordRow from "./wordgrid/WordRow.astro";
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
 
+
+  // Initialize the word grid after a window reload
+  // and only after the data fetching is complete.
+  window.addEventListener("gamePageLoaded", () => {
+    initGameState();
+  });
+
   window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
     gameSession = event.detail.gameSession;
@@ -51,17 +58,6 @@ import WordRow from "./wordgrid/WordRow.astro";
     const event = e as CustomEvent;
     handleKeyboardInput(event.detail.keyInput);
   });
-
-
-  /**
-   * 
-   */
-  function addSelectionClass(): void {
-    charTiles[cursor.getPos()]?.classList.add('char-tile-selected');
-  }
-  function removeSelectionClass(): void {
-    charTiles[cursor.getPos()]?.classList.remove('char-tile-selected');
-  }
 
 
   /**
@@ -125,12 +121,12 @@ import WordRow from "./wordgrid/WordRow.astro";
     if (cursor.selfSet || charTileLabels[cursor.getPos()].textContent !== '' || cursor.oob) {
       cursor.oob = false;
       charTileLabels[cursor.getPos()].textContent = '';
-      addSelectionClass();
+      cursor.addSelection(charTiles);
     } else if (cursor.x > 0) {
       charTileLabels[cursor.getPos()-1].textContent = '';
-      removeSelectionClass();
+      cursor.removeSelection(charTiles);
       cursor.x--;
-      addSelectionClass();
+      cursor.addSelection(charTiles);
     }
   }
 
@@ -143,12 +139,12 @@ import WordRow from "./wordgrid/WordRow.astro";
     if (cursor.oob) return;
     charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
     if (cursor.x <= 3) {
-      removeSelectionClass();
+      cursor.removeSelection(charTiles);
       cursor.x++;
-      addSelectionClass();
+      cursor.addSelection(charTiles);
     } else {
       cursor.oob = true;
-      removeSelectionClass();
+      cursor.removeSelection(charTiles);
     }
   }
 
@@ -188,6 +184,16 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
+  function initGameState(): void {
+    cursor.x = 0;
+    cursor.y = gameSession.guesses_used;
+    cursor.selfSet = false;
+    cursor.oob = false;
+    cursor.addSelection(charTiles);
+    charHighlighting();
+  }
+
+
   function updateGameState(): void {
     // if (gameSession.current_guess_valid) {
     //   document.querySelector('word-grid')?.classList.add('game-won');
@@ -198,16 +204,17 @@ import WordRow from "./wordgrid/WordRow.astro";
     //   return;
     // }
 
-    console.log("This is sus!");
-    
-    removeSelectionClass();
-    cursor.x = 0;
-    cursor.y = gameSession.guesses_used;
-    cursor.selfSet = false;
-    cursor.oob = false;
-    charHighlighting();
-    shiftRow();
-    addSelectionClass();
+    if (!gameSession.current_guess_valid) {
+      
+    } else {
+      cursor.removeSelection(charTiles);
+      cursor.x = 0;
+      cursor.y = gameSession.guesses_used;
+      cursor.oob = false;
+      cursor.addSelection(charTiles);
+      charHighlighting();
+      shiftRow();
+    }
 
     gameSession?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(5)) {
@@ -222,11 +229,9 @@ import WordRow from "./wordgrid/WordRow.astro";
       if (!tile.classList.contains('active')) return;
       cursor.selfSet = true;
       cursor.oob = false;
-      removeSelectionClass();
+      cursor.removeSelection(charTiles);
       [cursor.x, cursor.y] = cursor.idxToCoord(idx);
-      addSelectionClass();
+      cursor.addSelection(charTiles);
     });
   });
-
-  // updateGameState();
 </script>
