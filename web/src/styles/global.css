@@ -7,14 +7,21 @@
 }
 
 :root {
-  --background-color: rgb(33, 34, 49);
-  --dark-accent-color: rgb(49, 50, 71);
-  --light-accent-color: rgb(102, 103, 127);
-  --text-color: rgb(230, 238, 238);
+  --text: rgb(240, 255, 245);
+  --background: rgb(1, 26, 43);
+  --background-accent: #003153;
+  --primary: rgb(82, 207, 184);
+  --secondary: rgb(254, 185, 65);
+  --accent: rgb(242, 237, 161);
+
+  --gray: rgb(136, 136, 136);
+  --yellow: rgb(255, 194, 0);
+  --green: rgb(78, 172, 70);
+  --red: rgb(206, 32, 41);
 }
 
 * {
-  color: var(--text-color);
+  color: var(--text);
   font-family: 'AtkinsonHyperlegibleMono', sans-serif;
   box-sizing: border-box;
 }
@@ -24,5 +31,5 @@ html, body {
   padding: .5rem;
   width: 100%;
   height: 100%;
-  background-color: var(--background-color);
+  background-color: var(--background);
 }
