@@ -20,3 +20,36 @@ import CharTile from "./CharTile.astro";
     width: fit-content;
   }
 </style>
+
+<script>
+  import type { GameSession } from "../../../lib/gameSession";
+
+  const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
+  let gameSession: GameSession;
+
+
+  // Connection to exchange the gameSession after each fetch
+  window.addEventListener("transmitCurrentGameState", (e) => {
+    const event = e as CustomEvent;
+
+    gameSession = event.detail.gameSession;
+    shiftRow();
+  });
+
+
+  /**
+   * Activates the current row based on `cursor.y`
+   * and deactivates all other ones.
+   */
+  function shiftRow(): void {
+    wordRows.forEach(row => {
+      Array.from(row.children).forEach(char => {
+        char.classList.remove('active', 'char-tile-selected');
+      });
+    });
+
+    Array.from(wordRows[gameSession.guesses_used].children).forEach(char => {
+      char.classList.add('active');
+    });
+  }
+</script>

@@ -15,10 +15,9 @@ import Layout from "../../layouts/Layout.astro"
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
 
+  const pageBody = document.querySelector('body') as HTMLBodyElement;
   let gameSession: GameSession = await requestGameSession();
   let keyboardKeys = structuredClone(KEYBOARD_KEYS);
-
-  const pageBody = document.querySelector('body') as HTMLBodyElement;
 
 
   /**
@@ -41,7 +40,7 @@ import Layout from "../../layouts/Layout.astro"
   /**
    * 
    */
-  function updateGameState(): void {
+  function triggerUpdate(): void {
     const event = new CustomEvent("transmitCurrentGameState", {
       detail: {
         gameSession: gameSession,
@@ -72,10 +71,9 @@ import Layout from "../../layouts/Layout.astro"
     gameSession.current_guess_valid = false;
 
     gameSession = await guessRequest(gameSession);
-    updateGameState();
+    triggerUpdate();
   });
 
 
-  updateGameState();
-  window.dispatchEvent(new CustomEvent("gamePageLoaded"));
+  triggerUpdate();
 </script>

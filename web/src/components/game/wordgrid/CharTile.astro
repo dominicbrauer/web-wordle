@@ -19,22 +19,29 @@
     align-items: center;
     margin: .25rem;
     overflow: hidden;
+    user-select: none;
   }
 
-  .active:hover::before,
-  .char-tile-selected::before {
+  .active::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     background-color: var(--primary);
+    opacity: 0;
+  }
+
+  .active:hover::before,
+  .char-tile-selected::before {
     opacity: 0.2;
+    transition: opacity 150ms ease;
   }
 
   .char-tile-selected,
   .active:hover {
     cursor: pointer;
     border-color: var(--primary);
+    transition: border-color 150ms ease;
   }
 
   .char-tile-label {
@@ -46,15 +53,12 @@
   .char-feedback-gray {
     background-color: var(--gray);
   }
-
   .char-feedback-yellow {
     background-color: var(--yellow);
   }
-
   .char-feedback-green {
     background-color: var(--green);
   }
-
   .char-feedback-gray,
   .char-feedback-yellow,
   .char-feedback-green {

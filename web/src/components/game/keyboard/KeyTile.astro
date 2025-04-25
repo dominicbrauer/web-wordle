@@ -8,25 +8,36 @@ const { class: className } = Astro.props;
 
 <style>
   .key-tile {
+    position: relative;
     width: 3rem;
     height: 3rem;
-    font-size: 1.5em;
     padding: .5rem;
     margin: 0 2px;
-    background-color: var(--gray);
+    font-size: 1.5em;
+    background-color: var(--secondary);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
+    box-shadow: 0px 4px 0 0px var(--border-hover);
+    z-index: 0;
+    transition: all 150ms ease;
+    user-select: none;
+  }
+
+  .key-tile-label {
+    position: relative;
+    z-index: 1;
   }
 
   .key-tile:hover {
-    background-color: darkgray;
-    transform: scale(0.98);
+    filter: brightness(1.15);
   }
 
   .key-tile:active {
-    transform: scale(0.9);
+    transform: scale(0.98) translateY(3px);
+    box-shadow: none;
+    transition: all 100ms ease;
   }
 
   .enter-key {
@@ -42,5 +53,18 @@ const { class: className } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .key-feedback-gray {
+    background-color: var(--gray);
+    .key-tile-label {
+      color: var(--background);
+    }
+  }
+  .key-feedback-yellow {
+    background-color: var(--yellow);
+  }
+  .key-feedback-green {
+    background-color: var(--green);
   }
 </style>

@@ -66,7 +66,7 @@ public class GuessFeedbackService {
     }
 
     List<Char> character_list = new ArrayList<>();
-    String[] colors = this.handleCharCheck(currentGuess, solutionWord.toCharArray());
+    String[] colors = this.handleCharCheck(currentGuess.clone(), solutionWord.toCharArray());
 
     for (int i = 0; i < 5; i++) {
       Char character = new Char(

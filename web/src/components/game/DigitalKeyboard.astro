@@ -21,6 +21,7 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
 
 <style>
   .keyboard-container {
+    position: relative;
     margin: 2rem auto;
     width: fit-content;
     border: 2px solid var(--secondary);
@@ -35,10 +36,12 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
   const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
   let gameSession: GameSession;
   
+
   window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
 
     gameSession = event.detail.gameSession;
+    keyHighlighting();
   });
 
   keyTiles.forEach(keyTile => {
@@ -57,4 +60,36 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
       window.dispatchEvent(event);
     })
   });
+
+
+  function extractKeyInfo(): Map<string, string[]> {
+    const map = new Map<string, string[]>();
+    map.set("green", []);
+    map.set("gray", []);
+    map.set("yellow", []);
+
+    gameSession.guesses?.forEach(guess => {
+      guess.character_info.forEach(char => {
+        map.get(char.scoring)?.push(char.character.toUpperCase());
+      });
+    });
+
+    return map;
+  }
+
+
+  function keyHighlighting(): void {
+    const map: Map<string, string[]> = extractKeyInfo();
+
+    keyTiles.forEach(tile => {
+      const char = tile.firstElementChild?.textContent;
+      if (char == null || char.length > 1) return; // 'Enter' and 'Backspace' are excluded
+      
+      map.forEach((value, key) => {
+        if (value.includes(char)) {
+          tile.classList.add(`key-feedback-${key}`);
+        }
+      });
+    });
+  }
 </script>

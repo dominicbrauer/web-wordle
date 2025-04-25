@@ -13,6 +13,7 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 <style>
   .word-grid {
+    position: relative;
     display: flex;
     flex-direction: column;
     background-color: var(--background);
@@ -37,19 +38,11 @@ import WordRow from "./wordgrid/WordRow.astro";
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
-
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
 
 
   ////////// Event Listeners //////////
-  // Initializes the word grid after a window reload
-  // and only after the data fetching is complete.
-  window.addEventListener("gamePageLoaded", () => {
-    initGameState();
-  });
-
-
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
@@ -102,18 +95,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
-  /**
-   * Activates the current row based on `cursor.y`
-   * and deactivates all other ones.
-   */
-  function shiftRow(): void {
-    charTiles.forEach(tile => {
-      tile.classList.remove('active');
-    });
-    for (const i of range(5)) {
-      charTiles[cursor.coordToIdx(i, undefined)].classList.add('active');
-    }
-  }
+  
 
 
   /**
@@ -134,7 +116,7 @@ import WordRow from "./wordgrid/WordRow.astro";
    * Performs character removal if possible.
    */
   function handleBackspaceInput(): void {
-    if (cursor.selfSet || charTileLabels[cursor.getPos()].textContent !== '' || cursor.oob) {
+    if ((cursor.selfSet || cursor.oob) && charTileLabels[cursor.getPos()].textContent !== '') {
       cursor.oob = false;
       charTileLabels[cursor.getPos()].textContent = '';
       cursor.addSelection(charTiles);
@@ -207,7 +189,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     cursor.oob = false;
     cursor.addSelection(charTiles);
     charHighlighting();
-    shiftRow();
+    // shiftRow();
 
     gameSession?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(5)) {
@@ -232,10 +214,7 @@ import WordRow from "./wordgrid/WordRow.astro";
       return;
     }
 
-    if (!gameSession.current_guess_valid) {
-      // Invalid guess logic
-    } else {
-      initGameState();
-    }
+    console.log("asdfjkjkbasdhjkbdf");
+    initGameState();
   }
 </script>
