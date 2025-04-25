@@ -9,6 +9,19 @@ import Layout from "../../layouts/Layout.astro"
   <DigitalKeyboard />
 </Layout>
 
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media screen (max-width: 700px) {
+    body {
+      padding: 1rem;
+    }
+  }
+</style>
+
 <script>
   import { KEYBOARD_KEYS } from "../../lib/constants";
   import type { GameSession} from "../../lib/gameSession";
@@ -67,7 +80,7 @@ import Layout from "../../layouts/Layout.astro"
     const event = e as CustomEvent;
 
     gameSession.current_guess = event.detail.word;
-    gameSession.status = "submit-guess";
+    gameSession.status = "submit_guess";
     gameSession.current_guess_valid = false;
 
     gameSession = await guessRequest(gameSession);

@@ -23,11 +23,13 @@ import CharTile from "./CharTile.astro";
 
 <script>
   import type { GameSession } from "../../../lib/gameSession";
+  import { headShake } from "../../../scripts/headshakeAnimation"
 
   const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
   let gameSession: GameSession;
 
-
+  
+  ////////// Event Listeners //////////
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
@@ -35,6 +37,12 @@ import CharTile from "./CharTile.astro";
     gameSession = event.detail.gameSession;
     shiftRow();
   });
+
+  window.addEventListener("headShake", (e) => {
+    const event = e as CustomEvent;
+    headShake(wordRows[event.detail.row]);
+  });
+  ////////// Event Listeners //////////
 
 
   /**

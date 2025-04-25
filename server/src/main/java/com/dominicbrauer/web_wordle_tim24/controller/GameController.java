@@ -44,7 +44,14 @@ public class GameController {
   @GetMapping("/start-game")
   public ResponseEntity<GameSession> initNewGame(HttpSession session) {
     if (!session.isNew()) {
-      return ResponseEntity.ok((GameSession) session.getAttribute("gameSession"));
+      GameSession knownSession = (GameSession) session.getAttribute("gameSession");
+      return ResponseEntity.ok(new GameSession(
+        "game_found",
+        knownSession.guesses_used(),
+        knownSession.current_guess(),
+        knownSession.current_guess_valid(),
+        knownSession.guesses()
+      ));
     }
 
     GameSession newGameSession = gameService.createNewGameSession();

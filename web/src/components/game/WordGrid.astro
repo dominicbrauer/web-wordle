@@ -19,7 +19,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     background-color: var(--background);
     width: fit-content;
     height: fit-content;
-    margin: auto;
+    margin: 2rem auto;
   }
 
   .game-won {
@@ -134,7 +134,10 @@ import WordRow from "./wordgrid/WordRow.astro";
    * @param key 
    */
   function handleCharacterInput(key: string): void {
-    if (cursor.oob) return;
+    if (cursor.oob) {
+      requestHeadShake();
+      return;
+    }
     charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
     if (cursor.x <= 3) {
       cursor.removeSelection(charTiles);
@@ -158,8 +161,7 @@ import WordRow from "./wordgrid/WordRow.astro";
       characters.push(divText !== null ? divText : '');
     }
     if (characters.includes('')) {
-      // Invalid Enter handling...
-      console.log("Not all characters are set!");
+      requestHeadShake();
       return;
     }
     
@@ -182,15 +184,31 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
+  function requestHeadShake(): void {
+    const event = new CustomEvent("headShake", {
+      detail: {
+        row: cursor.y,
+      }
+    });
+    window.dispatchEvent(event);
+  }
+
+
   function initGameState(): void {
-    cursor.x = 0;
+    if (gameSession.status == "return_feedback" && !gameSession.current_guess_valid) {
+      requestHeadShake();
+      return;
+    }
+
+    if (gameSession.current_guess_valid) {
+      cursor.x = 0;
+      cursor.oob = false;
+      cursor.selfSet = false;
+    }
+
     cursor.y = gameSession.guesses_used;
-    cursor.selfSet = false;
-    cursor.oob = false;
     cursor.addSelection(charTiles);
     charHighlighting();
-    // shiftRow();
-
     gameSession?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(5)) {
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
@@ -214,7 +232,6 @@ import WordRow from "./wordgrid/WordRow.astro";
       return;
     }
 
-    console.log("asdfjkjkbasdhjkbdf");
     initGameState();
   }
 </script>

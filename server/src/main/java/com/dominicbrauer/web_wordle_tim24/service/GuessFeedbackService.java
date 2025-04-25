@@ -62,7 +62,13 @@ public class GuessFeedbackService {
     char[] currentGuess = currentGuessString.toCharArray();
 
     if (!validateWordApiService.valid(currentGuessString)) {
-      return gameSession;
+      return new GameSession(
+        "return_feedback",
+        gameSession.guesses_used(),
+        gameSession.current_guess(),
+        gameSession.current_guess_valid(),
+        gameSession.guesses()
+      );
     }
 
     List<Char> character_list = new ArrayList<>();
@@ -90,7 +96,7 @@ public class GuessFeedbackService {
     guesses.add(guess);
 
     GameSession responseGameSession = new GameSession(
-      "running",
+      "return_feedback",
       gameSession.guesses_used() + 1,
       currentGuessString,
       true,
