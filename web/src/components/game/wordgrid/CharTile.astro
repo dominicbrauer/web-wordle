@@ -8,23 +8,39 @@
 
 <style>
   .char-tile {
+    position: relative;
     width: 4rem;
     height: 4rem;
-    font-size: 2.25em;
-    font-weight: bold;
-    background-color: var(--background);
-    border: 4px solid var(--background-accent);
-    border-radius: .5rem;
+    background-color: var(--background-secondary);
+    border: 2px solid var(--secondary);
+    border-radius: .25rem;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: .25rem;
+    overflow: hidden;
+  }
+
+  .active:hover::before,
+  .char-tile-selected::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    opacity: 0.2;
   }
 
   .char-tile-selected,
   .active:hover {
-    border-color: var(--accent);
     cursor: pointer;
+    border-color: var(--primary);
+  }
+
+  .char-tile-label {
+    font-size: 2.25em;
+    font-weight: bold;
+    z-index: 1;
   }
 
   .char-feedback-gray {
@@ -37,5 +53,11 @@
 
   .char-feedback-green {
     background-color: var(--green);
+  }
+
+  .char-feedback-gray,
+  .char-feedback-yellow,
+  .char-feedback-green {
+    border-color: var(--background);
   }
 </style>

@@ -7,17 +7,18 @@
 }
 
 :root {
-  --text: rgb(240, 255, 245);
-  --background: rgb(1, 26, 43);
-  --background-accent: #003153;
-  --primary: rgb(82, 207, 184);
-  --secondary: rgb(254, 185, 65);
-  --accent: rgb(242, 237, 161);
+  --text: #EEFFEE;  
+  --background: #0E1520;
+  --background-secondary: #111927;
+  --primary: #004074;
+  --secondary: #3A3A4A;
+  --accent: #FFC53D;
+  --border-hover: #606060;
 
-  --gray: rgb(136, 136, 136);
-  --yellow: rgb(255, 194, 0);
-  --green: rgb(78, 172, 70);
-  --red: rgb(206, 32, 41);
+  --gray: #7B7B7B;
+  --yellow: var(--accent);
+  --green: #46A758;
+  --red: #E54D2E;
 }
 
 * {
