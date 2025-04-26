@@ -22,11 +22,16 @@ import CharTile from "./CharTile.astro";
 </style>
 
 <script>
+  ////////// Imports //////////
   import type { GameSession } from "../../../lib/gameSession";
   import { headShake } from "../../../scripts/headshakeAnimation"
+  ////////// Imports //////////
 
+
+  ////////// Variables //////////
   const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
   let gameSession: GameSession;
+  ////////// Variables //////////
 
   
   ////////// Event Listeners //////////
@@ -45,6 +50,7 @@ import CharTile from "./CharTile.astro";
   ////////// Event Listeners //////////
 
 
+  ////////// Functions //////////
   /**
    * Activates the current row based on `cursor.y`
    * and deactivates all other ones.
@@ -61,4 +67,5 @@ import CharTile from "./CharTile.astro";
       char.classList.add('active');
     });
   }
+  ////////// Functions //////////
 </script>

@@ -25,21 +25,26 @@ import WordRow from "./wordgrid/WordRow.astro";
   .game-won {
     border: 4px solid var(--green);
   }
-
   .game-lost {
     border: 4px solid var(--red);
   }
 </style>
 
 <script>
+  ////////// Imports //////////
   import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
+  import { flipTile } from "../../scripts/flipTileAnimation"
+  ////////// Imports //////////
 
+
+  ////////// Variables //////////
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
+  ////////// Variables //////////
 
 
   ////////// Event Listeners //////////
@@ -48,7 +53,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     const event = e as CustomEvent;
   
     gameSession = event.detail.gameSession;
-    updateGameState();
+    updateGame();
   });
 
 
@@ -75,6 +80,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   ////////// Event Listeners //////////
 
 
+  ////////// Functions //////////
   /**
    * Color codes the character tiles in the word grid.
    */
@@ -93,9 +99,6 @@ import WordRow from "./wordgrid/WordRow.astro";
       }
     }
   }
-
-
-  
 
 
   /**
@@ -125,6 +128,8 @@ import WordRow from "./wordgrid/WordRow.astro";
       cursor.removeSelection(charTiles);
       cursor.x--;
       cursor.addSelection(charTiles);
+    } else {
+      requestHeadShake();
     }
   }
 
@@ -184,6 +189,9 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
+  /**
+   * Dispatches the event to make the current wordRow headshake.
+   */
   function requestHeadShake(): void {
     const event = new CustomEvent("headShake", {
       detail: {
@@ -194,6 +202,9 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
+  /**
+   * Initiliazes the word grid after a new gameSession is available.
+   */
   function initGameState(): void {
     if (gameSession.status == "return_feedback" && !gameSession.current_guess_valid) {
       requestHeadShake();
@@ -217,7 +228,10 @@ import WordRow from "./wordgrid/WordRow.astro";
   }
 
 
-  function updateGameState(): void {
+  /**
+   * First checks if the win/lose condition is met, otherwise it updates the word grid.
+   */
+  function updateGame(): void {
     // Correct guess: Win
     if (gameSession.guesses_used > 0) {
       if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
@@ -234,4 +248,5 @@ import WordRow from "./wordgrid/WordRow.astro";
 
     initGameState();
   }
+  ////////// Functions //////////
 </script>

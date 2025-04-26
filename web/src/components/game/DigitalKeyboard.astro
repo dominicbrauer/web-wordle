@@ -31,12 +31,18 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
 </style>
 
 <script>
+  ////////// Imports //////////
   import type { GameSession } from "../../lib/gameSession";
+  ////////// Imports //////////
 
+
+  ////////// Variables //////////
   const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
   let gameSession: GameSession;
-  
+  ////////// Variables //////////
 
+  
+  ////////// Event Listeners //////////
   window.addEventListener("transmitCurrentGameState", (e) => {
     const event = e as CustomEvent;
 
@@ -60,8 +66,10 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
       window.dispatchEvent(event);
     })
   });
+  ////////// Event Listeners //////////
 
 
+  ////////// Functions //////////
   function extractKeyInfo(): Map<string, string[]> {
     const map = new Map<string, string[]>();
     map.set("green", []);
@@ -92,4 +100,5 @@ import { KEYBOARD_KEYS } from "../../lib/constants";
       });
     });
   }
+  ////////// Functions //////////
 </script>
