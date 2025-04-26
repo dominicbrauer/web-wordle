@@ -10,16 +10,21 @@ export async function flipTile(tile: HTMLDivElement, color: string): Promise<voi
     fill: 'forwards'
   });
 
-  firstHalf.onfinish = () => {
-    tile.classList.add(`char-feedback-${color}`);
+  await new Promise((resolve) => {
+    firstHalf.onfinish = async () => {
+      tile.classList.add(`char-feedback-${color}`);
+  
+      const secondHalf = tile.animate([
+        { transform: 'rotateY(270deg)' },
+        { transform: 'rotateY(360deg)' }
+      ], {
+        duration: duration / 2,
+        easing: 'linear',
+        fill: 'forwards'
+      });
 
-    tile.animate([
-      { transform: 'rotateY(270deg)' },
-      { transform: 'rotateY(360deg)' }
-    ], {
-      duration: duration / 2,
-      easing: 'linear',
-      fill: 'forwards'
-    });
-  }
+      await secondHalf.finished;
+      resolve('');
+    };
+  });  
 }

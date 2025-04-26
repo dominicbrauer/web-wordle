@@ -84,7 +84,17 @@ import WordRow from "./wordgrid/WordRow.astro";
   /**
    * Color codes the character tiles in the word grid.
    */
-  function charHighlighting(): void {
+  async function charHighlighting(): Promise<void> {
+    if (gameSession.status == "return_feedback") {
+      for (const i of range(5)) {
+        const charIdx: number = cursor.coordToIdx(i, gameSession.guesses_used - 1);
+        const color: string = gameSession.guesses[gameSession.guesses_used - 1].character_info[i].scoring;
+
+        await flipTile(charTiles[charIdx], color);
+      }
+      return;
+    }
+
     for (const i of range(gameSession.guesses_used)) {
       for (const j of range(5)) {
         const charScoring = gameSession.guesses[i].character_info[j].scoring;
@@ -205,11 +215,13 @@ import WordRow from "./wordgrid/WordRow.astro";
   /**
    * Initiliazes the word grid after a new gameSession is available.
    */
-  function initGameState(): void {
+  async function initGameState(): Promise<void> {
     if (gameSession.status == "return_feedback" && !gameSession.current_guess_valid) {
       requestHeadShake();
       return;
     }
+
+    await charHighlighting();
 
     if (gameSession.current_guess_valid) {
       cursor.x = 0;
@@ -219,7 +231,6 @@ import WordRow from "./wordgrid/WordRow.astro";
 
     cursor.y = gameSession.guesses_used;
     cursor.addSelection(charTiles);
-    charHighlighting();
     gameSession?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(5)) {
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
