@@ -19,7 +19,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     background-color: var(--background);
     width: fit-content;
     height: fit-content;
-    margin: 2rem auto;
+    margin: 0 auto;
   }
 
   .game-won {
@@ -64,7 +64,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   charTiles?.forEach((tile, idx) => {
     tile.addEventListener('click', () => {
       if (!tile.classList.contains('active')) return;
-
+      
       cursor.selfSet = true;
       cursor.oob = false;
       cursor.removeSelection(charTiles);
@@ -108,7 +108,7 @@ import WordRow from "./wordgrid/WordRow.astro";
       case 'BACKSPACE': handleBackspaceInput(); break;
       default: handleCharacterInput(key); break;
     }
-    cursor.selfSet = false;
+    // cursor.selfSet = false;
   }
 
 

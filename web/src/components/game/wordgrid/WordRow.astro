@@ -50,6 +50,7 @@ import CharTile from "./CharTile.astro";
    * and deactivates all other ones.
    */
   function shiftRow(): void {
+    if (!gameSession.current_guess_valid && gameSession.status == "return_feedback") return;
     wordRows.forEach(row => {
       Array.from(row.children).forEach(char => {
         char.classList.remove('active', 'char-tile-selected');
