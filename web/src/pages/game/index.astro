@@ -33,46 +33,22 @@ import Layout from "../../layouts/Layout.astro"
 </style>
 
 <script>
+  ////////// Imports //////////
   import { KEYBOARD_KEYS } from "../../lib/constants";
   import type { GameSession} from "../../lib/gameSession";
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
+  ////////// Imports //////////
 
+
+  ////////// Variables //////////
   const pageBody = document.querySelector('body') as HTMLBodyElement;
   let gameSession: GameSession = await requestGameSession();
-  let keyboardKeys = structuredClone(KEYBOARD_KEYS);
+  let blockUserInputs: boolean = false;
+  ////////// Variables //////////
 
 
-  /**
-   * Validates an input key
-   * @param key - keyboard key
-   * @returns Whether the key is valid
-   */
-  function validKeyInput(key: string): boolean {
-    let found: boolean = false;
-
-    keyboardKeys.push(['ENTER', 'BACKSPACE']); // Also allow enter/backspace input
-    keyboardKeys?.forEach(row => {
-      if (row.includes(key)) found = true;
-    });
-
-    return found;
-  }
-
-
-  /**
-   * 
-   */
-  function triggerUpdate(): void {
-    const event = new CustomEvent("transmitCurrentGameState", {
-      detail: {
-        gameSession: gameSession,
-      }
-    });
-    window.dispatchEvent(event);
-  }
-
-
+  ////////// Event Listeners //////////
   pageBody?.addEventListener('keydown', (e) => {
     const keyInput: string = e.key.toUpperCase();
 
@@ -96,6 +72,38 @@ import Layout from "../../layouts/Layout.astro"
     gameSession = await guessRequest(gameSession);
     triggerUpdate();
   });
+  ////////// Event Listeners //////////
+
+
+  ////////// Functions //////////
+  /**
+   * Validates an input key
+   * @param key - keyboard key
+   * @returns Whether the key is valid
+   */
+   function validKeyInput(key: string): boolean {
+    let found: boolean = false;
+
+    KEYBOARD_KEYS?.forEach(row => {
+      if (row.includes(key) || ['ENTER', 'BACKSPACE'].includes(key)) found = true;
+    });
+
+    return found;
+  }
+
+
+  /**
+   * Transmits the current gameSession as an event
+   */
+  function triggerUpdate(): void {
+    const event = new CustomEvent("transmitCurrentGameState", {
+      detail: {
+        gameSession: gameSession,
+      }
+    });
+    window.dispatchEvent(event);
+  }
+  ////////// Functions //////////
 
 
   triggerUpdate();

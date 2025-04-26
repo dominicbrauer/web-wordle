@@ -3,3 +3,8 @@ export const KEYBOARD_KEYS: Array<Array<string>> = [
   ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
   ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
 ];
+
+export const SETTINGS = {
+  charTileFlipAnimationDuration: 500, // time in ms
+  charTileFlipAnimationDirection: 'Y', // 'X' or 'Y' based on your preference
+};

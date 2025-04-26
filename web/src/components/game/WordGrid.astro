@@ -44,22 +44,25 @@ import WordRow from "./wordgrid/WordRow.astro";
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
+  let blockUserInput: boolean = false;
   ////////// Variables //////////
 
 
   ////////// Event Listeners //////////
   // Connection to exchange the gameSession after each fetch
-  window.addEventListener("transmitCurrentGameState", (e) => {
+  window.addEventListener("transmitCurrentGameState", async (e) => {
     const event = e as CustomEvent;
   
     gameSession = event.detail.gameSession;
-    updateGame();
+    await updateGame();
+    blockUserInput = false;
   });
 
 
   // Exchanges the read keyboard key
   window.addEventListener("keyInput", (e) => {
     const event = e as CustomEvent;
+    if (blockUserInput) return;
 
     handleKeyboardInput(event.detail.keyInput);
   });
@@ -68,6 +71,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   // Makes every char tile clickable
   charTiles?.forEach((tile, idx) => {
     tile.addEventListener('click', () => {
+      if (blockUserInput) return;
       if (!tile.classList.contains('active')) return;
       
       cursor.selfSet = true;
@@ -190,6 +194,8 @@ import WordRow from "./wordgrid/WordRow.astro";
    * @param word Five-letter word guess
    */
   function sendWord(word: string): void {
+    blockUserInput = true;
+    
     const event = new CustomEvent("guessRequest", {
       detail: {
         word: word,
@@ -242,7 +248,9 @@ import WordRow from "./wordgrid/WordRow.astro";
   /**
    * First checks if the win/lose condition is met, otherwise it updates the word grid.
    */
-  function updateGame(): void {
+  async function updateGame(): Promise<void> {
+    await initGameState();
+
     // Correct guess: Win
     if (gameSession.guesses_used > 0) {
       if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
@@ -256,8 +264,6 @@ import WordRow from "./wordgrid/WordRow.astro";
       document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-lost');
       return;
     }
-
-    initGameState();
   }
   ////////// Functions //////////
 </script>
