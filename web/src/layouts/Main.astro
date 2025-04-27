@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import NavBarSide from '../components/NavBarSide.astro';
+import NavBarTop from '../components/NavBarTop.astro';
 
 const { title } = Astro.props;
 ---
@@ -14,8 +16,23 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<slot />
+    <NavBarSide />
+    <div class="main-window">
+      <NavBarTop />
+      <slot />
+    </div>
 	</body>
 </html>
 
-<style></style>
+<style>
+  body {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main-window {
+    position: relative;
+    width: 100%;
+  }
+</style>

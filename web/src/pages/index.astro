@@ -1,8 +1,27 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import Main from '../layouts/Main.astro'
 import '../styles/global.css'
 ---
 
-<Layout>
-  <h1>Root Webpage</h1>
-</Layout>
+<Main title="Home">
+  <main>
+    <h1>Root Webpage</h1>
+    <a class="game-link" href="/game">Play here</a>
+  </main>
+</Main>
+
+<style>
+  main {
+    position: relative;
+    margin: 1rem;
+  }
+
+  .game-link {
+    width: 10rem;
+    height: 4rem;
+    text-decoration: none;
+    background-color: var(--primary);
+    padding: 1rem;
+    border-radius: .5rem;
+  }
+</style>
