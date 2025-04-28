@@ -1,9 +1,14 @@
 ---
-
+import GitHubIcon from "../assets/icons/github.svg"
+import MoonIcon from "../assets/icons/moon.svg"
+import SunIcon from "../assets/icons/sun.svg"
 ---
 
 <div class="nav-bar-top">
-  <span>Top Bar</span>
+  <span class="website-link">localhost:4321</span>
+  <a class="account-link" href="/">Sign in</a>
+  <GitHubIcon class="github-icon" />
+  <MoonIcon class="moon-icon" />
 </div>
 
 <style>
@@ -11,9 +16,34 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    justify-content: right;
+    align-items: center;
     width: 100%;
-    height: 6rem;
-    border-bottom: 1px solid var(--secondary);
+    height: 4rem;
+    border-bottom: 2px solid var(--border);
     padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .account-link {
+    background-color: var(--primary);
+    text-decoration: none;
+    height: fit-content;
+    padding: .4rem .75rem;
+    border-radius: var(--br-button);
+    border: 1px solid var(--primary-border);
+    font-size: .8em;
+  }
+
+  .website-link {
+    font-size: .8em;
+  }
+
+  .github-icon {
+    stroke: var(--text-secondary);
+  }
+
+  .moon-icon {
+    stroke: var(--text-secondary);
   }
 </style>
