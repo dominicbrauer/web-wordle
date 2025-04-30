@@ -3,13 +3,13 @@ import KeyRow from "./keyboard/KeyRow.astro";
 import KeyTile from "./keyboard/KeyTile.astro";
 import DeleteIcon from "../../assets/icons/delete.svg";
 
-import { KEYBOARD_KEYS } from "../../lib/constants";
+import { KEYBOARD_KEYS } from "../../lib/config";
 ---
 
 <div class="keyboard-container">
-  <KeyRow keys={ KEYBOARD_KEYS[0] }></KeyRow>
-  <KeyRow keys={ KEYBOARD_KEYS[1] }></KeyRow>
-  <KeyRow keys={ KEYBOARD_KEYS[2] }>
+  <KeyRow keys={KEYBOARD_KEYS[0]}></KeyRow>
+  <KeyRow keys={KEYBOARD_KEYS[1]}></KeyRow>
+  <KeyRow keys={KEYBOARD_KEYS[2]}>
     <KeyTile slot="enter-key" class="enter-key">
       ENTER
     </KeyTile>

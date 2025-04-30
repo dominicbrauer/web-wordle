@@ -1,14 +1,12 @@
 ---
 import WordRow from "./wordgrid/WordRow.astro";
+import { GUESSES } from "../../lib/config";
 ---
 
 <div class="word-grid">
-  <WordRow />
-  <WordRow />
-  <WordRow />
-  <WordRow />
-  <WordRow />
-  <WordRow />
+  {Array.from({ length: GUESSES }).map(() => (
+    <WordRow />
+  ))}
 </div>
 
 <style>
@@ -32,6 +30,7 @@ import WordRow from "./wordgrid/WordRow.astro";
 
 <script>
   ////////// Imports //////////
+  import { WORD_LENGTH, GUESSES } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
@@ -90,7 +89,7 @@ import WordRow from "./wordgrid/WordRow.astro";
    */
   async function charHighlighting(): Promise<void> {
     if (gameSession.status == "return_feedback") {
-      for (const i of range(5)) {
+      for (const i of range(WORD_LENGTH)) {
         const charIdx: number = cursor.coordToIdx(i, gameSession.guesses_used - 1);
         const color: string = gameSession.guesses[gameSession.guesses_used - 1].character_info[i].scoring;
 
@@ -100,7 +99,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     }
 
     for (const i of range(gameSession.guesses_used)) {
-      for (const j of range(5)) {
+      for (const j of range(WORD_LENGTH)) {
         const charScoring = gameSession.guesses[i].character_info[j].scoring;
         const tile = charTiles[cursor.coordToIdx(j, i)];
 
@@ -158,7 +157,7 @@ import WordRow from "./wordgrid/WordRow.astro";
       return;
     }
     charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
-    if (cursor.x <= 3) {
+    if (cursor.x < WORD_LENGTH - 1) {
       cursor.removeSelection(charTiles);
       cursor.x++;
       cursor.addSelection(charTiles);
@@ -175,7 +174,7 @@ import WordRow from "./wordgrid/WordRow.astro";
   function handleEnterInput(): void {
     const characters: string[] = [];
 
-    for (const i of range(5)) {
+    for (const i of range(WORD_LENGTH)) {
       const divText: string | null = charTileLabels[cursor.coordToIdx(i, undefined)].textContent;
       characters.push(divText !== null ? divText : '');
     }
@@ -238,7 +237,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     cursor.y = gameSession.guesses_used;
     cursor.addSelection(charTiles);
     gameSession?.guesses?.forEach((guess, rowIdx) => {
-      for (const i of range(5)) {
+      for (const i of range(WORD_LENGTH)) {
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }
     });
@@ -260,7 +259,7 @@ import WordRow from "./wordgrid/WordRow.astro";
     }
     
     // No guesses left: Lose
-    if (gameSession.guesses_used > 5) {
+    if (gameSession.guesses_used >= GUESSES) {
       document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-lost');
       return;
     }

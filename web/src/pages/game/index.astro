@@ -26,15 +26,11 @@ import Layout from "../../layouts/Layout.astro"
     display: flex;
     flex-direction: column;
   }
-
-  @media screen (max-width: 700px) {
-
-  }
 </style>
 
 <script>
   ////////// Imports //////////
-  import { KEYBOARD_KEYS } from "../../lib/constants";
+  import { KEYBOARD_KEYS } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";

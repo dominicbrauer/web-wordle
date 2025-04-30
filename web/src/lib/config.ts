@@ -8,3 +8,6 @@ export const SETTINGS = {
   charTileFlipAnimationDuration: 500, // time in ms
   charTileFlipAnimationDirection: 'Y', // 'X' or 'Y' based on your preference
 };
+
+export const WORD_LENGTH: number = 5; // default: 5
+export const GUESSES: number = 6; // default: 6

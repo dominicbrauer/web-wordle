@@ -1,3 +1,5 @@
+import { WORD_LENGTH } from "./config";
+
 export class Cursor {
   public x: number;
   public y: number;
@@ -12,11 +14,11 @@ export class Cursor {
   }
 
   public coordToIdx(x: number = this.x, y: number = this.y): number {
-    return y * 5 + x;
+    return y * WORD_LENGTH + x;
   }
 
   public idxToCoord(idx: number): number[] {
-    return [idx % 5, Math.floor(idx / 5)];
+    return [idx % WORD_LENGTH, Math.floor(idx / WORD_LENGTH)];
   }
 
   public getPos(): number {

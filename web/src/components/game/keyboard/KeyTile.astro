@@ -9,8 +9,9 @@ const { class: className } = Astro.props;
 <style>
   .key-tile {
     position: relative;
-    width: 3rem;
+    width: auto;
     height: 3rem;
+    aspect-ratio: 1 / 1;
     padding: .5rem;
     margin: 0 2px;
     font-size: 1.5em;
@@ -46,7 +47,8 @@ const { class: className } = Astro.props;
 
   .delete-key,
   .enter-key {
-    width: 4.5rem;
+    aspect-ratio: 1.5 / 1;
+    /* width: 4.5rem; */
   }
 
   .delete-key .key-tile-label {

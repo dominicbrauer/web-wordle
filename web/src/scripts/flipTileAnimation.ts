@@ -1,4 +1,4 @@
-import { SETTINGS } from "../lib/constants";
+import { SETTINGS } from "../lib/config";
 
 export async function flipTile(tile: HTMLDivElement, color: string): Promise<void> {
   const duration: number = SETTINGS.charTileFlipAnimationDuration / 2;

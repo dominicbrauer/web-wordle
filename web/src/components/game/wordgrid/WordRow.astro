@@ -1,15 +1,12 @@
 ---
+import { WORD_LENGTH } from "../../../lib/config";
 import CharTile from "./CharTile.astro";
-
-
 ---
 
 <div class="word-row">
-  <CharTile></CharTile>
-  <CharTile></CharTile>
-  <CharTile></CharTile>
-  <CharTile></CharTile>
-  <CharTile></CharTile>
+  {Array.from({ length: WORD_LENGTH }).map(() => (
+    <CharTile />
+  ))}
 </div>
 
 <style>
