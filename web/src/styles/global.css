@@ -8,13 +8,15 @@
 
 :root {
   /* Colors */
-  --text: #EEFFEE;
+  --text-primary: #eeffee;
   --text-secondary: #7B7B7B;
-  --background: #0E1520;
+  --background: #0D1520;
+  --background-hover: #ffffff1a;
   --primary: #004074;
   --primary-border: #205D9E;
-  /* --primary-hover: */
+  --primary-hover: #104D87;
   --secondary: #3A3A4A;
+  --secondary-border: #484858;
   --accent: #FFC53D;
   --border: #222734;
 
@@ -29,7 +31,7 @@
 }
 
 * {
-  color: var(--text);
+  color: var(--text-primary);
   font-family: 'AtkinsonHyperlegibleMono', sans-serif;
   box-sizing: border-box;
   word-spacing: -.25em;
