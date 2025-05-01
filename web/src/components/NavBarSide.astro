@@ -1,16 +1,44 @@
 ---
-
+import { Image } from "astro:assets"
+import logoImage from "../assets/images/logo.png"
+import HomeIcon from "../assets/icons/house.svg"
+import BookIcon from "../assets/icons/book-open-text.svg"
+import GridIcon from "../assets/icons/grid-3x3.svg"
+import SwordsIcon from "../assets/icons/swords.svg"
 ---
 
 <div class="nav-bar-side">
+  <section class="title-section">
+    <Image src={logoImage} alt="A logo with the letter 'w' wearing a little crown. The top and bottow show five-letter word rows in the colors gray, yellow and green." class="logo" />
+    <div class="title">
+      <span class="title-one">wordle</span>
+      <span class="title-two">CHAMPIONS</span>
+    </div>
+  </section>
+  <section class="navigation-section">
+    <div class="sidebar-card home-card">
+      <HomeIcon />
+      <span>Home</span>
+    </div>
+    <div class="sidebar-card home-card">
+      <BookIcon />
+      <span>How to Play</span>
+    </div>
+    <div class="category">
+      <span class="subheading">GAMING</span>
+    <div class="sidebar-card classic-mode-card">
+      <GridIcon />
+      <span>Classic Mode</span>
+    </div>
+    <div class="sidebar-card duel-mode-card">
+      <SwordsIcon />
+      <span>Duel Mode</span>
+    </div>
+    </div>    
+  </section>
+
   <div class="home-link">
     <span>Wordle</span>
-  </div>
-  <div class="classic-mode-link">
-    <span>Classic</span>
-  </div>
-  <div class="duel-mode-link">
-    <span>Duel</span>
   </div>
   <div class="account-link">
     <span>Account</span>
@@ -22,14 +50,84 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    width: 24rem;
+    align-items: start;
+    width: 560px;
     position: relative;
     border-right: 2px solid var(--border);
-    padding: 2rem 2rem;
+    padding: 2rem 2.5rem;
   }
 
-  .nav-bar-side span {
-    color: #7B7B7B;
+  .title-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: .75rem;
+    .logo {
+      width: 2rem;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+    .title {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: .75rem;
+    }
+    .title-one {
+      font-size: 1.75em;
+      font-weight: 600;
+      padding-block: 0;
+      height: fit-content;
+    }
+    .title-two {
+      color: var(--accent);
+      font-size: 1.5em;
+      font-weight: 300;
+      height: fit-content;
+    }
+  }
+
+  .category {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border-top: 2px solid var(--border);
+    gap: 1rem;
+    padding: .5rem 0;
+  }
+
+  .sidebar-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    gap: .5rem;
+    svg {
+      stroke: var(--text-secondary);
+      height: 1.5rem;
+      width: auto;
+      aspect-ratio: 1 / 1;
+    }
+    span {
+      font-size: 1.25em;
+      color: var(--text-secondary);
+    }
+  }
+
+  .navigation-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .subheading {
+    position: relative;
+    color: var(--text-secondary);
+    font-weight: 400;
+    overflow: hidden;
+    font-size: 1.25em;
+    height: 2rem;
+    width: 10rem;
+    opacity: 0.75;
   }
 </style>

@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'AtkinsonHyperlegibleMono';
   src: url('/fonts/AtkinsonHyperlegibleMono-VariableFont_wght.ttf') format("truetype");
-  font-weight: normal;
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -35,6 +35,7 @@
   font-family: 'AtkinsonHyperlegibleMono', sans-serif;
   box-sizing: border-box;
   word-spacing: -.25em;
+  letter-spacing: -.05em;
 }
 
 html, body {
@@ -43,4 +44,15 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: var(--background);
+}
+
+.button-primary {
+  background-color: var(--primary);
+  border-radius: var(--br-button);
+  border: 1px solid var(--primary-border);
+  transition: background-color 100ms ease;
+}
+
+.button-primary:hover {
+  background-color: var(--primary-hover);
 }

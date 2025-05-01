@@ -8,7 +8,7 @@ const url = new URL(Astro.url);
 
 <div class="nav-bar-top">
   <span class="website-link">{url.host}</span>
-  <a class="account-link" href="/">Sign in</a>
+  <a class="account-link button-primary" href="/">Sign in</a>
   <a href="https://github.com/dominicbrauer/web-wordle" target="_blank" class="icon-button github-link">
     <GitHubIcon class="github-icon" />
   </a>
@@ -26,24 +26,16 @@ const url = new URL(Astro.url);
     justify-content: right;
     align-items: center;
     width: 100%;
-    height: 4rem;
+    height: 6rem;
     border-bottom: 2px solid var(--border);
     padding: 0 2rem;
     gap: 1.5rem;
   }
 
   .account-link {
-    background-color: var(--primary);
     text-decoration: none;
     height: fit-content;
     padding: .4rem .75rem;
-    border-radius: var(--br-button);
-    border: 1px solid var(--primary-border);
-    transition: all 100ms ease;
-  }
-
-  .account-link:hover {
-    background-color: var(--primary-hover);
   }
 
   .icon-button {
