@@ -27,7 +27,7 @@
 
   /* Border Radius */
   --br-tile: .25rem;
-  --br-button: .25rem;
+  --br-button: .5rem;
 }
 
 * {
@@ -50,6 +50,8 @@ html, body {
   background-color: var(--primary);
   border-radius: var(--br-button);
   border: 1px solid var(--primary-border);
+  padding: .5rem 1rem;
+  text-decoration: none;
   transition: background-color 100ms ease;
 }
 

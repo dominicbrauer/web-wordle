@@ -36,25 +36,18 @@ import SwordsIcon from "../assets/icons/swords.svg"
     </div>
     </div>    
   </section>
-
-  <div class="home-link">
-    <span>Wordle</span>
-  </div>
-  <div class="account-link">
-    <span>Account</span>
-  </div>
 </div>
 
 <style>
   .nav-bar-side {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: start;
-    width: 560px;
     position: relative;
     border-right: 2px solid var(--border);
-    padding: 2rem 2.5rem;
+    padding: 0 10rem 0 4rem;
+    width: fit-content;
   }
 
   .title-section {
@@ -62,7 +55,8 @@ import SwordsIcon from "../assets/icons/swords.svg"
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: .75rem;
+    height: 6rem;
+    gap: .5rem;
     .logo {
       width: 2rem;
       height: auto;
@@ -93,8 +87,8 @@ import SwordsIcon from "../assets/icons/swords.svg"
     flex-direction: column;
     align-items: start;
     border-top: 2px solid var(--border);
-    gap: 1rem;
-    padding: .5rem 0;
+    gap: 2rem;
+    padding: 1.5rem 0;
   }
 
   .sidebar-card {
@@ -102,32 +96,32 @@ import SwordsIcon from "../assets/icons/swords.svg"
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    gap: .5rem;
+    gap: 1rem;
     svg {
       stroke: var(--text-secondary);
-      height: 1.5rem;
+      height: 1.75rem;
       width: auto;
       aspect-ratio: 1 / 1;
     }
     span {
-      font-size: 1.25em;
+      font-size: 1.5em;
       color: var(--text-secondary);
     }
   }
 
   .navigation-section {
+    position: relative;
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 0;
+    width: fit-content;
   }
 
   .subheading {
-    position: relative;
     color: var(--text-secondary);
     font-weight: 400;
-    overflow: hidden;
-    font-size: 1.25em;
-    height: 2rem;
-    width: 10rem;
+    font-size: 1.4em;
     opacity: 0.75;
   }
 </style>
