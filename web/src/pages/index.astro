@@ -1,22 +1,64 @@
 ---
+import Home from '../components/sections/Home.astro'
+import Tutorial from '../components/sections/Tutorial.astro'
+import ClassicMode from '../components/sections/ClassicMode.astro'
+import DuelMode from '../components/sections/DuelMode.astro'
 import Main from '../layouts/Main.astro'
 import '../styles/global.css'
 ---
 
 <Main title="Home">
   <main>
-    <h1>Root Webpage</h1>
-    <a class="game-link button-primary" href="/game">Play here</a>
+    <div class="content">
+      <Home />
+      <Tutorial />
+      <ClassicMode />
+      <DuelMode />
+    </div>
   </main>
 </Main>
 
 <style>
   main {
     position: relative;
-    margin: 1rem;
+    overflow: hidden;
+  }
+
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 400%;
+    scroll-snap-align: start;
   }
 
   .game-link {
     font-size: 1.5em;
   }
 </style>
+
+<script>
+  const sidebarCards = document.querySelectorAll<HTMLDivElement>('.sidebar-card');
+  const main = document.querySelector<HTMLDivElement>('main');
+  let currentSection = 0;
+
+  window.addEventListener('resize', (e) => {
+    const mainWidth = main?.clientWidth!;
+    main?.scrollTo({
+      left: mainWidth * currentSection,
+      behavior: 'instant',
+    });
+  });
+
+  sidebarCards.forEach((card, index) => {
+    card.addEventListener('click', (e) => {
+      currentSection = index;
+      const mainWidth = main?.clientWidth!;
+      main?.scrollTo({
+        left: mainWidth * currentSection,
+        behavior: 'smooth',
+      });
+    })
+  });
+</script>

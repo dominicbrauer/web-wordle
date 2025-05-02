@@ -20,7 +20,7 @@ import SwordsIcon from "../assets/icons/swords.svg"
       <HomeIcon />
       <span>Home</span>
     </div>
-    <div class="sidebar-card home-card">
+    <div class="sidebar-card tutorial-card">
       <BookIcon />
       <span>How to Play</span>
     </div>
@@ -97,15 +97,28 @@ import SwordsIcon from "../assets/icons/swords.svg"
     align-items: center;
     justify-content: left;
     gap: 1rem;
+    transition: all 150ms ease;
     svg {
       stroke: var(--text-secondary);
       height: 1.75rem;
       width: auto;
       aspect-ratio: 1 / 1;
+      transition: all 100ms ease;
     }
     span {
       font-size: 1.5em;
       color: var(--text-secondary);
+      transition: all 100ms ease;
+    }
+  }
+
+  .sidebar-card:hover {
+    cursor: pointer;
+    svg {
+      stroke: var(--text-primary);
+    }
+    span {
+      color: var(--text-primary);
     }
   }
 
