@@ -11,3 +11,4 @@ export const SETTINGS = {
 
 export const WORD_LENGTH: number = 5; // default: 5
 export const GUESSES: number = 6; // default: 6
+export const ROW_MULTIPLIERS: number[] = [10, 8, 5, 3, 2, 1]; // default: [10, 8, 5, 3, 2, 1]

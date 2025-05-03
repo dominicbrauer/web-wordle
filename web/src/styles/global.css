@@ -20,8 +20,8 @@
   --accent: #FFC53D;
   --border: #222734;
 
-  --gray: #7B7B7B;
-  --yellow: var(--accent);
+  --gray: var(--text-secondary);
+  --yellow: #E6AC1F;
   --green: #46A758;
   --red: #E54D2E;
 

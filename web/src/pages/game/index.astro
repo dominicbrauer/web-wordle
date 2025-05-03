@@ -1,12 +1,27 @@
 ---
+import Assistant from "../../components/game/Assistant.astro"
 import DigitalKeyboard from "../../components/game/DigitalKeyboard.astro"
 import WordGrid from "../../components/game/WordGrid.astro"
 import Layout from "../../layouts/Layout.astro"
+import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 ---
 
 <Layout title="Classic Game">
   <div class="game-frame">
-    <WordGrid />
+    <div class="grid-area">
+      <div class="factors">
+        {Array.from({ length: GUESSES }).map((_, index) => (
+          <span>x{ROW_MULTIPLIERS[index]}</span>
+        ))}
+      </div>
+      <WordGrid />
+      <div class="scores">
+        {Array.from({ length: GUESSES }).map(() => (
+          <span>69P</span>
+        ))}
+      </div>
+    </div>
+    <Assistant />
     <DigitalKeyboard />
   </div>
 </Layout>
@@ -17,9 +32,47 @@ import Layout from "../../layouts/Layout.astro"
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+    width: fit-content;
     height: 100%;
     margin: 1rem auto;
     gap: 1rem;
+  }
+
+  .grid-area {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    justify-content: center;
+  }
+
+  .factors {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 6rem;
+    margin: 0 .5rem;
+    span {
+      font-size: 2em;
+      color: var(--text-primary);
+      background-color: var(--primary);
+      border-radius: var(--br-tile);
+      padding: 0 .5rem;
+    }
+  }
+
+  .scores {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-around;
+    width: 6rem;
+    padding-left: 1rem;
+    span {
+      font-size: 2em;
+    }
   }
   
   body {

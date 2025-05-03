@@ -32,15 +32,6 @@ public class GameController {
   }
 
 
-  @PostMapping("/guess")
-  public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {    
-    GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
-
-    session.setAttribute("gameSession", updatedGameSession);
-    return ResponseEntity.ok(updatedGameSession);
-  }
-
-
   @GetMapping("/start-game")
   public ResponseEntity<GameSession> initNewGame(HttpSession session) {
     if (!session.isNew()) {
@@ -58,6 +49,28 @@ public class GameController {
 
     session.setAttribute("solutionWord", gameService.rndmWord());
     session.setAttribute("gameSession", newGameSession);
+    return ResponseEntity.ok(newGameSession);
+  }
+
+
+  @PostMapping("/guess")
+  public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {    
+    GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
+
+    session.setAttribute("gameSession", updatedGameSession);
+    return ResponseEntity.ok(updatedGameSession);
+  }
+
+
+  @PostMapping("/game-continue")
+  public ResponseEntity<GameSession> nextRound(@RequestBody GameSession gameSession, HttpSession session) {
+    GameSession newGameSession = gameService.createNewGameSession();
+
+    // Score saves etc.
+    
+    session.setAttribute("solutionWord", gameService.rndmWord());
+    session.setAttribute("gameSession", newGameSession);
+
     return ResponseEntity.ok(newGameSession);
   }
 

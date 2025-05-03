@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets"
+import shrekImage from "../../assets/images/shrek.webp"
+---
+
+<div class="game-assistant">
+  <div class="character-container">
+    <Image src={shrekImage} alt="Giga Shrek" class="picture" />
+    <span>Shrek</span>
+  </div>
+  <p class="text-container">
+    Nice Balls! <br> Can I touch 'em?
+  </p>
+</div>
+
+<style>
+  .game-assistant {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 672px;
+    height: 16rem;
+    gap: 1rem;
+    border-left: 2px solid var(--border);
+    padding: 1rem;
+  }
+
+  .character-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: .5rem;
+    span {
+      font-size: 1.5em;
+      color: var(--text-secondary);
+    }
+    .picture {
+      width: 8rem;
+      height: auto;
+      aspect-ratio: 1080 / 1069;
+    }
+  }
+
+  .text-container {
+    margin: 0;
+    font-size: 1.5em;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.5em;
+  }
+</style>
