@@ -48,12 +48,18 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 
   
   ////////// Event Listeners //////////
-  window.addEventListener("transmitCurrentGameState", (e) => {
-    const event = e as CustomEvent;
-
-    gameSession = event.detail.gameSession;
+  window.addEventListener("updateDigitalKeyboard", (e) => {
+    gameSession = (e as CustomEvent).detail.gameSession;
     keyHighlighting();
   });
+
+
+  window.addEventListener("resetDigitalKeyboard", (e) => {
+    keyTiles.forEach(keyTile => {
+      keyTile.classList.remove('key-feedback-gray', 'key-feedback-yellow', 'key-feedback-green');
+    })
+  });
+
 
   keyTiles.forEach(keyTile => {
     keyTile.addEventListener('click', () => {

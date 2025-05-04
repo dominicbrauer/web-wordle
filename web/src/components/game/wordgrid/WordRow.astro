@@ -33,16 +33,13 @@ import CharTile from "./CharTile.astro";
   
   ////////// Event Listeners //////////
   // Connection to exchange the gameSession after each fetch
-  window.addEventListener("transmitCurrentGameState", (e) => {
-    const event = e as CustomEvent;
-
-    gameSession = event.detail.gameSession;
+  window.addEventListener("updateWordRows", (e) => {
+    gameSession = (e as CustomEvent).detail.gameSession;
     shiftRow();
   });
 
   window.addEventListener("headShake", (e) => {
-    const event = e as CustomEvent;
-    headShake(wordRows[event.detail.row]);
+    headShake(wordRows[(e as CustomEvent).detail.row]);
   });
   ////////// Event Listeners //////////
 

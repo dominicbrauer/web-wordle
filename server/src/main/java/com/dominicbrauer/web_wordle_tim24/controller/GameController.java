@@ -49,6 +49,8 @@ public class GameController {
 
     session.setAttribute("solutionWord", gameService.rndmWord());
     session.setAttribute("gameSession", newGameSession);
+    System.out.println(session.getAttribute("solutionWord").toString());
+    
     return ResponseEntity.ok(newGameSession);
   }
 
@@ -70,6 +72,7 @@ public class GameController {
     
     session.setAttribute("solutionWord", gameService.rndmWord());
     session.setAttribute("gameSession", newGameSession);
+    System.out.println(session.getAttribute("solutionWord").toString());
 
     return ResponseEntity.ok(newGameSession);
   }

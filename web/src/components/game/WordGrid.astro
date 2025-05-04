@@ -48,21 +48,27 @@ import { GUESSES } from "../../lib/config";
 
   ////////// Event Listeners //////////
   // Connection to exchange the gameSession after each fetch
-  window.addEventListener("transmitCurrentGameState", async (e) => {
-    const event = e as CustomEvent;
-  
-    gameSession = event.detail.gameSession;
+  window.addEventListener("updateWordGrid", async (e) => {
+    gameSession = (e as CustomEvent).detail.gameSession;
     await updateGame();
     blockUserInput = false;
+  });
+
+  //
+  window.addEventListener("resetWordGrid", (e) => {
+    gameSession = (e as CustomEvent).detail.gameSession;
+    charTiles.forEach(charTile => {
+      flipTile(charTile, "reset");
+    });
+    updateGame();
   });
 
 
   // Exchanges the read keyboard key
   window.addEventListener("keyInput", (e) => {
-    const event = e as CustomEvent;
     if (blockUserInput) return;
 
-    handleKeyboardInput(event.detail.keyInput);
+    handleKeyboardInput((e as CustomEvent).detail.keyInput);
   });
 
 
@@ -219,7 +225,12 @@ import { GUESSES } from "../../lib/config";
   /**
    * Initiliazes the word grid after a new gameSession is available.
    */
-  async function initGameState(): Promise<void> {
+  async function updateGame(): Promise<void> {
+    const updateWordRows = new CustomEvent("updateWordRows", {
+      detail: {gameSession: gameSession}
+    });
+    window.dispatchEvent(updateWordRows);
+    
     if (gameSession.status == "return_feedback" && !gameSession.current_guess_valid) {
       requestHeadShake();
       return;
@@ -240,28 +251,10 @@ import { GUESSES } from "../../lib/config";
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }
     });
-  }
 
-
-  /**
-   * First checks if the win/lose condition is met, otherwise it updates the word grid.
-   */
-  async function updateGame(): Promise<void> {
-    await initGameState();
-
-    // Correct guess: Win
-    if (gameSession.guesses_used > 0) {
-      if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
-        document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-won');
-        return;
-      }
-    }
-    
-    // No guesses left: Lose
-    if (gameSession.guesses_used >= GUESSES) {
-      document.querySelector<HTMLDivElement>('.word-grid')?.classList.add('game-lost');
-      return;
-    }
+    // Requests a win/lose evaluation
+    const analyseGameState = new CustomEvent("analyseGameState");
+    window.dispatchEvent(analyseGameState);
   }
   ////////// Functions //////////
 </script>

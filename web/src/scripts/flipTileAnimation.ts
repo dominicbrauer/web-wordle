@@ -2,7 +2,12 @@ import { SETTINGS } from "../lib/config";
 
 export async function flipTile(tile: HTMLDivElement, color: string): Promise<void> {
   const duration: number = SETTINGS.charTileFlipAnimationDuration / 2;
-  const animationAngle: string = SETTINGS.charTileFlipAnimationDirection;
+  let animationAngle: string;
+  if (color == "reset") {
+    animationAngle = 'X';
+  } else {
+    animationAngle = SETTINGS.charTileFlipAnimationDirection;
+  }
 
   const firstHalf = tile.animate([
     { transform: `rotate${animationAngle}(0deg)` },
@@ -15,7 +20,12 @@ export async function flipTile(tile: HTMLDivElement, color: string): Promise<voi
 
   await new Promise((resolve) => {
     firstHalf.onfinish = async () => {
-      tile.classList.add(`char-feedback-${color}`);
+      if (color == "reset") {
+        tile.classList.remove('char-feedback-gray', 'char-feedback-yellow', 'char-feedback-green');
+        tile.firstElementChild!.textContent = "";
+      } else {
+        tile.classList.add(`char-feedback-${color}`);
+      }
   
       const secondHalf = tile.animate([
         { transform: `rotate${animationAngle}(270deg)` },

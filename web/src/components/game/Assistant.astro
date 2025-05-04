@@ -9,7 +9,7 @@ import shrekImage from "../../assets/images/shrek.webp"
     <span>Shrek</span>
   </div>
   <p class="text-container">
-    Nice Balls! <br> Can I touch 'em?
+    ...
   </p>
 </div>
 
@@ -51,3 +51,15 @@ import shrekImage from "../../assets/images/shrek.webp"
     line-height: 1.5em;
   }
 </style>
+
+<script>
+  const textContainer = document.querySelector<HTMLParagraphElement>('.text-container');
+
+  window.addEventListener('assistantMessage', (e) => {
+    const event = e as CustomEvent;
+    const msg = event.detail.msg;
+    if (textContainer !== null) {
+      textContainer.textContent = msg;
+    }
+  });
+</script>
