@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.dominicbrauer.web_wordle_tim24.lib.Config;
+
 @Service
 public class RandomWordApiService {
 
@@ -23,7 +25,7 @@ public class RandomWordApiService {
    */
   public String fetchRandomWord() {
     ResponseEntity<List<String>> response = restTemplate.exchange(
-    "https://random-word-api.vercel.app/api?words=1&length=5",
+    "https://random-word-api.vercel.app/api?words=1&length=" + String.valueOf(Config.WORD_LENGTH),
     HttpMethod.GET,
     null,
     new ParameterizedTypeReference<List<String>>() {}

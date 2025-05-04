@@ -27,7 +27,7 @@ export async function flipTile(tile: HTMLDivElement, color: string): Promise<voi
         tile.classList.add(`char-feedback-${color}`);
       }
   
-      const secondHalf = tile.animate([
+      tile.animate([
         { transform: `rotate${animationAngle}(270deg)` },
         { transform: `rotate${animationAngle}(360deg)` }
       ], {
@@ -36,8 +36,7 @@ export async function flipTile(tile: HTMLDivElement, color: string): Promise<voi
         fill: 'forwards'
       });
 
-      // await secondHalf.finished;
       resolve('');
     };
-  });  
+  });
 }

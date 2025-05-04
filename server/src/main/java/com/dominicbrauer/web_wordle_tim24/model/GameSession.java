@@ -8,5 +8,5 @@ public record GameSession(
   String current_guess,
   boolean current_guess_valid,
   List<Guess> guesses,
-  List<Integer> scores
+  int[] scores
 ) {}

@@ -17,7 +17,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
       <WordGrid />
       <div class="score-container">
         {Array.from({ length: GUESSES }).map(() => (
-          <span class="score">69P</span>
+          <span class="score">0</span>
         ))}
       </div>
     </div>
@@ -65,6 +65,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 
   .factor.disabled {
     background-color: var(--secondary);
+    color: var(--text-secondary);
   }
 
   .score-container {
@@ -74,7 +75,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     align-items: start;
     justify-content: space-around;
     width: 6rem;
-    padding-left: 1rem;
+    padding-left: 1.5rem;
   }
 
   .score {
@@ -100,7 +101,9 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 
   ////////// Variables //////////
   const pageBody = document.querySelector('body') as HTMLBodyElement;
-  const factors = document.querySelectorAll<HTMLSpanElement>('.factor');
+  const factorLabels = document.querySelectorAll<HTMLSpanElement>('.factor');
+  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
+
   let gameSession: GameSession;
   try {
     gameSession = await requestGameSession();
@@ -165,7 +168,9 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
    */
   function triggerUpdate(): void {
     for (const i of range(gameSession.guesses_used)) {
-      factors[i].classList.add('disabled');
+      if (!gameSession.guesses[i].was_correct) {
+        factorLabels[i].classList.add('disabled');
+      }
     }
     
     const updateWordGrid = new CustomEvent("updateWordGrid", {
@@ -179,33 +184,55 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     window.dispatchEvent(updateDigitalKeyboard);
   }
 
+
   /**
-   * 
+   * Analyses if the the last word was correct
+   * or if all guesses have been used up.
    */
-  async function analyseGameState() {
+  async function analyseGameState(): Promise<void> {
     // Correct guess: Win
     if (gameSession.guesses_used > 0) {
       if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
-        // Confetti or smth
-        window.alert("You won!");
-        gameSession = await requestContinue(gameSession);
-        const resetWordGrid = new CustomEvent("resetWordGrid", {
-          detail: {gameSession: gameSession}
-        });
-        window.dispatchEvent(resetWordGrid);
-        const resetDigitalKeyboard = new CustomEvent("resetDigitalKeyboard");
-        window.dispatchEvent(resetDigitalKeyboard);
+        await handleWin();
       }
     }
 
     // No guesses left: Lose
     if (gameSession.guesses_used >= GUESSES) {
-      const showAssistantMessage = new CustomEvent("showAssistantMessage", {
-          detail: {msg: "You lost! :pepoSadge:"}
-        });
-        window.dispatchEvent(showAssistantMessage);
-      // window.location.replace("http://localhost:4321");
+      handleLose();
     }
+  }
+
+
+  async function handleWin(): Promise<void> {
+
+    factorLabels.forEach(factor => {
+      factor.classList.remove('disabled');
+    });
+
+    scoreLabels.forEach(score => {
+      score.textContent = "0";
+    });
+
+    console.log(gameSession.scores);
+
+    gameSession = await requestContinue(gameSession);
+
+    const resetWordGrid = new CustomEvent("resetWordGrid", {
+      detail: {gameSession: gameSession}
+    });
+    window.dispatchEvent(resetWordGrid);
+    const resetDigitalKeyboard = new CustomEvent("resetDigitalKeyboard");
+    window.dispatchEvent(resetDigitalKeyboard);
+  }
+
+
+  function handleLose(): void {
+    const showAssistantMessage = new CustomEvent("showAssistantMessage", {
+      detail: {msg: "You lost! :pepoSadge:"}
+    });
+    window.dispatchEvent(showAssistantMessage);
+    // window.location.replace("http://localhost:4321");
   }
   ////////// Functions //////////
 

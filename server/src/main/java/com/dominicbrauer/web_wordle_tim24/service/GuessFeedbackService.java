@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.dominicbrauer.web_wordle_tim24.lib.Config;
 import com.dominicbrauer.web_wordle_tim24.model.Char;
 import com.dominicbrauer.web_wordle_tim24.model.GameSession;
 import com.dominicbrauer.web_wordle_tim24.model.Guess;
@@ -21,10 +22,10 @@ public class GuessFeedbackService {
 
 
   public String[] handleCharCheck(char[] guess, char[] solution) {
-    String[] colors = new String[5];
-    boolean[] matched = new boolean[5];
+    String[] colors = new String[Config.WORD_LENGTH];
+    boolean[] matched = new boolean[Config.WORD_LENGTH];
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < Config.WORD_LENGTH; i++) {
       if (guess[i] == solution[i]) {
         colors[i] = "green";
         matched[i] = true;
@@ -32,10 +33,10 @@ public class GuessFeedbackService {
       }
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < Config.WORD_LENGTH; i++) {
       if (colors[i] != null) continue;
 
-      for (int j = 0; j < 5; j++) {
+      for (int j = 0; j < Config.WORD_LENGTH; j++) {
         if (!matched[j] && guess[i] == solution[j]) {
           colors[i] = "yellow";
           matched[j] = true;
@@ -75,7 +76,7 @@ public class GuessFeedbackService {
     List<Char> character_list = new ArrayList<>();
     String[] colors = this.handleCharCheck(currentGuess.clone(), solutionWord.toCharArray());
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < Config.WORD_LENGTH; i++) {
       Char character = new Char(
         currentGuess[i],
         colors[i]

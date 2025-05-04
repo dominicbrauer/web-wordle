@@ -29,7 +29,7 @@ import { GUESSES } from "../../lib/config";
 
 <script>
   ////////// Imports //////////
-  import { WORD_LENGTH, GUESSES } from "../../lib/config";
+  import { WORD_LENGTH, GUESSES, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
@@ -40,6 +40,7 @@ import { GUESSES } from "../../lib/config";
   ////////// Variables //////////
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
+  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
   let blockUserInput: boolean = false;
@@ -70,7 +71,7 @@ import { GUESSES } from "../../lib/config";
 
 
   // Exchanges the read keyboard key
-  window.addEventListener("keyInput", (e) => {
+  window.addEventListener('keyInput', (e) => {
     if (blockUserInput) return;
 
     handleKeyboardInput((e as CustomEvent).detail.keyInput);
@@ -258,6 +259,31 @@ import { GUESSES } from "../../lib/config";
       for (const i of range(WORD_LENGTH)) {
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }
+    });
+
+    calcScores();
+  }
+
+
+  /**
+   * 
+   */
+  function calcScores(): void {
+    gameSession.guesses?.forEach((guess, index) => {
+      const colors: Array<string> = [];
+
+      guess.character_info.forEach(char => {
+        colors.push(char.scoring);
+      });
+
+      const grays: number = colors.filter(element => element == "gray").length;
+      const yellows: number = colors.filter(element => element == "yellow").length;
+      const greens: number = colors.filter(element => element == "green").length;
+
+      const score = GRAY_TILE_VALUE * grays + YELLOW_TILE_VALUE * yellows + GREEN_TILE_VALUE * greens;
+
+      scoreLabels[index].textContent = score.toString() + 'P';
+      gameSession.scores[index] = score;
     });
   }
   ////////// Functions //////////
