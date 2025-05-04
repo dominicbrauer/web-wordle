@@ -51,6 +51,11 @@ import { GUESSES } from "../../lib/config";
   window.addEventListener("updateWordGrid", async (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
     await updateGame();
+
+    // Requests a win/lose evaluation
+    const analyseGameState = new CustomEvent("analyseGameState");
+    window.dispatchEvent(analyseGameState);
+
     blockUserInput = false;
   });
 
@@ -174,7 +179,8 @@ import { GUESSES } from "../../lib/config";
 
 
   /**
-   * Reads a word input in the current row and transmits it in a dispatch event.
+   * Reads the characters in the current row.
+   * If the row is filled, the guess is sent to the server.
    */
   function handleEnterInput(): void {
     const characters: string[] = [];
@@ -210,7 +216,7 @@ import { GUESSES } from "../../lib/config";
 
 
   /**
-   * Dispatches the event to make the current wordRow headshake.
+   * Requests the current row to run its headshake animation.
    */
   function requestHeadShake(): void {
     const event = new CustomEvent("headShake", {
@@ -223,13 +229,15 @@ import { GUESSES } from "../../lib/config";
 
 
   /**
-   * Initiliazes the word grid after a new gameSession is available.
+   * Updates all word grid components.
    */
   async function updateGame(): Promise<void> {
-    const updateWordRows = new CustomEvent("updateWordRows", {
-      detail: {gameSession: gameSession}
-    });
-    window.dispatchEvent(updateWordRows);
+    if (gameSession.guesses_used < GUESSES) {
+      const updateWordRows = new CustomEvent("updateWordRows", {
+        detail: {gameSession: gameSession}
+      });
+      window.dispatchEvent(updateWordRows);
+    }
     
     if (gameSession.status == "return_feedback" && !gameSession.current_guess_valid) {
       requestHeadShake();
@@ -251,10 +259,6 @@ import { GUESSES } from "../../lib/config";
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }
     });
-
-    // Requests a win/lose evaluation
-    const analyseGameState = new CustomEvent("analyseGameState");
-    window.dispatchEvent(analyseGameState);
   }
   ////////// Functions //////////
 </script>

@@ -67,7 +67,8 @@ public class GuessFeedbackService {
         gameSession.guesses_used(),
         gameSession.current_guess(),
         gameSession.current_guess_valid(),
-        gameSession.guesses()
+        gameSession.guesses(),
+        gameSession.scores()
       );
     }
 
@@ -100,7 +101,8 @@ public class GuessFeedbackService {
       gameSession.guesses_used() + 1,
       currentGuessString,
       true,
-      guesses
+      guesses,
+      gameSession.scores()
     );
 
     return responseGameSession;

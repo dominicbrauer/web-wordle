@@ -9,15 +9,15 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 <Layout title="Classic Game">
   <div class="game-frame">
     <div class="grid-area">
-      <div class="factors">
+      <div class="factor-container">
         {Array.from({ length: GUESSES }).map((_, index) => (
-          <span>x{ROW_MULTIPLIERS[index]}</span>
+          <span class="factor">x{ROW_MULTIPLIERS[index]}</span>
         ))}
       </div>
       <WordGrid />
-      <div class="scores">
+      <div class="score-container">
         {Array.from({ length: GUESSES }).map(() => (
-          <span>69P</span>
+          <span class="score">69P</span>
         ))}
       </div>
     </div>
@@ -46,23 +46,28 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     justify-content: center;
   }
 
-  .factors {
+  .factor-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     width: 6rem;
     margin: 0 .5rem;
-    span {
-      font-size: 2em;
-      color: var(--text-primary);
-      background-color: var(--primary);
-      border-radius: var(--br-tile);
-      padding: 0 .5rem;
-    }
   }
 
-  .scores {
+  .factor {
+    font-size: 2em;
+    color: var(--text-primary);
+    background-color: var(--primary);
+    border-radius: var(--br-tile);
+    padding: 0 .5rem;
+  }
+
+  .factor.disabled {
+    background-color: var(--secondary);
+  }
+
+  .score-container {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -70,9 +75,10 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     justify-content: space-around;
     width: 6rem;
     padding-left: 1rem;
-    span {
-      font-size: 2em;
-    }
+  }
+
+  .score {
+    font-size: 2em;
   }
 
   body {
@@ -88,21 +94,21 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
   import { requestContinue } from "../../scripts/requestContinue"
+  import { range } from "../../lib/helpers";
   ////////// Imports //////////
 
 
   ////////// Variables //////////
   const pageBody = document.querySelector('body') as HTMLBodyElement;
+  const factors = document.querySelectorAll<HTMLSpanElement>('.factor');
   let gameSession: GameSession;
   try {
     gameSession = await requestGameSession();
   } catch {
-    const event = new CustomEvent("assistantMessage", {
-      detail: {
-        msg: "I couldn't connect to the server.",
-      }
+    const showAssistantMessage = new CustomEvent("showAssistantMessage", {
+      detail: {msg: "I couldn't connect to the server."}
     });
-    window.dispatchEvent(event);
+    window.dispatchEvent(showAssistantMessage);
   }
   ////////// Variables //////////
 
@@ -158,6 +164,10 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
    * Transmits the current gameSession as an event
    */
   function triggerUpdate(): void {
+    for (const i of range(gameSession.guesses_used)) {
+      factors[i].classList.add('disabled');
+    }
+    
     const updateWordGrid = new CustomEvent("updateWordGrid", {
       detail: {gameSession: gameSession}
     });
@@ -190,8 +200,11 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 
     // No guesses left: Lose
     if (gameSession.guesses_used >= GUESSES) {
-      window.alert("You lost!");
-      window.location.replace("http://localhost:4321");
+      const showAssistantMessage = new CustomEvent("showAssistantMessage", {
+          detail: {msg: "You lost! :pepoSadge:"}
+        });
+        window.dispatchEvent(showAssistantMessage);
+      // window.location.replace("http://localhost:4321");
     }
   }
   ////////// Functions //////////
