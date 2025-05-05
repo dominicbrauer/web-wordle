@@ -89,17 +89,15 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 </style>
 
 <script>
-  ////////// Imports //////////
   import { GUESSES, KEYBOARD_KEYS } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
   import { requestContinue } from "../../scripts/requestContinue"
   import { range } from "../../lib/helpers";
-  ////////// Imports //////////
 
 
-  ////////// Variables //////////
+
   const pageBody = document.querySelector('body') as HTMLBodyElement;
   const factorLabels = document.querySelectorAll<HTMLSpanElement>('.factor');
   const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
@@ -113,10 +111,9 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     });
     window.dispatchEvent(showAssistantMessage);
   }
-  ////////// Variables //////////
 
 
-  ////////// Event Listeners //////////
+
   pageBody?.addEventListener('keydown', (e) => {
     const keyInput: string = e.key.toUpperCase();
 
@@ -130,6 +127,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   });
 
 
+
   window.addEventListener("guessRequest", async (e) => {
     gameSession.current_guess = (e as CustomEvent).detail.word;
     gameSession.status = "submit_guess";
@@ -140,13 +138,13 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   });
 
 
+
   window.addEventListener("analyseGameState", () => {
     analyseGameState();
   });
-  ////////// Event Listeners //////////
 
 
-  ////////// Functions //////////
+
   /**
    * Validates an input key
    * @param key - keyboard key
@@ -161,6 +159,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 
     return found;
   }
+
 
 
   /**
@@ -185,6 +184,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   }
 
 
+
   /**
    * Analyses if the the last word was correct
    * or if all guesses have been used up.
@@ -204,6 +204,10 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   }
 
 
+
+  /**
+   * Handles winning the game (correct word).
+   */
   async function handleWin(): Promise<void> {
 
     factorLabels.forEach(factor => {
@@ -222,11 +226,15 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
       detail: {gameSession: gameSession}
     });
     window.dispatchEvent(resetWordGrid);
-    const resetDigitalKeyboard = new CustomEvent("resetDigitalKeyboard");
-    window.dispatchEvent(resetDigitalKeyboard);
+    // const resetDigitalKeyboard = new CustomEvent("resetDigitalKeyboard");
+    // window.dispatchEvent(resetDigitalKeyboard);
   }
 
 
+
+  /**
+   * Handles losing the game (all guesses used).
+   */
   function handleLose(): void {
     const showAssistantMessage = new CustomEvent("showAssistantMessage", {
       detail: {msg: "You lost! :pepoSadge:"}
@@ -234,7 +242,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     window.dispatchEvent(showAssistantMessage);
     // window.location.replace("http://localhost:4321");
   }
-  ////////// Functions //////////
+
 
 
   triggerUpdate();

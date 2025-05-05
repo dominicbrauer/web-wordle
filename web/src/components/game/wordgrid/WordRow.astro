@@ -19,38 +19,38 @@ import CharTile from "./CharTile.astro";
 </style>
 
 <script>
-  ////////// Imports //////////
   import type { GameSession } from "../../../lib/gameSession";
   import { headShake } from "../../../scripts/headshakeAnimation"
-  ////////// Imports //////////
 
 
-  ////////// Variables //////////
+
   const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
   let gameSession: GameSession;
-  ////////// Variables //////////
+
 
   
-  ////////// Event Listeners //////////
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("updateWordRows", (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
     shiftRow();
   });
 
+
+
   window.addEventListener("headShake", (e) => {
     headShake(wordRows[(e as CustomEvent).detail.row]);
   });
-  ////////// Event Listeners //////////
 
 
-  ////////// Functions //////////
+
   /**
    * Activates the current row based on `cursor.y`
    * and deactivates all other ones.
    */
   function shiftRow(): void {
-    if (!gameSession.current_guess_valid && gameSession.status == "return_feedback") return;
+    if (!gameSession.current_guess_valid && gameSession.status == "return_feedback") {
+      return;
+    }
     wordRows.forEach(row => {
       Array.from(row.children).forEach(char => {
         char.classList.remove('active', 'char-tile-selected');
@@ -61,5 +61,4 @@ import CharTile from "./CharTile.astro";
       char.classList.add('active');
     });
   }
-  ////////// Functions //////////
 </script>

@@ -36,31 +36,24 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 </style>
 
 <script>
-  ////////// Imports //////////
   import type { GameSession } from "../../lib/gameSession";
-  ////////// Imports //////////
 
 
-  ////////// Variables //////////
+
   const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
   let gameSession: GameSession;
-  ////////// Variables //////////
 
   
-  ////////// Event Listeners //////////
+
+  // Gets current gameSession and updates the keyboard
   window.addEventListener("updateDigitalKeyboard", (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
     keyHighlighting();
   });
 
 
-  window.addEventListener("resetDigitalKeyboard", (e) => {
-    keyTiles.forEach(keyTile => {
-      keyTile.classList.remove('key-feedback-gray', 'key-feedback-yellow', 'key-feedback-green');
-    })
-  });
 
-
+  // Listen for keyboard usage
   keyTiles.forEach(keyTile => {
     keyTile.addEventListener('click', () => {
       const key = (() => {
@@ -75,13 +68,16 @@ import { KEYBOARD_KEYS } from "../../lib/config";
         }
       });
       window.dispatchEvent(event);
-    })
+    });
   });
-  ////////// Event Listeners //////////
 
 
-  ////////// Functions //////////
-  function extractKeyInfo(): Map<string, string[]> {
+
+  /**
+   * Reads the scoring values for all guesses made.
+   * @returns A map with the color and the corresponding characters.
+   */
+  function extractGuessFeedback(): Map<string, string[]> {
     const map = new Map<string, string[]>();
     map.set("green", []);
     map.set("gray", []);
@@ -97,13 +93,26 @@ import { KEYBOARD_KEYS } from "../../lib/config";
   }
 
 
+
+  /**
+   * Colors the keyboard tiles.
+   */
   function keyHighlighting(): void {
-    const map: Map<string, string[]> = extractKeyInfo();
+    // Reset the keyboard colors
+    keyTiles.forEach(keyTile => {
+      keyTile.classList.remove('key-feedback-gray', 'key-feedback-yellow', 'key-feedback-green');
+    });
+    
+    // Get characters and colors
+    const map: Map<string, string[]> = extractGuessFeedback();
 
     keyTiles.forEach(tile => {
       const char = tile.firstElementChild?.textContent;
-      if (char == null || char.length > 1) return; // 'Enter' and 'Backspace' are excluded
-      
+      // 'Enter' and 'Backspace' are excluded
+      if (char == null || char.length > 1) {
+        return; 
+      }
+
       map.forEach((value, key) => {
         if (value.includes(char)) {
           tile.classList.add(`key-feedback-${key}`);
@@ -111,5 +120,4 @@ import { KEYBOARD_KEYS } from "../../lib/config";
       });
     });
   }
-  ////////// Functions //////////
 </script>
