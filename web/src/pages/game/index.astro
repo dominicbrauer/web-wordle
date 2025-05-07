@@ -9,11 +9,12 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 <Layout title="Classic Game">
   <div class="game-frame">
     <div class="grid-area">
-      <div class="factor-container">
+      <Assistant />
+      <!-- <div class="factor-container">
         {Array.from({ length: GUESSES }).map((_, index) => (
           <span class="factor">x{ROW_MULTIPLIERS[index]}</span>
         ))}
-      </div>
+      </div> -->
       <WordGrid />
       <div class="score-container">
         {Array.from({ length: GUESSES }).map(() => (
@@ -21,7 +22,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
         ))}
       </div>
     </div>
-    <Assistant />
+    
     <DigitalKeyboard />
   </div>
 </Layout>
@@ -44,6 +45,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     flex-direction: row;
     height: fit-content;
     justify-content: center;
+    gap: 2rem;
   }
 
   .factor-container {
@@ -56,7 +58,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   }
 
   .factor {
-    font-size: 2em;
+    font-size: 1.5em;
     color: var(--text-primary);
     background-color: var(--primary);
     border-radius: var(--br-tile);
@@ -74,12 +76,12 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     flex-direction: column;
     align-items: start;
     justify-content: space-around;
-    width: 6rem;
-    padding-left: 1.5rem;
+    width: 24rem;
+    /* padding-left: 1.5rem; */
   }
 
   .score {
-    font-size: 2em;
+    font-size: 1.5em;
   }
 
   body {
