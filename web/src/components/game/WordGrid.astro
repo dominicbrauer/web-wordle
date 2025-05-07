@@ -37,7 +37,7 @@ import { GUESSES } from "../../lib/config";
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
-  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
+  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score-label');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
   let blockUserInput: boolean = false;
@@ -239,6 +239,8 @@ import { GUESSES } from "../../lib/config";
       return;
     }
 
+    const scores = calcScores();
+
     await charHighlighting();
 
     if (gameSession.current_guess_valid) {
@@ -254,30 +256,41 @@ import { GUESSES } from "../../lib/config";
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }
     });
-
-    calcScores();
   }
 
 
   /**
-   * 
+   * Calculates the scores for each guess
+   * based on the feedback colors.
+   * @returns 2D-array with score values
    */
-  function calcScores(): void {
-    gameSession.guesses?.forEach((guess, index) => {
+  function calcScores(): number[][] {
+    // Empty scores 2D-array
+    const scores: number[][] = Array.from({ length: GUESSES }, () =>
+      Array(WORD_LENGTH).fill(0)
+    );
+    
+    gameSession.guesses?.forEach((guess, i) => {
       const colors: Array<string> = [];
-
+      
+      // Gets the colors of a word
       guess.character_info.forEach(char => {
         colors.push(char.scoring);
       });
 
-      const grays: number = colors.filter(element => element == "gray").length;
-      const yellows: number = colors.filter(element => element == "yellow").length;
-      const greens: number = colors.filter(element => element == "green").length;
+      // Colors and their score values
+      const colorMap: Record<string, number> = {
+        gray: GRAY_TILE_VALUE,
+        yellow: YELLOW_TILE_VALUE,
+        green: GREEN_TILE_VALUE
+      };
 
-      const score = GRAY_TILE_VALUE * grays + YELLOW_TILE_VALUE * yellows + GREEN_TILE_VALUE * greens;
-
-      scoreLabels[index].textContent = score.toString() + 'P';
-      gameSession.scores[index] = score;
+      // Adds score values to scores[]
+      colors?.forEach((color, j) => {
+        scores[i][j] = colorMap[color];
+      });
     });
+
+    return scores;
   }
 </script>

@@ -26,7 +26,7 @@ public class GameService {
       null,
       false,
       null,
-      new int[Config.WORD_LENGTH]
+      new int[Config.GUESSES]
     );
     return gameSession;
   }

@@ -1,26 +1,27 @@
 ---
 import Assistant from "../../components/game/Assistant.astro"
 import DigitalKeyboard from "../../components/game/DigitalKeyboard.astro"
+import ScoreBoard from "../../components/game/ScoreBoard.astro"
 import WordGrid from "../../components/game/WordGrid.astro"
 import Layout from "../../layouts/Layout.astro"
-import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
+import { GUESSES } from "../../lib/config"
 ---
 
 <Layout title="Classic Game">
   <div class="game-frame">
     <div class="grid-area">
-      <Assistant />
-      <!-- <div class="factor-container">
-        {Array.from({ length: GUESSES }).map((_, index) => (
-          <span class="factor">x{ROW_MULTIPLIERS[index]}</span>
-        ))}
-      </div> -->
-      <WordGrid />
-      <div class="score-container">
-        {Array.from({ length: GUESSES }).map(() => (
-          <span class="score">0</span>
-        ))}
+      <div class="left-side">
+        <Assistant />
       </div>
+      <WordGrid />
+      <div class="right-side">
+        <div class="score-container">
+          {Array.from({ length: GUESSES }).map(() => (
+            <span class="score-label">0P</span>
+          ))}
+        </div>
+        <ScoreBoard />
+      </div>      
     </div>
     
     <DigitalKeyboard />
@@ -48,26 +49,20 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     gap: 2rem;
   }
 
-  .factor-container {
+  .left-side {
     display: flex;
     flex-direction: column;
+    width: 400px;
+    height: 100%;
+  }
+
+  .right-side {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: space-around;
-    width: 6rem;
-    margin: 0 .5rem;
-  }
-
-  .factor {
-    font-size: 1.5em;
-    color: var(--text-primary);
-    background-color: var(--primary);
-    border-radius: var(--br-tile);
-    padding: 0 .5rem;
-  }
-
-  .factor.disabled {
-    background-color: var(--secondary);
-    color: var(--text-secondary);
+    width: 400px;
+    height: 100%;
+    gap: 2rem;
   }
 
   .score-container {
@@ -76,11 +71,11 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     flex-direction: column;
     align-items: start;
     justify-content: space-around;
-    width: 24rem;
-    /* padding-left: 1.5rem; */
+    width: 15%;
+    height: 100%;
   }
 
-  .score {
+  .score-label {
     font-size: 1.5em;
   }
 
@@ -96,12 +91,10 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
   import { requestContinue } from "../../scripts/requestContinue"
-  import { range } from "../../lib/helpers";
 
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
-  const factorLabels = document.querySelectorAll<HTMLSpanElement>('.factor');
-  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
+  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score-label');
 
   let gameSession: GameSession;
   try {
@@ -162,12 +155,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
    * Transmits the current gameSession as an event
    */
   function triggerUpdate(): void {
-    for (const i of range(gameSession.guesses_used)) {
-      if (!gameSession.guesses[i].was_correct) {
-        factorLabels[i].classList.add('disabled');
-      }
-    }
-    
     const updateWordGrid = new CustomEvent("updateWordGrid", {
       detail: {gameSession: gameSession}
     });
@@ -188,7 +175,7 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     // Correct guess: Win
     if (gameSession.guesses_used > 0) {
       if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
-        await handleWin();
+        // await handleWin();
       }
     }
 
@@ -203,13 +190,8 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
    * Handles winning the game (correct word).
    */
   async function handleWin(): Promise<void> {
-
-    factorLabels.forEach(factor => {
-      factor.classList.remove('disabled');
-    });
-
     scoreLabels.forEach(score => {
-      score.textContent = "0";
+      score.textContent = "0P";
     });
 
     console.log(gameSession.scores);
