@@ -28,26 +28,21 @@ import { GUESSES } from "../../lib/config";
 </style>
 
 <script>
-  ////////// Imports //////////
   import { WORD_LENGTH, GUESSES, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
   import { flipTile } from "../../scripts/flipTileAnimation"
-  ////////// Imports //////////
 
 
-  ////////// Variables //////////
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
   const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
   let blockUserInput: boolean = false;
-  ////////// Variables //////////
 
 
-  ////////// Event Listeners //////////
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("updateWordGrid", async (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
@@ -60,7 +55,7 @@ import { GUESSES } from "../../lib/config";
     blockUserInput = false;
   });
 
-  //
+  // Connection to reset the word grid
   window.addEventListener("resetWordGrid", (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
     charTiles.forEach(charTile => {
@@ -91,10 +86,8 @@ import { GUESSES } from "../../lib/config";
       cursor.addSelection(charTiles);
     });
   });
-  ////////// Event Listeners //////////
 
 
-  ////////// Functions //////////
   /**
    * Color codes the character tiles in the word grid.
    */
@@ -181,7 +174,8 @@ import { GUESSES } from "../../lib/config";
 
   /**
    * Reads the characters in the current row.
-   * If the row is filled, the guess is sent to the server.
+   * If every tile in the row contains a character,
+   * the guess is sent to the server.
    */
   function handleEnterInput(): void {
     const characters: string[] = [];
@@ -286,5 +280,4 @@ import { GUESSES } from "../../lib/config";
       gameSession.scores[index] = score;
     });
   }
-  ////////// Functions //////////
 </script>

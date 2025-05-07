@@ -97,7 +97,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   import { range } from "../../lib/helpers";
 
 
-
   const pageBody = document.querySelector('body') as HTMLBodyElement;
   const factorLabels = document.querySelectorAll<HTMLSpanElement>('.factor');
   const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score');
@@ -113,7 +112,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   }
 
 
-
   pageBody?.addEventListener('keydown', (e) => {
     const keyInput: string = e.key.toUpperCase();
 
@@ -127,7 +125,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   });
 
 
-
   window.addEventListener("guessRequest", async (e) => {
     gameSession.current_guess = (e as CustomEvent).detail.word;
     gameSession.status = "submit_guess";
@@ -138,11 +135,9 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   });
 
 
-
   window.addEventListener("analyseGameState", () => {
     analyseGameState();
   });
-
 
 
   /**
@@ -159,7 +154,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
 
     return found;
   }
-
 
 
   /**
@@ -184,7 +178,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   }
 
 
-
   /**
    * Analyses if the the last word was correct
    * or if all guesses have been used up.
@@ -202,7 +195,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
       handleLose();
     }
   }
-
 
 
   /**
@@ -231,7 +223,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
   }
 
 
-
   /**
    * Handles losing the game (all guesses used).
    */
@@ -242,7 +233,6 @@ import { GUESSES, ROW_MULTIPLIERS } from "../../lib/config"
     window.dispatchEvent(showAssistantMessage);
     // window.location.replace("http://localhost:4321");
   }
-
 
 
   triggerUpdate();

@@ -23,12 +23,10 @@ import CharTile from "./CharTile.astro";
   import { headShake } from "../../../scripts/headshakeAnimation"
 
 
-
   const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
   let gameSession: GameSession;
 
 
-  
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("updateWordRows", (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
@@ -36,11 +34,9 @@ import CharTile from "./CharTile.astro";
   });
 
 
-
   window.addEventListener("headShake", (e) => {
     headShake(wordRows[(e as CustomEvent).detail.row]);
   });
-
 
 
   /**

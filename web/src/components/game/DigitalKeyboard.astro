@@ -39,18 +39,15 @@ import { KEYBOARD_KEYS } from "../../lib/config";
   import type { GameSession } from "../../lib/gameSession";
 
 
-
   const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
   let gameSession: GameSession;
 
-  
 
   // Gets current gameSession and updates the keyboard
   window.addEventListener("updateDigitalKeyboard", (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
     keyHighlighting();
   });
-
 
 
   // Listen for keyboard usage
@@ -72,7 +69,6 @@ import { KEYBOARD_KEYS } from "../../lib/config";
   });
 
 
-
   /**
    * Reads the scoring values for all guesses made.
    * @returns A map with the color and the corresponding characters.
@@ -91,7 +87,6 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 
     return map;
   }
-
 
 
   /**

@@ -43,6 +43,9 @@ import '../styles/global.css'
   const main = document.querySelector<HTMLDivElement>('main');
   let currentSection = 0;
 
+
+  // Resizing the page by any means instantly
+  // realigns the sections correctly
   window.addEventListener('resize', (e) => {
     const mainWidth = main?.clientWidth!;
     main?.scrollTo({
@@ -51,6 +54,9 @@ import '../styles/global.css'
     });
   });
 
+
+  // Clicking a card in the sidebar will scroll
+  // the page to the corresponding section.
   sidebarCards.forEach((card, index) => {
     card.addEventListener('click', (e) => {
       currentSection = index;
