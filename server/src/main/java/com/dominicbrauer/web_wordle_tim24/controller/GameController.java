@@ -41,8 +41,7 @@ public class GameController {
         knownSession.guesses_used(),
         knownSession.current_guess(),
         knownSession.current_guess_valid(),
-        knownSession.guesses(),
-        knownSession.scores()
+        knownSession.guesses()
       ));
     }
 

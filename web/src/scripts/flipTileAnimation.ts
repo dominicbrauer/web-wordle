@@ -26,7 +26,7 @@ export async function flipTile(tile: HTMLDivElement, color: string): Promise<voi
       } else {
         tile.classList.add(`char-feedback-${color}`);
       }
-  
+
       tile.animate([
         { transform: `rotate${animationAngle}(270deg)` },
         { transform: `rotate${animationAngle}(360deg)` }

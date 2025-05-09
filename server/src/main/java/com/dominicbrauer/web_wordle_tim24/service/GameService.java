@@ -2,7 +2,6 @@ package com.dominicbrauer.web_wordle_tim24.service;
 
 import org.springframework.stereotype.Service;
 
-import com.dominicbrauer.web_wordle_tim24.lib.Config;
 import com.dominicbrauer.web_wordle_tim24.model.GameSession;
 
 @Service
@@ -25,8 +24,7 @@ public class GameService {
       0,
       null,
       false,
-      null,
-      new int[Config.GUESSES]
+      null
     );
     return gameSession;
   }

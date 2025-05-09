@@ -86,11 +86,12 @@ import { GUESSES } from "../../lib/config"
 </style>
 
 <script>
-  import { GUESSES, KEYBOARD_KEYS } from "../../lib/config";
+  import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
   import { requestGameSession } from "../../scripts/requestGameSession";
   import { guessRequest } from "../../scripts/guessRequest";
   import { requestContinue } from "../../scripts/requestContinue"
+import { range } from "../../lib/helpers";
 
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
@@ -173,10 +174,8 @@ import { GUESSES } from "../../lib/config"
    */
   async function analyseGameState(): Promise<void> {
     // Correct guess: Win
-    if (gameSession.guesses_used > 0) {
-      if (gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
-        // await handleWin();
-      }
+    if (gameSession.guesses_used > 0 && gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
+      await handleWin();
     }
 
     // No guesses left: Lose
@@ -193,8 +192,6 @@ import { GUESSES } from "../../lib/config"
     scoreLabels.forEach(score => {
       score.textContent = "0P";
     });
-
-    console.log(gameSession.scores);
 
     gameSession = await requestContinue(gameSession);
 
@@ -219,5 +216,12 @@ import { GUESSES } from "../../lib/config"
   }
 
 
-  triggerUpdate();
+  /**
+   * 
+   */
+  function initialize() {
+    triggerUpdate();
+  }
+
+  initialize();
 </script>

@@ -33,6 +33,7 @@ import { GUESSES } from "../../lib/config";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
   import { flipTile } from "../../scripts/flipTileAnimation"
+  import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
 
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
@@ -114,6 +115,16 @@ import { GUESSES } from "../../lib/config";
 
         tile.classList.add(classMap[charScoring] || 'char-feedback-gray');
       }
+    }
+  }
+
+
+  /**
+   * 
+   */
+  async function scoreAdding(scores: number[][]) {
+    for (const index of range(WORD_LENGTH)) {
+      await animateScoreAdding(gameSession, charTiles[cursor.coordToIdx(index, undefined)], scores, index);
     }
   }
 
@@ -239,9 +250,13 @@ import { GUESSES } from "../../lib/config";
       return;
     }
 
-    const scores = calcScores();
-
     await charHighlighting();
+
+    if (gameSession.status == "return_feedback" && gameSession.current_guess_valid) {
+      const scores = calcScores();
+      console.log(scores);
+      await scoreAdding(scores);
+    }
 
     if (gameSession.current_guess_valid) {
       cursor.x = 0;
