@@ -68,6 +68,7 @@ public class GuessFeedbackService {
         gameSession.current_guess(),
         false,
         gameSession.guesses(),
+        gameSession.current_game_index(),
         gameSession.scores()
       );
     }
@@ -102,6 +103,7 @@ public class GuessFeedbackService {
       currentGuessString,
       true,
       guesses,
+      gameSession.current_game_index(),
       gameSession.scores()
     );
 

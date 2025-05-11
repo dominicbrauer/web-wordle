@@ -15,5 +15,6 @@ export interface GameSession {
   current_guess: string;
   current_guess_valid: boolean;
   guesses: Array<Guess>;
+  current_game_index: number;
   scores: Array<number>;
 }

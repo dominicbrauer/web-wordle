@@ -25,6 +25,7 @@ public class GameService {
       null,
       true,
       null,
+      0,
       null
     );
     return gameSession;

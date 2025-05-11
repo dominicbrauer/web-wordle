@@ -8,5 +8,6 @@ public record GameSession(
   String current_guess,
   boolean current_guess_valid,
   ArrayList<Guess> guesses,
+  int current_game_index,
   ArrayList<Number> scores
 ) {}

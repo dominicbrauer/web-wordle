@@ -42,6 +42,7 @@ public class GameController {
         knownSession.current_guess(),
         true,
         knownSession.guesses(),
+        knownSession.current_game_index(),
         knownSession.scores()
       ));
     }
@@ -73,6 +74,7 @@ public class GameController {
       null,
       false,
       null,
+      gameSession.current_game_index(),
       gameSession.scores()
     );
 
