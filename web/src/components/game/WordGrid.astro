@@ -33,12 +33,10 @@ import { GUESSES } from "../../lib/config";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
   import { flipTile } from "../../scripts/flipTileAnimation"
-  import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
 
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
-  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score-label');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
   let blockUserInput: boolean = false;
@@ -92,7 +90,7 @@ import { GUESSES } from "../../lib/config";
   /**
    * Color codes the character tiles in the word grid.
    */
-  async function charHighlighting(): Promise<void> {
+  async function charHighlighting() {
     if (gameSession.status == "return_feedback") {
       for (const i of range(WORD_LENGTH)) {
         const charIdx: number = cursor.coordToIdx(i, gameSession.guesses_used - 1);
@@ -123,7 +121,7 @@ import { GUESSES } from "../../lib/config";
    * Redirects a keyboard input based on its type.
    * @param key A keyboard key
    */
-  function handleKeyboardInput(key: string): void {
+  function handleKeyboardInput(key: string) {
     switch(key) {
       case 'ENTER': handleEnterInput(); break;
       case 'BACKSPACE': handleBackspaceInput(); break;
@@ -136,7 +134,7 @@ import { GUESSES } from "../../lib/config";
   /**
    * Performs character removal if possible.
    */
-  function handleBackspaceInput(): void {
+  function handleBackspaceInput() {
     if ((cursor.selfSet || cursor.oob) && charTileLabels[cursor.getPos()].textContent !== '') {
       cursor.oob = false;
       charTileLabels[cursor.getPos()].textContent = '';
@@ -156,7 +154,7 @@ import { GUESSES } from "../../lib/config";
    * Inserts a keyboard key into the word grid.
    * @param key a valid character
    */
-  function handleCharacterInput(key: string): void {
+  function handleCharacterInput(key: string) {
     if (cursor.oob) {
       rowHeadShake();
       return;
@@ -178,7 +176,7 @@ import { GUESSES } from "../../lib/config";
    * If every tile in the row contains a character,
    * the guess is sent to the server.
    */
-  function handleEnterInput(): void {
+  function handleEnterInput() {
     const characters: string[] = [];
 
     for (const i of range(WORD_LENGTH)) {
@@ -201,7 +199,7 @@ import { GUESSES } from "../../lib/config";
    * Transmits a guessRequest event.
    * @param word Five-letter word guess
    */
-  function sendWord(word: string): void {
+  function sendWord(word: string) {
     blockUserInput = true;
 
     const event = new CustomEvent("submitGuess", {
@@ -216,7 +214,7 @@ import { GUESSES } from "../../lib/config";
   /**
    * Requests the current row to run its headshake animation.
    */
-  function rowHeadShake(): void {
+  function rowHeadShake() {
     window.dispatchEvent(new CustomEvent("headShake", {
       detail: {row: gameSession.guesses_used}
     }));
@@ -226,7 +224,7 @@ import { GUESSES } from "../../lib/config";
   /**
    * Updates the character tiles.
    */
-  async function updateGame(): Promise<void> {
+  async function updateGame() {
     if (gameSession.current_guess_valid) {
       await charHighlighting();
 

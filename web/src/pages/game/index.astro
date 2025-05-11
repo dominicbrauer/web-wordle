@@ -1,25 +1,21 @@
 ---
 import Assistant from "../../components/game/Assistant.astro"
 import DigitalKeyboard from "../../components/game/DigitalKeyboard.astro"
+import LogoSection from "../../components/game/LogoSection.astro"
 import ScoreBoard from "../../components/game/ScoreBoard.astro"
 import WordGrid from "../../components/game/WordGrid.astro"
 import Layout from "../../layouts/Layout.astro"
-import { GUESSES } from "../../lib/config"
 ---
 
 <Layout title="Classic Game">
   <div class="game-frame">
-    <div class="grid-area">
-      <div class="left-side">
+    <div class="upper-area">
+      <div class="side left">
+        <LogoSection />
         <Assistant />
       </div>
       <WordGrid />
-      <div class="right-side">
-        <div class="score-container">
-          {Array.from({ length: GUESSES }).map(() => (
-            <span class="score-label">0P</span>
-          ))}
-        </div>
+      <div class="side right">
         <ScoreBoard />
       </div>      
     </div>
@@ -41,7 +37,7 @@ import { GUESSES } from "../../lib/config"
     gap: 1rem;
   }
 
-  .grid-area {
+  .upper-area {
     display: flex;
     flex-direction: row;
     height: fit-content;
@@ -49,34 +45,22 @@ import { GUESSES } from "../../lib/config"
     gap: 2rem;
   }
 
-  .left-side {
+  .side {
     display: flex;
-    flex-direction: column;
+    padding: 1.5rem;
     width: 400px;
     height: 100%;
   }
 
-  .right-side {
-    display: flex;
-    flex-direction: row;
+  .side.left {
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  }
+
+  .side.right {
     align-items: center;
-    width: 400px;
-    height: 100%;
-    gap: 2rem;
-  }
-
-  .score-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: space-around;
-    width: 15%;
-    height: 100%;
-  }
-
-  .score-label {
-    font-size: 1.5em;
+    justify-content: left;
   }
 
   body {
@@ -89,21 +73,15 @@ import { GUESSES } from "../../lib/config"
   import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
   import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
-  import { range } from "../../lib/helpers";
-  import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
 
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
-  const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score-label');
 
   let gameSession: GameSession;
   try {
     gameSession = await requestGameSession();
   } catch {
-    const showAssistantMessage = new CustomEvent("showAssistantMessage", {
-      detail: {msg: "I couldn't connect to the server."}
-    });
-    window.dispatchEvent(showAssistantMessage);
+    updateAssistantMessage("I couldn't connect to the server!");
   }
 
 
@@ -123,11 +101,21 @@ import { GUESSES } from "../../lib/config"
   window.addEventListener("submitGuess", async (e) => {
     gameSession.current_guess = (e as CustomEvent).detail.word;
     gameSession.status = "submit_guess";
-    // gameSession.current_guess_valid = false;
 
     gameSession = await submitGuess(gameSession);
     triggerUpdate();
   });
+
+
+  /**
+   * Updates the shown text in the Assistant container.
+   * @param msg Message to display
+   */
+  function updateAssistantMessage(msg: string) {
+    window.dispatchEvent(new CustomEvent("showAssistantMessage", {
+      detail: {msg: msg}
+    }));
+  }
 
 
   /**
@@ -149,7 +137,7 @@ import { GUESSES } from "../../lib/config"
   /**
    * Transmits the current gameSession as an event.
    */
-  function triggerUpdate(): void {
+  function triggerUpdate() {
     // Invalid guess
     if (!gameSession.current_guess_valid) {
       window.dispatchEvent(new CustomEvent("headShake", {
@@ -221,7 +209,7 @@ import { GUESSES } from "../../lib/config"
    * Analyses the current game state for
    * winning/losing conditions.
    */
-  async function analyseGameState(): Promise<void> {
+  async function analyseGameState() {
     // Correct guess: Win
     if (gameSession.guesses_used > 0 && gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
       await handleWin();
@@ -237,11 +225,7 @@ import { GUESSES } from "../../lib/config"
   /**
    * Handles winning the game (correct word).
    */
-  async function handleWin(): Promise<void> {
-    scoreLabels.forEach(score => {
-      score.textContent = "0P";
-    });
-
+  async function handleWin() {
     gameSession = await requestNextGame(gameSession);
 
     const resetWordGrid = new CustomEvent("resetWordGrid", {
@@ -256,7 +240,7 @@ import { GUESSES } from "../../lib/config"
   /**
    * Handles losing the game (all guesses used).
    */
-  function handleLose(): void {
+  function handleLose() {
     const showAssistantMessage = new CustomEvent("showAssistantMessage", {
       detail: {msg: "You lost! :pepoSadge:"}
     });
