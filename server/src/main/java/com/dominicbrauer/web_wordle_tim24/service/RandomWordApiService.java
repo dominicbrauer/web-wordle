@@ -20,15 +20,15 @@ public class RandomWordApiService {
   }
 
   /**
-   * 
-   * @return Random five-letter word from API
+   * Returns a random word from the given API.
+   * @return an x-letter word
    */
   public String fetchRandomWord() {
     ResponseEntity<List<String>> response = restTemplate.exchange(
-    "https://random-word-api.vercel.app/api?words=1&length=" + String.valueOf(Config.WORD_LENGTH),
-    HttpMethod.GET,
-    null,
-    new ParameterizedTypeReference<List<String>>() {}
+      "https://random-word-api.vercel.app/api?words=1&length=" + String.valueOf(Config.WORD_LENGTH),
+      HttpMethod.GET,
+      null,
+      new ParameterizedTypeReference<List<String>>() {}
     );
     List<String> list = response.getBody();
 

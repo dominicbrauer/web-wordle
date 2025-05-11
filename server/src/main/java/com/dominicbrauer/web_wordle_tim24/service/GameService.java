@@ -24,6 +24,7 @@ public class GameService {
       0,
       null,
       false,
+      null,
       null
     );
     return gameSession;
@@ -39,11 +40,11 @@ public class GameService {
   /**
    * @return Random word from ApiService
    */
-  public String rndmWord() {
+  public String getRandomWord() {
     String word;
     do {
-      word = this.randomWordApiService.fetchRandomWord();
-    } while (!this.validateWord(word));
+      word = randomWordApiService.fetchRandomWord();
+    } while (!validateWord(word));
     return word;
   }
 

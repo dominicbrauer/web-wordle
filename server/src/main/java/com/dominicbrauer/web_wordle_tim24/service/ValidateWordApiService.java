@@ -17,10 +17,10 @@ public class ValidateWordApiService {
   }
 
   /**
-   * Check if String is a valid English word
+   * Checks if the String is a valid English word.
    * 
    * @param word The word to check
-   * @return Random five-letter word from API
+   * @return true if the word is valid
    */
   public boolean valid(String word) {
     String url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word;

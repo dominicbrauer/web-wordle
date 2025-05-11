@@ -41,13 +41,14 @@ public class GameController {
         knownSession.guesses_used(),
         knownSession.current_guess(),
         knownSession.current_guess_valid(),
-        knownSession.guesses()
+        knownSession.guesses(),
+        knownSession.scores()
       ));
     }
 
     GameSession newGameSession = gameService.createNewGameSession();
 
-    session.setAttribute("solutionWord", gameService.rndmWord());
+    session.setAttribute("solutionWord", gameService.getRandomWord());
     session.setAttribute("gameSession", newGameSession);
     System.out.println(session.getAttribute("solutionWord").toString());
     
@@ -66,15 +67,22 @@ public class GameController {
 
   @PostMapping("/game-continue")
   public ResponseEntity<GameSession> nextRound(@RequestBody GameSession gameSession, HttpSession session) {
-    GameSession newGameSession = gameService.createNewGameSession();
+    GameSession nextGameSession = new GameSession(
+      "next_game",
+      0,
+      null,
+      false,
+      null,
+      gameSession.scores()
+    );
 
     // Score saves etc.
     
-    session.setAttribute("solutionWord", gameService.rndmWord());
-    session.setAttribute("gameSession", newGameSession);
+    session.setAttribute("solutionWord", gameService.getRandomWord());
+    session.setAttribute("gameSession", nextGameSession);
     System.out.println(session.getAttribute("solutionWord").toString());
 
-    return ResponseEntity.ok(newGameSession);
+    return ResponseEntity.ok(nextGameSession);
   }
 
 }

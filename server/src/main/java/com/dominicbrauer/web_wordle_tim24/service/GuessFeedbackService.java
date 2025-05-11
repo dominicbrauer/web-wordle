@@ -1,7 +1,6 @@
 package com.dominicbrauer.web_wordle_tim24.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -68,11 +67,12 @@ public class GuessFeedbackService {
         gameSession.guesses_used(),
         gameSession.current_guess(),
         gameSession.current_guess_valid(),
-        gameSession.guesses()
+        gameSession.guesses(),
+        gameSession.scores()
       );
     }
 
-    List<Char> character_list = new ArrayList<>();
+    ArrayList<Char> character_list = new ArrayList<>();
     String[] colors = this.handleCharCheck(currentGuess.clone(), solutionWord.toCharArray());
 
     for (int i = 0; i < Config.WORD_LENGTH; i++) {
@@ -83,7 +83,7 @@ public class GuessFeedbackService {
       character_list.add(character);
     }
 
-    List<Guess> guesses = new ArrayList<>();
+    ArrayList<Guess> guesses = new ArrayList<>();
     if (gameSession.guesses() != null) {
       for (Guess previousGuess : gameSession.guesses()) {
         guesses.add(previousGuess);
@@ -101,7 +101,8 @@ public class GuessFeedbackService {
       gameSession.guesses_used() + 1,
       currentGuessString,
       true,
-      guesses
+      guesses,
+      gameSession.scores()
     );
 
     return responseGameSession;
