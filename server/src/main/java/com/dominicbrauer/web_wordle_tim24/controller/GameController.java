@@ -40,7 +40,7 @@ public class GameController {
         "game_found",
         knownSession.guesses_used(),
         knownSession.current_guess(),
-        knownSession.current_guess_valid(),
+        true,
         knownSession.guesses(),
         knownSession.scores()
       ));

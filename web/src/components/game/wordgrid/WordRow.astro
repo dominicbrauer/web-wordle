@@ -28,14 +28,16 @@ import CharTile from "./CharTile.astro";
 
 
   // Connection to exchange the gameSession after each fetch
-  window.addEventListener("updateWordRows", (e) => {
+  window.addEventListener("initWordRows", (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
     shiftRow();
   });
 
 
   window.addEventListener("headShake", (e) => {
-    headShake(wordRows[(e as CustomEvent).detail.row]);
+    const rowIdx = (e as CustomEvent).detail.row;
+    const row = wordRows[rowIdx];
+    headShake(row);
   });
 
 
@@ -44,9 +46,6 @@ import CharTile from "./CharTile.astro";
    * and deactivates all other ones.
    */
   function shiftRow(): void {
-    if (!gameSession.current_guess_valid && gameSession.status == "return_feedback") {
-      return;
-    }
     wordRows.forEach(row => {
       Array.from(row.children).forEach(char => {
         char.classList.remove('active', 'char-tile-selected');

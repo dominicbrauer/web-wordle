@@ -28,7 +28,7 @@ import { GUESSES } from "../../lib/config";
 </style>
 
 <script>
-  import { WORD_LENGTH, GUESSES, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
+  import { WORD_LENGTH, GUESSES } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
@@ -49,9 +49,7 @@ import { GUESSES } from "../../lib/config";
     gameSession = (e as CustomEvent).detail.gameSession;
     await updateGame();
 
-    // Requests a win/lose evaluation
-    const analyseGameState = new CustomEvent("analyseGameState");
-    window.dispatchEvent(analyseGameState);
+    window.dispatchEvent(new CustomEvent("analyseGameState"));
 
     blockUserInput = false;
   });
@@ -68,8 +66,9 @@ import { GUESSES } from "../../lib/config";
 
   // Exchanges the read keyboard key
   window.addEventListener('keyInput', (e) => {
-    if (blockUserInput) return;
-
+    if (blockUserInput) {
+      return;
+    }
     handleKeyboardInput((e as CustomEvent).detail.keyInput);
   });
 
@@ -77,9 +76,10 @@ import { GUESSES } from "../../lib/config";
   // Makes every char tile clickable
   charTiles?.forEach((tile, idx) => {
     tile.addEventListener('click', () => {
-      if (blockUserInput) return;
-      if (!tile.classList.contains('active')) return;
-      
+      if (blockUserInput || !tile.classList.contains('active')) {
+        return;
+      }
+
       cursor.selfSet = true;
       cursor.oob = false;
       cursor.removeSelection(charTiles);
@@ -120,16 +120,6 @@ import { GUESSES } from "../../lib/config";
 
 
   /**
-   * 
-   */
-  async function scoreAdding(scores: number[][]) {
-    for (const index of range(WORD_LENGTH)) {
-      await animateScoreAdding(gameSession, charTiles[cursor.coordToIdx(index, undefined)], scores, index);
-    }
-  }
-
-
-  /**
    * Redirects a keyboard input based on its type.
    * @param key A keyboard key
    */
@@ -139,7 +129,7 @@ import { GUESSES } from "../../lib/config";
       case 'BACKSPACE': handleBackspaceInput(); break;
       default: handleCharacterInput(key); break;
     }
-    // cursor.selfSet = false;
+    cursor.selfSet = false;
   }
 
 
@@ -157,18 +147,18 @@ import { GUESSES } from "../../lib/config";
       cursor.x--;
       cursor.addSelection(charTiles);
     } else {
-      requestHeadShake();
+      rowHeadShake();
     }
   }
 
 
   /**
    * Inserts a keyboard key into the word grid.
-   * @param key 
+   * @param key a valid character
    */
   function handleCharacterInput(key: string): void {
     if (cursor.oob) {
-      requestHeadShake();
+      rowHeadShake();
       return;
     }
     charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
@@ -195,8 +185,10 @@ import { GUESSES } from "../../lib/config";
       const divText: string | null = charTileLabels[cursor.coordToIdx(i, undefined)].textContent;
       characters.push(divText !== null ? divText : '');
     }
+
+    // row is not full
     if (characters.includes('')) {
-      requestHeadShake();
+      rowHeadShake();
       return;
     }
     
@@ -206,13 +198,13 @@ import { GUESSES } from "../../lib/config";
 
 
   /**
-   * Dispatch an event to fetch a guessRequest.
+   * Transmits a guessRequest event.
    * @param word Five-letter word guess
    */
   function sendWord(word: string): void {
     blockUserInput = true;
-    
-    const event = new CustomEvent("guessRequest", {
+
+    const event = new CustomEvent("submitGuess", {
       detail: {
         word: word,
       }
@@ -224,41 +216,20 @@ import { GUESSES } from "../../lib/config";
   /**
    * Requests the current row to run its headshake animation.
    */
-  function requestHeadShake(): void {
-    const event = new CustomEvent("headShake", {
-      detail: {
-        row: cursor.y,
-      }
-    });
-    window.dispatchEvent(event);
+  function rowHeadShake(): void {
+    window.dispatchEvent(new CustomEvent("headShake", {
+      detail: {row: gameSession.guesses_used}
+    }));
   }
 
 
   /**
-   * Updates all word grid components.
+   * Updates the character tiles.
    */
   async function updateGame(): Promise<void> {
-    if (gameSession.guesses_used < GUESSES) {
-      const updateWordRows = new CustomEvent("updateWordRows", {
-        detail: {gameSession: gameSession}
-      });
-      window.dispatchEvent(updateWordRows);
-    }
-    
-    if (gameSession.status == "return_feedback" && !gameSession.current_guess_valid) {
-      requestHeadShake();
-      return;
-    }
-
-    await charHighlighting();
-
-    if (gameSession.status == "return_feedback" && gameSession.current_guess_valid) {
-      const scores = calcScores();
-      console.log(scores);
-      await scoreAdding(scores);
-    }
-
     if (gameSession.current_guess_valid) {
+      await charHighlighting();
+
       cursor.x = 0;
       cursor.oob = false;
       cursor.selfSet = false;
@@ -271,41 +242,5 @@ import { GUESSES } from "../../lib/config";
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }
     });
-  }
-
-
-  /**
-   * Calculates the scores for each guess
-   * based on the feedback colors.
-   * @returns 2D-array with score values
-   */
-  function calcScores(): number[][] {
-    // Empty scores 2D-array
-    const scores: number[][] = Array.from({ length: GUESSES }, () =>
-      Array(WORD_LENGTH).fill(0)
-    );
-    
-    gameSession.guesses?.forEach((guess, i) => {
-      const colors: Array<string> = [];
-      
-      // Gets the colors of a word
-      guess.character_info.forEach(char => {
-        colors.push(char.scoring);
-      });
-
-      // Colors and their score values
-      const colorMap: Record<string, number> = {
-        gray: GRAY_TILE_VALUE,
-        yellow: YELLOW_TILE_VALUE,
-        green: GREEN_TILE_VALUE
-      };
-
-      // Adds score values to scores[]
-      colors?.forEach((color, j) => {
-        scores[i][j] = colorMap[color];
-      });
-    });
-
-    return scores;
   }
 </script>

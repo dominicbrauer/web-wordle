@@ -86,12 +86,11 @@ import { GUESSES } from "../../lib/config"
 </style>
 
 <script>
-  import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH } from "../../lib/config";
+  import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
-  import { requestGameSession } from "../../scripts/requestGameSession";
-  import { guessRequest } from "../../scripts/guessRequest";
-  import { requestContinue } from "../../scripts/requestContinue"
-import { range } from "../../lib/helpers";
+  import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
+  import { range } from "../../lib/helpers";
+  import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
 
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
@@ -121,18 +120,13 @@ import { range } from "../../lib/helpers";
   });
 
 
-  window.addEventListener("guessRequest", async (e) => {
+  window.addEventListener("submitGuess", async (e) => {
     gameSession.current_guess = (e as CustomEvent).detail.word;
     gameSession.status = "submit_guess";
-    gameSession.current_guess_valid = false;
+    // gameSession.current_guess_valid = false;
 
-    gameSession = await guessRequest(gameSession);
+    gameSession = await submitGuess(gameSession);
     triggerUpdate();
-  });
-
-
-  window.addEventListener("analyseGameState", () => {
-    analyseGameState();
   });
 
 
@@ -153,24 +147,79 @@ import { range } from "../../lib/helpers";
 
 
   /**
-   * Transmits the current gameSession as an event
+   * Transmits the current gameSession as an event.
    */
   function triggerUpdate(): void {
-    const updateWordGrid = new CustomEvent("updateWordGrid", {
-      detail: {gameSession: gameSession}
-    });
-    window.dispatchEvent(updateWordGrid);
+    // Invalid guess
+    if (!gameSession.current_guess_valid) {
+      window.dispatchEvent(new CustomEvent("headShake", {
+        detail: {row: gameSession.guesses_used}
+      }));
+    }
 
-    const updateDigitalKeyboard = new CustomEvent("updateDigitalKeyboard", {
+    if (gameSession.guesses_used < GUESSES) {
+      window.dispatchEvent(new CustomEvent("initWordRows", {
+        detail: {gameSession: gameSession}
+      }));
+    }
+
+    window.dispatchEvent(new CustomEvent("updateWordGrid", {
       detail: {gameSession: gameSession}
-    });
-    window.dispatchEvent(updateDigitalKeyboard);
+    }));
+
+    window.dispatchEvent(new CustomEvent("updateDigitalKeyboard", {
+      detail: {gameSession: gameSession}
+    }));
   }
 
 
   /**
-   * Analyses if the the last word was correct
-   * or if all guesses have been used up.
+   * Calculates the scores for each guess
+   * based on the feedback colors.
+   * 
+   * @return 2D-array with score values
+   */
+  function calcScores(): Array<Array<number>> {
+    // Empty scores 2D-array
+    const scores: number[][] = Array.from({ length: GUESSES }, () =>
+      Array(WORD_LENGTH).fill(0)
+    );
+    
+    gameSession.guesses?.forEach((guess, i) => {
+      const colors: Array<string> = [];
+      
+      // Gets the colors of a word
+      guess.character_info.forEach(char => {
+        colors.push(char.scoring);
+      });
+
+      // Colors and their score values
+      const colorMap: Record<string, number> = {
+        gray: GRAY_TILE_VALUE,
+        yellow: YELLOW_TILE_VALUE,
+        green: GREEN_TILE_VALUE
+      };
+
+      // Adds score values to scores[]
+      colors?.forEach((color, j) => {
+        scores[i][j] = colorMap[color];
+      });
+    });
+
+    return scores;
+  }
+
+
+  // async function scoreAdding(scores: number[][]) {
+  //   for (const index of range(WORD_LENGTH)) {
+  //     await animateScoreAdding(gameSession, charTiles[cursor.coordToIdx(index, undefined)], scores, index);
+  //   }
+  // }
+
+
+  /**
+   * Analyses the current game state for
+   * winning/losing conditions.
    */
   async function analyseGameState(): Promise<void> {
     // Correct guess: Win
@@ -193,7 +242,7 @@ import { range } from "../../lib/helpers";
       score.textContent = "0P";
     });
 
-    gameSession = await requestContinue(gameSession);
+    gameSession = await requestNextGame(gameSession);
 
     const resetWordGrid = new CustomEvent("resetWordGrid", {
       detail: {gameSession: gameSession}
@@ -217,10 +266,12 @@ import { range } from "../../lib/helpers";
 
 
   /**
-   * 
+   * Initializes the game after reloading the page.
    */
   function initialize() {
-    triggerUpdate();
+    if (gameSession != null) {
+      triggerUpdate();
+    }
   }
 
   initialize();

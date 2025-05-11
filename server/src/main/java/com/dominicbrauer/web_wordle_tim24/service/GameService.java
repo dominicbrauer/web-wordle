@@ -23,7 +23,7 @@ public class GameService {
       "new_game",
       0,
       null,
-      false,
+      true,
       null,
       null
     );
