@@ -11,15 +11,15 @@
   </div>
   <hr>
   <div class="game-info-container">
-    <span class="round-count">Game 3</span>
+    <span class="round-count">N/A</span>
     <div class="score-info-container">
-      <span class="current-score">42P</span>
-      <span class="current-multiplier">x1.3</span>
+      <span class="current-score">N/A</span>
+      <span class="current-multiplier">N/A</span>
     </div>
   </div>
   <hr>
   <div class="total-score-container">
-    <span class="total-score">690P</span>
+    <span class="total-score">N/A</span>
   </div>
 </div>
 
@@ -145,3 +145,48 @@
     font-size: 2.5em;
   }
 </style>
+
+<script>
+  import type { GameSession } from "../../lib/gameSession";
+
+
+  const roundCountLabel = document.querySelector<HTMLSpanElement>('.round-count');
+  const currentScoreLabel = document.querySelector<HTMLSpanElement>('.current-score');
+  const currentMultiplierLabel = document.querySelector<HTMLSpanElement>('.current-multiplier');
+  const totalScoreLabel = document.querySelector<HTMLSpanElement>('.total-score');
+
+
+  window.addEventListener("updateScoreBoard", (e) => {
+    const gameSession: GameSession = (e as CustomEvent).detail.gameSession;
+
+    console.log("mogus sussy baka");
+    updateScoreBoard(gameSession);
+  });
+
+
+  function updateScoreBoard(gameSession: GameSession) {
+    // Set round count
+    if (roundCountLabel) {
+      const roundCountText = `Game ${gameSession.current_game_index + 1}`;
+      roundCountLabel.textContent = roundCountText;
+    }
+
+    // Set current score
+    // mogus
+
+    // Set multiplier
+    if (currentMultiplierLabel) {
+      const multiplierText = `x${(1 + gameSession.current_game_index * 0.1).toFixed(1)}`;
+      currentMultiplierLabel.textContent = multiplierText;
+    }
+
+    // Set total score
+    let total: number = 0;
+    gameSession.scores?.forEach(score => {
+      total += score;
+    });
+    if (totalScoreLabel) {
+      totalScoreLabel.textContent = `${total}P`;
+    }
+  }
+</script>

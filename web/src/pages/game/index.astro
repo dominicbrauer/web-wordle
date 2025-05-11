@@ -158,6 +158,10 @@ import Layout from "../../layouts/Layout.astro"
     window.dispatchEvent(new CustomEvent("updateDigitalKeyboard", {
       detail: {gameSession: gameSession}
     }));
+
+    window.dispatchEvent(new CustomEvent("updateScoreBoard", {
+      detail: {gameSession: gameSession}
+    }));
   }
 
 
