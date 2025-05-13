@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.model;
+package dev.dominicbrauer.web_wordle_tim24.model.game;
 
 public record Char(
   char character,

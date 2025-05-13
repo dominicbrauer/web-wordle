@@ -1,8 +1,8 @@
-package com.dominicbrauer.web_wordle_tim24.service;
+package dev.dominicbrauer.web_wordle_tim24.service;
 
 import org.springframework.stereotype.Service;
 
-import com.dominicbrauer.web_wordle_tim24.model.GameSession;
+import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
 
 @Service
 public class GameService {

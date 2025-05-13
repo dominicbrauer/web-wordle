@@ -8,7 +8,7 @@
       "type": "java",
       "name": "WebWordleTim24Application",
       "request": "launch",
-      "mainClass": "com.dominicbrauer.web_wordle_tim24.WebWordleTim24Application",
+      "mainClass": "dev.dominicbrauer.web_wordle_tim24.WebWordleTim24Application",
       "projectName": "web_wordle_tim24-server"
     },
     {
@@ -21,7 +21,7 @@
       "type": "java",
       "name": "WebWordleTim24Application",
       "request": "launch",
-      "mainClass": "com.dominicbrauer.web_wordle_tim24.WebWordleTim24Application",
+      "mainClass": "dev.dominicbrauer.web_wordle_tim24.WebWordleTim24Application",
       "projectName": "server"
     }
   ]

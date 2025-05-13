@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.config;
+package dev.dominicbrauer.web_wordle_tim24.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.controller;
+package dev.dominicbrauer.web_wordle_tim24.controller;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dominicbrauer.web_wordle_tim24.model.Account;
-import com.dominicbrauer.web_wordle_tim24.service.UserService;
+import dev.dominicbrauer.web_wordle_tim24.model.User;
+import dev.dominicbrauer.web_wordle_tim24.service.UserService;
 
 @RestController
 @RequestMapping("/users")
@@ -22,13 +22,13 @@ public class UserController {
 
 
   @GetMapping
-  public List<Account> getAllUsers() {
+  public List<User> getAllUsers() {
     return userService.getAllUsers();
   }
 
 
   @PostMapping("/add")
-  public ResponseEntity<String> addUser(@RequestBody Account user) {
+  public ResponseEntity<String> addUser(@RequestBody User user) {
     userService.addUser(user);
 
     return ResponseEntity.ok("User successfully added!");

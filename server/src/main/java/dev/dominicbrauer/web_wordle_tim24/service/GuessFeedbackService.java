@@ -1,14 +1,13 @@
-package com.dominicbrauer.web_wordle_tim24.service;
+package dev.dominicbrauer.web_wordle_tim24.service;
 
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
-import com.dominicbrauer.web_wordle_tim24.lib.Config;
-import com.dominicbrauer.web_wordle_tim24.model.Char;
-import com.dominicbrauer.web_wordle_tim24.model.GameSession;
-import com.dominicbrauer.web_wordle_tim24.model.Guess;
-
+import dev.dominicbrauer.web_wordle_tim24.lib.Config;
+import dev.dominicbrauer.web_wordle_tim24.model.game.Char;
+import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
+import dev.dominicbrauer.web_wordle_tim24.model.game.Guess;
 import jakarta.servlet.http.HttpSession;
 
 @Service

@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.controller;
+package dev.dominicbrauer.web_wordle_tim24.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

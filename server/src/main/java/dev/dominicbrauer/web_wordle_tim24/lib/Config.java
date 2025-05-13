@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.lib;
+package dev.dominicbrauer.web_wordle_tim24.lib;
 
 public class Config {
   public static final int WORD_LENGTH = 5; // default: 5

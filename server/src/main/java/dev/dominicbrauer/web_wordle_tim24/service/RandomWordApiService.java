@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.service;
+package dev.dominicbrauer.web_wordle_tim24.service;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.dominicbrauer.web_wordle_tim24.lib.Config;
+import dev.dominicbrauer.web_wordle_tim24.lib.Config;
 
 @Service
 public class RandomWordApiService {

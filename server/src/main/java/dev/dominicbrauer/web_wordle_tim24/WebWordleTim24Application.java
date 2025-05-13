@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24;
+package dev.dominicbrauer.web_wordle_tim24;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

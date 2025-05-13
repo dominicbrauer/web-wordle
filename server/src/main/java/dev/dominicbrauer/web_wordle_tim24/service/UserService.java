@@ -1,12 +1,12 @@
-package com.dominicbrauer.web_wordle_tim24.service;
+package dev.dominicbrauer.web_wordle_tim24.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dominicbrauer.web_wordle_tim24.model.Account;
-import com.dominicbrauer.web_wordle_tim24.repository.UserRepository;
+import dev.dominicbrauer.web_wordle_tim24.model.User;
+import dev.dominicbrauer.web_wordle_tim24.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -14,11 +14,11 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
-  public Account addUser(Account user) {
+  public User addUser(User user) {
     return userRepository.save(user);
   }
 
-  public List<Account> getAllUsers() {
+  public List<User> getAllUsers() {
     return userRepository.findAll();
   }
   

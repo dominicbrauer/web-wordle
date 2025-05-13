@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.controller;
+package dev.dominicbrauer.web_wordle_tim24.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dominicbrauer.web_wordle_tim24.model.GameSession;
-import com.dominicbrauer.web_wordle_tim24.service.GameService;
-import com.dominicbrauer.web_wordle_tim24.service.GuessFeedbackService;
+import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
+import dev.dominicbrauer.web_wordle_tim24.service.GameService;
+import dev.dominicbrauer.web_wordle_tim24.service.GuessFeedbackService;
 
 import jakarta.servlet.http.HttpSession;
 

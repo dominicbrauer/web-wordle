@@ -1,4 +1,4 @@
-package com.dominicbrauer.web_wordle_tim24.model;
+package dev.dominicbrauer.web_wordle_tim24.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Account {
+public class User {
 
   @Id // Primary key
   @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment
