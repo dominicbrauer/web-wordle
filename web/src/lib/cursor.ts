@@ -17,6 +17,10 @@ export class Cursor {
     return y * WORD_LENGTH + x;
   }
 
+  public static coordToIdx(x: number, y: number) {
+    return y * WORD_LENGTH + x;
+  }
+
   public idxToCoord(idx: number): number[] {
     return [idx % WORD_LENGTH, Math.floor(idx / WORD_LENGTH)];
   }

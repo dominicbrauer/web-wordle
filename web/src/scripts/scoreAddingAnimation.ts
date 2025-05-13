@@ -1,49 +1,53 @@
-import type { GameSession } from "../lib/gameSession";
-
-
-const scoreLabels = document.querySelectorAll<HTMLSpanElement>('.score-label');
-
 const wait = (duration: number = 500) => new Promise((resolve) => setTimeout(resolve, duration));
 
-export async function animateScoreAdding(gameSession: GameSession, tile: HTMLDivElement, scores: number[][], index: number): Promise<void> {
-  const currentRow = gameSession.guesses_used - 1;
-
-  const { x, y, width, height } = tile.getBoundingClientRect();
-  const xPos = x + width / 2;
-  const yPos = y + height / 2;
+export async function animateScoreAdding(tile: HTMLDivElement, score: number, destinationLabel: HTMLSpanElement) {
+  await wait(300);
 
   // Add element
-  const scoreElement = document.createElement('div');
-  scoreElement.className = "score-element";
-  
-  scoreElement.textContent = scores[currentRow][index].toString();
-
+  const scoreElement = document.createElement('span');
   document.body.appendChild(scoreElement);
+  scoreElement.className = "score-element";
+  scoreElement.textContent = score.toString();
 
-  scoreElement.style.position = "absolute";
-  scoreElement.style.fontSize = "1.5em";
-  const scoreElementWidth = scoreElement.getBoundingClientRect().width;
-  const scoreElementHeight = scoreElement.getBoundingClientRect().height;
-  scoreElement.style.left = `${xPos - scoreElementWidth / 2}px`;
-  scoreElement.style.top = `${yPos - scoreElementHeight / 2}px`;
+  scoreElement.style.position = 'absolute';
+  scoreElement.style.fontSize = '1.5em';
 
-  const scoreLabelX = scoreLabels[currentRow].getBoundingClientRect().x;
+  const [tilePosX, tilePosY] = getPos(tile, scoreElement);
+  const [labelPosX, labelPosY] = getPos(destinationLabel, scoreElement);
+
+  scoreElement.style.left = `${tilePosX}px`;
+  scoreElement.style.top = `${tilePosY}px`;
 
   await new Promise(async (resolve) => {
     const anim = scoreElement.animate([
-      { transform: `translateX(0)` },
-      { left: `${scoreLabelX}px` }
+      { transform: 'translateX(0)', offset: 0 },
+      // { transform: 'translateX(2rem) translateY(-2rem)', offset: 0.1 },
+      { left: `${labelPosX}px`, top: `${labelPosY}px`, offset: 1 }
     ], {
-      duration: 600,
+      duration: 700,
       easing: 'cubic-bezier(1, 0, 1, 1)',
       fill: 'forwards'
     });
 
-    await wait(300);
     resolve('');
     anim.onfinish = () => {
       scoreElement.remove();
-      scoreLabels[currentRow].textContent = (parseInt(scoreLabels[currentRow].textContent!) + scores[currentRow][index]).toString() + 'P';
+      const newScore: number = Number(destinationLabel.textContent!.split("P")[0]) + score;
+      destinationLabel.textContent = `${newScore}P`;
     };
   });
+}
+
+/**
+ * Gets the center position of an element based on a reference element.
+ * @param elem element of which we want the center position
+ * @param referenceElem element which should be centered at that position
+ * @returns the x and y position for 'elem'
+ */
+function getPos(elem: HTMLElement, referenceElem: HTMLElement): [number, number] {
+  const refWidth = referenceElem.getBoundingClientRect().width;
+  const refHeight = referenceElem.getBoundingClientRect().height;
+
+  const {x, y, width, height} = elem.getBoundingClientRect();
+  return [x + width / 2 - refWidth / 2, y + height / 2 - refHeight / 2];
 }

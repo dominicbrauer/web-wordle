@@ -13,7 +13,7 @@
   <div class="game-info-container">
     <span class="round-count">N/A</span>
     <div class="score-info-container">
-      <span class="current-score">N/A</span>
+      <span class="current-score">0P</span>
       <span class="current-multiplier">N/A</span>
     </div>
   </div>
@@ -56,28 +56,6 @@
     padding: .5rem;
     z-index: 0;
   }
-
-  /* .user-info-container::before {
-    content: '';
-    position: absolute;
-    width: 90%;
-    height: 4px;
-    top: 2rem;
-    border-bottom: 1px solid var(--primary-border);
-    border-top: 1px solid var(--primary-border);
-    z-index: -1;
-  }
-
-  .user-info-container::after {
-    content: '';
-    position: absolute;
-    width: 90%;
-    height: 4px;
-    top: 4rem;
-    border-bottom: 1px solid var(--primary-border);
-    border-top: 1px solid var(--primary-border);
-    z-index: -1;
-  } */
 
   .user-picture-container {
     position: relative;
@@ -147,46 +125,61 @@
 </style>
 
 <script>
+  import { WORD_LENGTH } from "../../lib/config";
+  import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
-
+  import { range } from "../../lib/helpers";
+  import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
 
   const roundCountLabel = document.querySelector<HTMLSpanElement>('.round-count');
   const currentScoreLabel = document.querySelector<HTMLSpanElement>('.current-score');
   const currentMultiplierLabel = document.querySelector<HTMLSpanElement>('.current-multiplier');
   const totalScoreLabel = document.querySelector<HTMLSpanElement>('.total-score');
+  const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
 
-
-  window.addEventListener("updateScoreBoard", (e) => {
+  window.addEventListener("updateScoreBoard", async (e) => {
     const gameSession: GameSession = (e as CustomEvent).detail.gameSession;
+    const scores: Array<Array<number>> = (e as CustomEvent).detail.scores;
 
-    console.log("mogus sussy baka");
-    updateScoreBoard(gameSession);
+    await updateScoreBoard(gameSession, scores);
   });
 
-
-  function updateScoreBoard(gameSession: GameSession) {
+  async function updateScoreBoard(gameSession: GameSession, scores: Array<Array<number>>) {
     // Set round count
-    if (roundCountLabel) {
-      const roundCountText = `Game ${gameSession.current_game_index + 1}`;
-      roundCountLabel.textContent = roundCountText;
-    }
+    const roundCountText = `Game ${gameSession.current_game_index + 1}`;
+    roundCountLabel!.textContent = roundCountText;
 
     // Set current score
-    // mogus
+    if (gameSession.status == "game_found") {
+      const totalScore = scores.reduce((acc, row) => {
+        return acc + row.reduce((acc2, val) => {
+          return acc2 + val;
+        }, 0);
+      }, 0);
+      currentScoreLabel!.textContent = `${totalScore}P`;
+    }
+    // Animate scores if feedback is returned
+    else if (gameSession.status == "return_feedback" && gameSession.current_guess_valid) {
+      const rowBefore = gameSession.guesses_used - 1;
+      for await (const i of range(WORD_LENGTH)) {
+        const charTile = charTiles[Cursor.coordToIdx(i, rowBefore)];
+        await animateScoreAdding(
+          charTile,
+          scores[rowBefore][i],
+          currentScoreLabel!
+        );
+      }
+    }
 
     // Set multiplier
-    if (currentMultiplierLabel) {
-      const multiplierText = `x${(1 + gameSession.current_game_index * 0.1).toFixed(1)}`;
-      currentMultiplierLabel.textContent = multiplierText;
-    }
+    const multiplierText = `x${(1 + gameSession.current_game_index * 0.1).toFixed(1)}`;
+    currentMultiplierLabel!.textContent = multiplierText;
 
     // Set total score
     let total: number = 0;
     gameSession.scores?.forEach(score => {
       total += score;
     });
-    if (totalScoreLabel) {
-      totalScoreLabel.textContent = `${total}P`;
-    }
+    totalScoreLabel!.textContent = `${total}P`;
   }
 </script>

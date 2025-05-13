@@ -26,14 +26,14 @@ import SwordsIcon from "../assets/icons/swords.svg"
     </div>
     <div class="category">
       <span class="subheading">GAMING</span>
-    <div class="sidebar-card classic-mode-card">
-      <GridIcon />
-      <span>Classic Mode</span>
-    </div>
-    <div class="sidebar-card duel-mode-card">
-      <SwordsIcon />
-      <span>Duel Mode</span>
-    </div>
+      <div class="sidebar-card classic-mode-card">
+        <GridIcon />
+        <span>Classic Mode</span>
+      </div>
+      <div class="sidebar-card duel-mode-card">
+        <SwordsIcon />
+        <span>Duel Mode</span>
+      </div>
     </div>    
   </section>
 </div>
@@ -43,10 +43,10 @@ import SwordsIcon from "../assets/icons/swords.svg"
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: start;
+    align-items: flex-start;
     position: relative;
     border-right: 2px solid var(--border);
-    padding: 0 10rem 0 4rem;
+    padding: 0 8rem 0 4rem;
     width: fit-content;
   }
 
@@ -58,7 +58,7 @@ import SwordsIcon from "../assets/icons/swords.svg"
     height: 6rem;
     gap: .5rem;
     .logo {
-      width: 2rem;
+      width: 1.75rem;
       height: auto;
       aspect-ratio: 1 / 1;
     }
@@ -69,14 +69,14 @@ import SwordsIcon from "../assets/icons/swords.svg"
       gap: .75rem;
     }
     .title-one {
-      font-size: 1.75em;
+      font-size: 1.5em;
       font-weight: 600;
       padding-block: 0;
       height: fit-content;
     }
     .title-two {
       color: var(--accent);
-      font-size: 1.5em;
+      font-size: 1.25em;
       font-weight: 300;
       height: fit-content;
     }
@@ -106,10 +106,15 @@ import SwordsIcon from "../assets/icons/swords.svg"
       transition: all 100ms ease;
     }
     span {
-      font-size: 1.5em;
+      font-size: 1.25em;
       color: var(--text-secondary);
       transition: all 100ms ease;
     }
+  }
+
+  hr {
+    margin: 0;
+    width: 100%;
   }
 
   .sidebar-card:hover {

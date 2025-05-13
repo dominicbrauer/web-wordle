@@ -34,13 +34,11 @@ import { GUESSES } from "../../lib/config";
   import { range } from "../../lib/helpers";
   import { flipTile } from "../../scripts/flipTileAnimation"
 
-
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
   let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
   let blockUserInput: boolean = false;
-
 
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("updateWordGrid", async (e) => {
@@ -61,7 +59,6 @@ import { GUESSES } from "../../lib/config";
     updateGame();
   });
 
-
   // Exchanges the read keyboard key
   window.addEventListener('keyInput', (e) => {
     if (blockUserInput) {
@@ -69,7 +66,6 @@ import { GUESSES } from "../../lib/config";
     }
     handleKeyboardInput((e as CustomEvent).detail.keyInput);
   });
-
 
   // Makes every char tile clickable
   charTiles?.forEach((tile, idx) => {
@@ -86,7 +82,6 @@ import { GUESSES } from "../../lib/config";
     });
   });
 
-
   /**
    * Color codes the character tiles in the word grid.
    */
@@ -101,6 +96,7 @@ import { GUESSES } from "../../lib/config";
       return;
     }
 
+    // Colors all tiles at page reload
     for (const i of range(gameSession.guesses_used)) {
       for (const j of range(WORD_LENGTH)) {
         const charScoring = gameSession.guesses[i].character_info[j].scoring;
@@ -116,7 +112,6 @@ import { GUESSES } from "../../lib/config";
     }
   }
 
-
   /**
    * Redirects a keyboard input based on its type.
    * @param key A keyboard key
@@ -129,7 +124,6 @@ import { GUESSES } from "../../lib/config";
     }
     cursor.selfSet = false;
   }
-
 
   /**
    * Performs character removal if possible.
@@ -148,7 +142,6 @@ import { GUESSES } from "../../lib/config";
       rowHeadShake();
     }
   }
-
 
   /**
    * Inserts a keyboard key into the word grid.
@@ -169,7 +162,6 @@ import { GUESSES } from "../../lib/config";
       cursor.removeSelection(charTiles);
     }
   }
-
 
   /**
    * Reads the characters in the current row.
@@ -194,7 +186,6 @@ import { GUESSES } from "../../lib/config";
     sendWord(word);
   }
 
-
   /**
    * Transmits a guessRequest event.
    * @param word Five-letter word guess
@@ -210,7 +201,6 @@ import { GUESSES } from "../../lib/config";
     window.dispatchEvent(event);
   }
 
-
   /**
    * Requests the current row to run its headshake animation.
    */
@@ -219,7 +209,6 @@ import { GUESSES } from "../../lib/config";
       detail: {row: gameSession.guesses_used}
     }));
   }
-
 
   /**
    * Updates the character tiles.

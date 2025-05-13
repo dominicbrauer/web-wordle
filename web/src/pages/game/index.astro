@@ -74,7 +74,6 @@ import Layout from "../../layouts/Layout.astro"
   import type { GameSession} from "../../lib/gameSession";
   import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
 
-
   const pageBody = document.querySelector('body') as HTMLBodyElement;
 
   let gameSession: GameSession;
@@ -83,7 +82,6 @@ import Layout from "../../layouts/Layout.astro"
   } catch {
     updateAssistantMessage("I couldn't connect to the server!");
   }
-
 
   pageBody?.addEventListener('keydown', (e) => {
     const keyInput: string = e.key.toUpperCase();
@@ -97,7 +95,6 @@ import Layout from "../../layouts/Layout.astro"
     window.dispatchEvent(event);
   });
 
-
   window.addEventListener("submitGuess", async (e) => {
     gameSession.current_guess = (e as CustomEvent).detail.word;
     gameSession.status = "submit_guess";
@@ -105,7 +102,6 @@ import Layout from "../../layouts/Layout.astro"
     gameSession = await submitGuess(gameSession);
     triggerUpdate();
   });
-
 
   /**
    * Updates the shown text in the Assistant container.
@@ -116,7 +112,6 @@ import Layout from "../../layouts/Layout.astro"
       detail: {msg: msg}
     }));
   }
-
 
   /**
    * Validates an input key
@@ -132,7 +127,6 @@ import Layout from "../../layouts/Layout.astro"
 
     return found;
   }
-
 
   /**
    * Transmits the current gameSession as an event.
@@ -160,15 +154,13 @@ import Layout from "../../layouts/Layout.astro"
     }));
 
     window.dispatchEvent(new CustomEvent("updateScoreBoard", {
-      detail: {gameSession: gameSession}
+      detail: {gameSession: gameSession, scores: calcScores()}
     }));
   }
-
 
   /**
    * Calculates the scores for each guess
    * based on the feedback colors.
-   * 
    * @return 2D-array with score values
    */
   function calcScores(): Array<Array<number>> {
@@ -201,14 +193,6 @@ import Layout from "../../layouts/Layout.astro"
     return scores;
   }
 
-
-  // async function scoreAdding(scores: number[][]) {
-  //   for (const index of range(WORD_LENGTH)) {
-  //     await animateScoreAdding(gameSession, charTiles[cursor.coordToIdx(index, undefined)], scores, index);
-  //   }
-  // }
-
-
   /**
    * Analyses the current game state for
    * winning/losing conditions.
@@ -225,7 +209,6 @@ import Layout from "../../layouts/Layout.astro"
     }
   }
 
-
   /**
    * Handles winning the game (correct word).
    */
@@ -240,7 +223,6 @@ import Layout from "../../layouts/Layout.astro"
     // window.dispatchEvent(resetDigitalKeyboard);
   }
 
-
   /**
    * Handles losing the game (all guesses used).
    */
@@ -251,7 +233,6 @@ import Layout from "../../layouts/Layout.astro"
     window.dispatchEvent(showAssistantMessage);
     // window.location.replace("http://localhost:4321");
   }
-
 
   /**
    * Initializes the game after reloading the page.
