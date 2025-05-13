@@ -1,11 +1,11 @@
-package dev.dominicbrauer.web_wordle_tim24.service;
+package dev.dominicbrauer.web_wordle_tim24.service.auth;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.dominicbrauer.web_wordle_tim24.model.User;
+import dev.dominicbrauer.web_wordle_tim24.model.auth.User;
 import dev.dominicbrauer.web_wordle_tim24.repository.UserRepository;
 
 @Service

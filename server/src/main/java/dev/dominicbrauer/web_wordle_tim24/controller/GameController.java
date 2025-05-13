@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
-import dev.dominicbrauer.web_wordle_tim24.service.GameService;
-import dev.dominicbrauer.web_wordle_tim24.service.GuessFeedbackService;
-
+import dev.dominicbrauer.web_wordle_tim24.service.game.GameService;
+import dev.dominicbrauer.web_wordle_tim24.service.game.GuessFeedbackService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController

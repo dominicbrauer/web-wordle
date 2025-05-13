@@ -1,4 +1,4 @@
-package dev.dominicbrauer.web_wordle_tim24.service;
+package dev.dominicbrauer.web_wordle_tim24.service.game;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import dev.dominicbrauer.web_wordle_tim24.lib.Config;
+import dev.dominicbrauer.web_wordle_tim24.lib.Constants;
 
 @Service
 public class RandomWordApiService {
@@ -25,7 +25,7 @@ public class RandomWordApiService {
    */
   public String fetchRandomWord() {
     ResponseEntity<List<String>> response = restTemplate.exchange(
-      "https://random-word-api.vercel.app/api?words=1&length=" + String.valueOf(Config.WORD_LENGTH),
+      "https://random-word-api.vercel.app/api?words=1&length=" + String.valueOf(Constants.WORD_LENGTH),
       HttpMethod.GET,
       null,
       new ParameterizedTypeReference<List<String>>() {}

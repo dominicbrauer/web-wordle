@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.dominicbrauer.web_wordle_tim24.model.User;
-import dev.dominicbrauer.web_wordle_tim24.service.UserService;
+import dev.dominicbrauer.web_wordle_tim24.model.auth.User;
+import dev.dominicbrauer.web_wordle_tim24.service.auth.UserService;
 
 @RestController
 @RequestMapping("/users")
