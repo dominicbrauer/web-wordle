@@ -24,12 +24,10 @@ public class GameController {
     this.guessFeedbackService = guessFeedbackService;
   }
 
-
   @GetMapping
   public ResponseEntity<String> index() {
     return ResponseEntity.ok("API is working! 🔤");
   }
-
 
   @GetMapping("/start-game")
   public ResponseEntity<GameSession> initNewGame(HttpSession session) {
@@ -55,7 +53,6 @@ public class GameController {
     return ResponseEntity.ok(newGameSession);
   }
 
-
   @PostMapping("/guess")
   public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {    
     GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
@@ -63,7 +60,6 @@ public class GameController {
     session.setAttribute("gameSession", updatedGameSession);
     return ResponseEntity.ok(updatedGameSession);
   }
-
 
   @PostMapping("/game-continue")
   public ResponseEntity<GameSession> nextRound(@RequestBody GameSession gameSession, HttpSession session) {

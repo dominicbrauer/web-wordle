@@ -4,24 +4,26 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
-@Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @ToString
 @EqualsAndHashCode
+@Entity
+@Table(name = "Users")
 public class UserEntity {
 
-  @Id // Primary key
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String userName;
   private String email;
   private String password;
-  private String profilePicturePath;
+  private boolean isVerified;
 
 }
