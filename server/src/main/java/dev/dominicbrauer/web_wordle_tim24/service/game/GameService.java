@@ -1,5 +1,7 @@
 package dev.dominicbrauer.web_wordle_tim24.service.game;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Service;
 
 import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
@@ -26,7 +28,7 @@ public class GameService {
       true,
       null,
       0,
-      null
+      new ArrayList<>(0)
     );
     return gameSession;
   }

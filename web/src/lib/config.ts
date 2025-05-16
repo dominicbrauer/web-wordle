@@ -11,7 +11,7 @@ export const SETTINGS = {
 
 export const WORD_LENGTH: number = 5; // default: 5
 export const GUESSES: number = 6; // default: 6
-export const ROW_MULTIPLIERS: number[] = [10, 8, 5, 3, 2, 1]; // default: [10, 8, 5, 3, 2, 1]
+export const ROW_MULTIPLIERS: number[] = [20, 7, 4, 2.5, 1.5, 1]; // default: [10, 8, 5, 3, 2, 1]
 
 export const GRAY_TILE_VALUE = 1; // default: 1
 export const YELLOW_TILE_VALUE = 2; // default: 2

@@ -21,7 +21,6 @@ export async function animateScoreAdding(tile: HTMLDivElement, score: number, de
   await new Promise(async (resolve) => {
     const anim = scoreElement.animate([
       { transform: 'translateX(0)', offset: 0 },
-      // { transform: 'translateX(2rem) translateY(-2rem)', offset: 0.1 },
       { left: `${labelPosX}px`, top: `${labelPosY}px`, offset: 1 }
     ], {
       duration: 700,

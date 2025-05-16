@@ -28,7 +28,7 @@ import { GUESSES } from "../../lib/config";
 </style>
 
 <script>
-  import { WORD_LENGTH, GUESSES } from "../../lib/config";
+  import { WORD_LENGTH } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
@@ -36,16 +36,14 @@ import { GUESSES } from "../../lib/config";
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
-  let gameSession: GameSession;
   const cursor: Cursor = new Cursor(0, 0, false, false);
+  let gameSession: GameSession;
   let blockUserInput: boolean = false;
 
   // Connection to exchange the gameSession after each fetch
   window.addEventListener("updateWordGrid", async (e) => {
     gameSession = (e as CustomEvent).detail.gameSession;
-    await updateGame();
-
-    window.dispatchEvent(new CustomEvent("analyseGameState"));
+    await updateGrid();
 
     blockUserInput = false;
   });
@@ -56,7 +54,7 @@ import { GUESSES } from "../../lib/config";
     charTiles.forEach(charTile => {
       flipTile(charTile, "reset");
     });
-    updateGame();
+    updateGrid();
   });
 
   // Exchanges the read keyboard key
@@ -144,6 +142,13 @@ import { GUESSES } from "../../lib/config";
   }
 
   /**
+   * mogus
+   */
+  export function testFun() {
+
+  }
+
+  /**
    * Inserts a keyboard key into the word grid.
    * @param key a valid character
    */
@@ -213,7 +218,7 @@ import { GUESSES } from "../../lib/config";
   /**
    * Updates the character tiles.
    */
-  async function updateGame() {
+  async function updateGrid() {
     if (gameSession.current_guess_valid) {
       await charHighlighting();
 

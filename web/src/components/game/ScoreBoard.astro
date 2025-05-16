@@ -130,6 +130,7 @@
   import type { GameSession } from "../../lib/gameSession";
   import { range } from "../../lib/helpers";
   import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
+  import { addScores } from "../../lib/helpers"
 
   const roundCountLabel = document.querySelector<HTMLSpanElement>('.round-count');
   const currentScoreLabel = document.querySelector<HTMLSpanElement>('.current-score');
@@ -142,6 +143,8 @@
     const scores: Array<Array<number>> = (e as CustomEvent).detail.scores;
 
     await updateScoreBoard(gameSession, scores);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    window.dispatchEvent(new CustomEvent("analyseGameState"));
   });
 
   async function updateScoreBoard(gameSession: GameSession, scores: Array<Array<number>>) {
@@ -150,12 +153,8 @@
     roundCountLabel!.textContent = roundCountText;
 
     // Set current score
-    if (gameSession.status == "game_found") {
-      const totalScore = scores.reduce((acc, row) => {
-        return acc + row.reduce((acc2, val) => {
-          return acc2 + val;
-        }, 0);
-      }, 0);
+    if (gameSession.status == "game_found" || gameSession.status == "next_game") {
+      const totalScore: number = addScores(scores);
       currentScoreLabel!.textContent = `${totalScore}P`;
     }
     // Animate scores if feedback is returned
@@ -169,6 +168,7 @@
           currentScoreLabel!
         );
       }
+      console.log("FIRE");
     }
 
     // Set multiplier

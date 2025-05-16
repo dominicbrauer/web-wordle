@@ -63,13 +63,15 @@ public class GameController {
 
   @PostMapping("/game-continue")
   public ResponseEntity<GameSession> nextRound(@RequestBody GameSession gameSession, HttpSession session) {
+    System.out.println("Scores: " + gameSession.scores());
+
     GameSession nextGameSession = new GameSession(
       "next_game",
       0,
       null,
       false,
       null,
-      gameSession.current_game_index(),
+      gameSession.current_game_index() + 1,
       gameSession.scores()
     );
 

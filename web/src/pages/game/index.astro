@@ -70,8 +70,10 @@ import Layout from "../../layouts/Layout.astro"
 </style>
 
 <script>
+  import { ROW_MULTIPLIERS } from "../../lib/config";
   import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
+  import { addScores } from "../../lib/helpers";
   import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
@@ -79,7 +81,7 @@ import Layout from "../../layouts/Layout.astro"
   let gameSession: GameSession;
   try {
     gameSession = await requestGameSession();
-  } catch {
+  } catch (error) {
     updateAssistantMessage("I couldn't connect to the server!");
   }
 
@@ -101,6 +103,10 @@ import Layout from "../../layouts/Layout.astro"
 
     gameSession = await submitGuess(gameSession);
     triggerUpdate();
+  });
+
+  window.addEventListener("analyseGameState", () => {
+    analyseGameState();
   });
 
   /**
@@ -201,11 +207,13 @@ import Layout from "../../layouts/Layout.astro"
     // Correct guess: Win
     if (gameSession.guesses_used > 0 && gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
       await handleWin();
+      return;
     }
 
     // No guesses left: Lose
     if (gameSession.guesses_used >= GUESSES) {
       handleLose();
+      return;
     }
   }
 
@@ -213,35 +221,41 @@ import Layout from "../../layouts/Layout.astro"
    * Handles winning the game (correct word).
    */
   async function handleWin() {
-    gameSession = await requestNextGame(gameSession);
+    const newScores: number[] = gameSession.scores;
+    const score = addScores(calcScores())
+      * (1 + gameSession.current_game_index * 0.1)
+      * ROW_MULTIPLIERS[gameSession.guesses_used - 1];
+    newScores.push(Math.floor(score));
 
-    const resetWordGrid = new CustomEvent("resetWordGrid", {
+    const sendGameSession: GameSession = {
+      status: "request_next_game",
+      guesses_used: gameSession.guesses_used,
+      current_guess: gameSession.current_guess,
+      current_guess_valid: gameSession.current_guess_valid,
+      guesses: gameSession.guesses,
+      current_game_index: gameSession.current_game_index,
+      scores: newScores
+    };
+
+    gameSession = await requestNextGame(sendGameSession);
+
+    triggerUpdate();
+
+    window.dispatchEvent(new CustomEvent("resetWordGrid", {
       detail: {gameSession: gameSession}
-    });
-    window.dispatchEvent(resetWordGrid);
-    // const resetDigitalKeyboard = new CustomEvent("resetDigitalKeyboard");
-    // window.dispatchEvent(resetDigitalKeyboard);
+    }));
   }
 
   /**
    * Handles losing the game (all guesses used).
    */
   function handleLose() {
-    const showAssistantMessage = new CustomEvent("showAssistantMessage", {
+    window.dispatchEvent(new CustomEvent("showAssistantMessage", {
       detail: {msg: "You lost! :pepoSadge:"}
-    });
-    window.dispatchEvent(showAssistantMessage);
+    }));
     // window.location.replace("http://localhost:4321");
   }
 
-  /**
-   * Initializes the game after reloading the page.
-   */
-  function initialize() {
-    if (gameSession != null) {
-      triggerUpdate();
-    }
-  }
-
-  initialize();
+  triggerUpdate();
+  analyseGameState();
 </script>
