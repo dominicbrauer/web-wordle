@@ -65,3 +65,22 @@ export async function requestNextGame(gameSession: GameSession): Promise<GameSes
   }
   return await response.json() as GameSession;
 };
+
+/**
+ * Submits all game data to the server. The gameSession
+ * will be invalidated.
+ */
+export async function submitLostGame(gameSession: GameSession): Promise<void> {
+  const response = await fetch('http://localhost:8080/api/game-over', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(gameSession),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
+  }
+}

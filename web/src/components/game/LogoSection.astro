@@ -1,16 +1,42 @@
 ---
-
+import { Image } from "astro:assets"
+import logoImg from "../../assets/images/logo.png"
 ---
 
 <div class="logo-section">
-  mogus
+  <Image src={logoImg} alt="Giga Shrek" class="picture" />
+  <div class="title">
+    <span class="main-title">wordle</span>
+    <span class="sub-title">CHAMPIONS</span>
+  </div>
 </div>
 
 <style>
   .logo-section {
     display: flex;
-    border: 2px solid red;
     width: 100%;
     height: 50%;
+  }
+
+  .logo-section .picture {
+    width: auto;
+    height: 4rem;
+    aspect-ratio: 1 / 1;
+    margin: .5rem;
+  }
+
+  .logo-section .title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo-section .main-title {
+    font-size: 2em;
+  }
+
+  .logo-section .sub-title {
+    font-size: 1.5em;
+    color: var(--accent);
   }
 </style>

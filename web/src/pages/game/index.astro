@@ -74,7 +74,7 @@ import Layout from "../../layouts/Layout.astro"
   import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
   import type { GameSession} from "../../lib/gameSession";
   import { addScores } from "../../lib/helpers";
-  import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
+  import { submitGuess, requestGameSession, requestNextGame, submitLostGame } from "../../scripts/gameRequests"
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
 
@@ -212,7 +212,7 @@ import Layout from "../../layouts/Layout.astro"
 
     // No guesses left: Lose
     if (gameSession.guesses_used >= GUESSES) {
-      handleLose();
+      await handleLose();
       return;
     }
   }
@@ -249,11 +249,31 @@ import Layout from "../../layouts/Layout.astro"
   /**
    * Handles losing the game (all guesses used).
    */
-  function handleLose() {
+  async function handleLose() {
     window.dispatchEvent(new CustomEvent("showAssistantMessage", {
-      detail: {msg: "You lost! :pepoSadge:"}
+      detail: {msg: "Oh no, you lost! You have no guesses left... Next time you'll win!"}
     }));
-    // window.location.replace("http://localhost:4321");
+
+    const newScores: number[] = gameSession.scores;
+    const score = addScores(calcScores())
+      * (1 + gameSession.current_game_index * 0.1)
+      * ROW_MULTIPLIERS[gameSession.guesses_used - 1];
+    newScores.push(Math.floor(score));
+
+    const sendGameSession: GameSession = {
+      status: "game_over",
+      guesses_used: gameSession.guesses_used,
+      current_guess: gameSession.current_guess,
+      current_guess_valid: gameSession.current_guess_valid,
+      guesses: gameSession.guesses,
+      current_game_index: gameSession.current_game_index,
+      scores: newScores
+    };
+
+    await submitLostGame(sendGameSession);
+
+    alert("No more guesses left!");
+    window.location.href = "http://localhost:4321";
   }
 
   triggerUpdate();

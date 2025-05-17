@@ -7,7 +7,7 @@
     <div class="user-picture-container">
       <img class="user-picture" src="" />
     </div>
-    <span class="user-name">DominicBrauer</span>
+    <span class="user-name">Anonymous</span>
   </div>
   <hr>
   <div class="game-info-container">
@@ -159,6 +159,10 @@
     }
     // Animate scores if feedback is returned
     else if (gameSession.status == "return_feedback" && gameSession.current_guess_valid) {
+      window.dispatchEvent(new CustomEvent("showAssistantMessage", {
+        detail: {msg: "That was great! Keep going."}
+      }));
+
       const rowBefore = gameSession.guesses_used - 1;
       for await (const i of range(WORD_LENGTH)) {
         const charTile = charTiles[Cursor.coordToIdx(i, rowBefore)];

@@ -74,14 +74,23 @@ public class GameController {
       gameSession.current_game_index() + 1,
       gameSession.scores()
     );
-
-    // Score saves etc.
     
     session.setAttribute("solutionWord", gameService.getRandomWord());
     session.setAttribute("gameSession", nextGameSession);
     System.out.println(session.getAttribute("solutionWord").toString());
 
     return ResponseEntity.ok(nextGameSession);
+  }
+
+  @PostMapping("/game-over")
+  public ResponseEntity<String> handleGameOver(@RequestBody GameSession gameSession, HttpSession session) {
+
+    System.out.println(gameSession.scores());
+    // score saves
+
+    session.invalidate();
+
+    return ResponseEntity.ok("Progress data has been saved!");
   }
 
 }
