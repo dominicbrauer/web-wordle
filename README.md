@@ -17,10 +17,7 @@
 - get profile picture and name from user if user available
 
 ### Root page
-- Home section
-- How To Play section
-- Classic Mode section
-- Duel Mode section
+- beautify sections
 
 ### Other
 - comment code
