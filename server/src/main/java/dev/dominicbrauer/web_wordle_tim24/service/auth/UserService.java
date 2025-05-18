@@ -13,6 +13,7 @@ public class UserService {
 
   @Autowired
   private UserH2Repository userRepository;
+  
 
   public UserEntity addUser(UserEntity user) {
     return userRepository.save(user);

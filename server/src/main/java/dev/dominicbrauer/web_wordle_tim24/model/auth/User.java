@@ -4,6 +4,5 @@ public record User(
   Long id,
   String userName,
   String email,
-  String password,
-  boolean isVerified
+  String password
 ) {}
