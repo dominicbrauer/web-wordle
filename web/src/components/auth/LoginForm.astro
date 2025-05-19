@@ -1,0 +1,93 @@
+---
+import '../../styles/global.css'
+import '../../styles/forms.css'
+---
+
+<div class="form-container">
+  <h1>Login</h1>
+  <form name="login-form" class="login-form">
+    <div class="form-element">
+      <label for="mail-input">E-Mail:</label>
+      <input
+        type="email"
+        name="mail-input"
+        id="mail-input"
+        placeholder="example@mail.com"
+        required>
+    </div>
+    <div class="form-element">
+      <label for="pw-input">Password:</label>
+      <input
+        type="password"
+        name="pw-input"
+        id="pw-input"
+        placeholder="Example123"
+        required>
+    </div>
+  </form>
+  <button name="submit-btn" id="submit-btn" class="submit-btn" disabled="true">Submit</button>
+  <span class="redirect-text">
+    Don't have an account yet?
+    <a href="/signup">Sign Up</a>
+  </span>
+</div>
+
+<script>
+  interface LoginData {
+    email: string;
+    password: string;
+  }
+
+  const mailInput = document.getElementById('mail-input') as HTMLInputElement;
+  const pwInput = document.getElementById('pw-input') as HTMLInputElement;
+  const submitButton = document.getElementById('submit-btn') as HTMLButtonElement;
+
+  const inputElements = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+
+  let mailInputEmpty: boolean = true;
+  let pwInputEmpty: boolean = true;
+
+  inputElements?.forEach(input => {
+    input?.addEventListener('input', () => {
+      pwInputEmpty = pwInput.value != "" ? false : true;
+      mailInputEmpty = mailInput.value != "" ? false : true;
+      toggleButton();
+  })});
+
+  function toggleButton() {
+    if (!(mailInputEmpty || pwInputEmpty)) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  }
+
+  submitButton?.addEventListener('click', () => {
+    const userData: LoginData = {
+      email: mailInput.value,
+      password: pwInput.value
+    };
+    submitForm(userData);
+  });
+
+  async function submitForm(userData: LoginData): Promise<void> {
+    try {
+      const response = await fetch('http://localhost:8080/users/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const responseData = await response.text();
+      console.log('Server response:', responseData);
+    } catch (error) {
+      console.error('Failed sending data:', error);
+    }
+  }
+</script>
