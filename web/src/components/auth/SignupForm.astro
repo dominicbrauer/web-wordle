@@ -5,45 +5,45 @@ import '../../styles/forms.css'
 
 <div class="form-container">
   <h1>Sign Up</h1>
-  <form name="signup-form" class="signup-form">
+  <form name="signup-form" class="signup-form" method="post" action="http://localhost:8080/users/add">
     <div class="form-element">
-      <label for="name-input">Name:</label>
+      <label for="userName">Name:</label>
       <input
         type="text"
-        name="name-input"
-        id="name-input"
+        name="userName"
+        id="userName"
         placeholder="ProGamer42"
         required>
     </div>
     <div class="form-element">
-      <label for="mail-input">E-Mail:</label>
+      <label for="email">E-Mail:</label>
       <input
         type="email"
-        name="mail-input"
-        id="mail-input"
+        name="email"
+        id="email"
         placeholder="example@mail.com"
         required>
     </div>
     <div class="form-element">
-      <label for="pw-input-one">Password:</label>
+      <label for="password">Password:</label>
       <input
         type="password"
-        name="pw-input-one"
-        id="pw-input-one"
+        name="password"
+        id="password"
         placeholder="Example123"
         required>
     </div>
     <div class="form-element">
-      <label for="pw-input-two">Validate Password:</label>
+      <label for="verifyPassword">Validate Password:</label>
       <input
         type="password"
-        name="pw-input-two"
-        id="pw-input-two"
+        name="verifyPassword"
+        id="verifyPassword"
         placeholder="Example123"
         required>
     </div>
+    <button type="submit" name="submit-btn" id="submit-btn" class="submit-btn" disabled="true">Submit</button>
   </form>
-  <button name="submit-btn" id="submit-btn" class="submit-btn" disabled="true">Submit</button>
   <span class="redirect-text">
     Already have an account?
     <a href="/login">Log in</a>
@@ -57,10 +57,10 @@ import '../../styles/forms.css'
     password: string;
   }
 
-  const nameInput = document.getElementById('name-input') as HTMLInputElement;
-  const mailInput = document.getElementById('mail-input') as HTMLInputElement;
-  const pwInputOne = document.getElementById('pw-input-one') as HTMLInputElement;
-  const pwInputTwo = document.getElementById('pw-input-two') as HTMLInputElement;
+  const nameInput = document.getElementById('userName') as HTMLInputElement;
+  const mailInput = document.getElementById('email') as HTMLInputElement;
+  const pwInputOne = document.getElementById('password') as HTMLInputElement;
+  const pwInputTwo = document.getElementById('verifyPassword') as HTMLInputElement;
   const submitButton = document.getElementById('submit-btn') as HTMLButtonElement;
 
   const inputElements = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
@@ -84,44 +84,6 @@ import '../../styles/forms.css'
       submitButton.disabled = false;
     } else {
       submitButton.disabled = true;
-    }
-  }
-
-  submitButton?.addEventListener('click', () => {
-    if (pwInputOne.value != pwInputTwo.value) {
-      alert("Both passwords must be the same!");
-      return;
-    }
-
-    const userData: SignupData = {
-      userName: nameInput.value,
-      email: mailInput.value,
-      password: pwInputOne.value
-    };
-
-    console.log(userData);
-
-    submitForm(userData);
-  });
-
-  async function submitForm(userData: SignupData): Promise<void> {
-    try {
-      const response = await fetch('http://localhost:8080/users/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const responseData = await response.text();
-      console.log('Server response:', responseData);
-    } catch (error) {
-      console.error('Failed sending data:', error);
     }
   }
 </script>

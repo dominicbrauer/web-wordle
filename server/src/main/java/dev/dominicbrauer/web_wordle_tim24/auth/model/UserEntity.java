@@ -1,4 +1,4 @@
-package dev.dominicbrauer.web_wordle_tim24.model.auth;
+package dev.dominicbrauer.web_wordle_tim24.auth.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

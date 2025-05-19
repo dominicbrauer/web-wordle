@@ -1,4 +1,4 @@
-package dev.dominicbrauer.web_wordle_tim24.model.game;
+package dev.dominicbrauer.web_wordle_tim24.game.model;
 
 import java.util.List;
 

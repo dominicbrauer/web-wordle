@@ -1,4 +1,4 @@
-package dev.dominicbrauer.web_wordle_tim24.service.game;
+package dev.dominicbrauer.web_wordle_tim24.game.service;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

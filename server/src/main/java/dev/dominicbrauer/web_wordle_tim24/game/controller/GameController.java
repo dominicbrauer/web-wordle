@@ -1,15 +1,17 @@
-package dev.dominicbrauer.web_wordle_tim24.controller;
+package dev.dominicbrauer.web_wordle_tim24.game.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
-import dev.dominicbrauer.web_wordle_tim24.service.game.GameService;
-import dev.dominicbrauer.web_wordle_tim24.service.game.GuessFeedbackService;
+import dev.dominicbrauer.web_wordle_tim24.game.model.GameSession;
+import dev.dominicbrauer.web_wordle_tim24.game.service.GameService;
+import dev.dominicbrauer.web_wordle_tim24.game.service.GuessFeedbackService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -25,11 +27,25 @@ public class GameController {
   }
 
   @GetMapping
+  @CrossOrigin(
+    allowedHeaders = "*",
+    exposedHeaders = "*",
+    methods = {RequestMethod.GET, RequestMethod.OPTIONS},
+    allowCredentials = "true",
+    origins = "http://localhost:4321"
+  )
   public ResponseEntity<String> index() {
     return ResponseEntity.ok("API is working! 🔤");
   }
 
   @GetMapping("/start-game")
+  @CrossOrigin(
+    allowedHeaders = "*",
+    exposedHeaders = "*",
+    methods = {RequestMethod.GET, RequestMethod.OPTIONS},
+    allowCredentials = "true",
+    origins = "http://localhost:4321"
+  )
   public ResponseEntity<GameSession> initNewGame(HttpSession session) {
     if (!session.isNew()) {
       GameSession knownSession = (GameSession) session.getAttribute("gameSession");
@@ -54,6 +70,13 @@ public class GameController {
   }
 
   @PostMapping("/guess")
+  @CrossOrigin(
+    allowedHeaders = "*",
+    exposedHeaders = "*",
+    methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+    allowCredentials = "true",
+    origins = "http://localhost:4321"
+  )
   public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {    
     GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
 
@@ -62,6 +85,13 @@ public class GameController {
   }
 
   @PostMapping("/game-continue")
+  @CrossOrigin(
+    allowedHeaders = "*",
+    exposedHeaders = "*",
+    methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+    allowCredentials = "true",
+    origins = "http://localhost:4321"
+  )
   public ResponseEntity<GameSession> nextRound(@RequestBody GameSession gameSession, HttpSession session) {
     System.out.println("Scores: " + gameSession.scores());
 
@@ -83,6 +113,13 @@ public class GameController {
   }
 
   @PostMapping("/game-over")
+  @CrossOrigin(
+    allowedHeaders = "*",
+    exposedHeaders = "*",
+    methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+    allowCredentials = "true",
+    origins = "http://localhost:4321"
+  )
   public ResponseEntity<String> handleGameOver(@RequestBody GameSession gameSession, HttpSession session) {
 
     System.out.println(gameSession.scores());

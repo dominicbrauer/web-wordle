@@ -1,10 +1,10 @@
-package dev.dominicbrauer.web_wordle_tim24.service.game;
+package dev.dominicbrauer.web_wordle_tim24.game.service;
 
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
-import dev.dominicbrauer.web_wordle_tim24.model.game.GameSession;
+import dev.dominicbrauer.web_wordle_tim24.game.model.GameSession;
 
 @Service
 public class GameService {
