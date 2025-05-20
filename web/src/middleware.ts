@@ -1,15 +1,13 @@
-import type { AstroCookies } from "astro";
 import { defineMiddleware } from "astro:middleware";
 
 export const onRequest = defineMiddleware(async (ctx, next) => {
+  const sessionCookie = ctx.cookies.get("session");
 
-  const cookie = ctx.cookies.get("session");
-
-  if (!cookie) {
+  if (!sessionCookie) {
     return next();
   }
 
-  // const session = await requestSession(cookie!.value);
+  const userData = await requestUserBySession(sessionCookie.value);
 
   return next();
 });
@@ -17,17 +15,14 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
 /**
  * 
  */
-// async function requestSession(cookieValue: string) {
-//   const response = await fetch('http://localhost:8080/api/guess', {
-//     method: 'POST',
-//     credentials: 'include',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     }
-//   });
+async function requestUserBySession(cookieValue: string) {
+  const response = await fetch('http://localhost:8080/session/get-user', {
+    method: 'POST',
+    body: cookieValue,
+  });
 
-//   if (!response.ok) {
-//     throw new Error(`Error: ${response.statusText}`);
-//   }
-//   return;
-// }
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
+  }
+  return;
+}

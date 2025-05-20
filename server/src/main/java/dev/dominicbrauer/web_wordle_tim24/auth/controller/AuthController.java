@@ -23,7 +23,7 @@ import dev.dominicbrauer.web_wordle_tim24.auth.service.AuthService;
 import dev.dominicbrauer.web_wordle_tim24.auth.service.SessionService;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/auth")
 public class AuthController {
 
   @Autowired
