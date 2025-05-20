@@ -1,6 +1,6 @@
 package dev.dominicbrauer.web_wordle_tim24.auth.service;
 
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +14,23 @@ public class SessionService {
 
   @Autowired
   private SessionH2Repository sessionRepository;
-  
+
+  private final Long WEEK = 1000 * 60 * 60 * 24 * 7L;
+
   /**
-   * 
+   * Creates a new session for the given user.
+   * @param userId the user ID the session should be assigned to
+   * @return the saved SessionEntity 
    */
   public SessionEntity createSession(Long userId) {
     UUID token = UUID.randomUUID();
 
-    SessionEntity session = new SessionEntity(token, userId, 6969L);
+    Long currentTime = new Date().getTime();
+    Long expireDate = currentTime + WEEK;
 
+    SessionEntity session = new SessionEntity(token, userId, expireDate);
     return sessionRepository.save(session);
   }
 
-  /**
-   * 
-   */
-  public List<SessionEntity> getAllSessions() {
-    return sessionRepository.findAll();
-  }
-  
 }
 
