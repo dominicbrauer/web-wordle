@@ -1,9 +1,30 @@
 ---
 import Layout from "../../layouts/Layout.astro"
-import '../../styles/global.css'
 import SignupForm from "../../components/auth/SignupForm.astro"
 ---
 
 <Layout title="Sign Up">
   <SignupForm />
 </Layout>
+
+<script>
+  const params = new URLSearchParams(document.location.search);
+  const error = params.get("error");
+
+  switch(error) {
+    case "passwords": {
+      alert("Both passwords must be equal!");
+      break;
+    }
+    case "invalid_email": {
+      alert("Invalid email address!");
+      break;
+    }
+    case "email_taken": {
+      alert("Email is already in use!");
+      break;
+    }
+  }
+
+  window.history.pushState('', '', "/signup");
+</script>

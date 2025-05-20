@@ -6,3 +6,17 @@ import LoginForm from "../../components/auth/LoginForm.astro"
 <Layout title="Log In">
   <LoginForm />
 </Layout>
+
+<script>
+  const params = new URLSearchParams(document.location.search);
+  const error = params.get("error");
+
+  switch(error) {
+    case "wrong_credentials": {
+      alert("Credentials are wrong!");
+      break;
+    }
+  }
+
+  window.history.pushState('', '', "/login");
+</script>
