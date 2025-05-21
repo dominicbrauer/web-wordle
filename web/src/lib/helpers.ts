@@ -19,3 +19,9 @@ export function addScores(scores: number[][]): number {
       }, 0);
   return totalScore;
 }
+
+/**
+ * Starts a timeout.
+ * @param duration the timeout duration in milliseconds
+ */
+export const wait = (duration: number) => new Promise((resolve) => setTimeout(resolve, duration));

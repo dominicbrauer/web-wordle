@@ -43,7 +43,6 @@ public class GameService {
 	 */
 	public Game createNewGame() {
 		return new Game(
-			"new_game",
 			0,
 			null,
 			false,
@@ -62,6 +61,7 @@ public class GameService {
 		do {
 			word = apiService.fetchRandomWord(Constants.WORD_LENGTH);
 		} while (!apiService.validWord(word));
+		System.out.println(word);
 		return word;
 	}
 
@@ -78,7 +78,6 @@ public class GameService {
 
 		if (!apiService.validWord(currentGuess)) {
 			Game responseGame = new Game(
-				"return_feedback", 
 				currentGame.guesses_used(),
 				currentGuess,
 				false,
@@ -102,7 +101,6 @@ public class GameService {
 
 		// Build game
 		Game responseGame = new Game(
-			"return_feedback",
 			currentGame.guesses_used() + 1,
 			currentGuess,
 			true,
@@ -114,10 +112,6 @@ public class GameService {
 			currentGuess.equals(solutionWord),
 			characters
 		));
-
-		if (currentGuess.equals(solutionWord)) {
-
-		}
 
 		return responseGame;
 	}

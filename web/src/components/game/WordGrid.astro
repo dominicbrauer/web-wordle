@@ -30,42 +30,41 @@ import { GUESSES } from "../../lib/config";
 <script>
   import { WORD_LENGTH } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
-  import type { Game } from "../../lib/Game";
+  import { Scoring, type Game, type GameSession } from "../../lib/models";
   import { range } from "../../lib/helpers";
-  import { flipTile } from "../../scripts/flipTileAnimation"
+  import { flipTile } from "../../scripts/flipTileAnimation";
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
   const cursor: Cursor = new Cursor(0, 0, false, false);
-  let Game: Game;
+  let currentGameSession: GameSession;
+  let currentGame: Game;
   let blockUserInput: boolean = false;
 
-  // Connection to exchange the Game after each fetch
   window.addEventListener("updateWordGrid", async (e) => {
-    Game = (e as CustomEvent).detail.Game;
+    currentGameSession = (e as CustomEvent).detail.currentGameSession;
+    currentGame = (e as CustomEvent).detail.currentGame;
+
     await updateGrid();
 
     blockUserInput = false;
   });
 
-  // Connection to reset the word grid
   window.addEventListener("resetWordGrid", (e) => {
-    Game = (e as CustomEvent).detail.Game;
+    currentGame = (e as CustomEvent).detail.currentGame;
     charTiles.forEach(charTile => {
-      flipTile(charTile, "reset");
+      flipTile(charTile, "RESET", 0);
     });
     updateGrid();
   });
 
-  // Exchanges the read keyboard key
-  window.addEventListener('keyInput', (e) => {
+  window.addEventListener("keyInput", (e) => {
     if (blockUserInput) {
       return;
     }
     handleKeyboardInput((e as CustomEvent).detail.keyInput);
   });
 
-  // Makes every char tile clickable
   charTiles?.forEach((tile, idx) => {
     tile.addEventListener('click', () => {
       if (blockUserInput || !tile.classList.contains('active')) {
@@ -84,28 +83,36 @@ import { GUESSES } from "../../lib/config";
    * Color codes the character tiles in the word grid.
    */
   async function charHighlighting() {
-    if (game.status == "return_feedback") {
+    if (currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") {
       for (const i of range(WORD_LENGTH)) {
-        const charIdx: number = cursor.coordToIdx(i, game.guesses_used - 1);
-        const color: string = game.guesses[game.guesses_used - 1].character_info[i].scoring;
+        const charIdx: number = cursor.coordToIdx(i, currentGame.guesses_used - 1);
+        const color: Scoring = currentGame.guesses[currentGame.guesses_used - 1].character_info[i].scoring;
 
-        await flipTile(charTiles[charIdx], color);
+        await flipTile(charTiles[charIdx], color, 250);
       }
       return;
     }
 
     // Colors all tiles at page reload
-    for (const i of range(game.guesses_used)) {
+    for (const i of range(currentGame.guesses_used)) {
       for (const j of range(WORD_LENGTH)) {
-        const charScoring = game.guesses[i].character_info[j].scoring;
+        const charScoring: Scoring = currentGame.guesses[i].character_info[j].scoring;
         const tile = charTiles[cursor.coordToIdx(j, i)];
 
-        const classMap: Record<string, string> = {
-          green: 'char-feedback-green',
-          yellow: 'char-feedback-yellow',
-        };
-
-        tile.classList.add(classMap[charScoring] || 'char-feedback-gray');
+        switch(charScoring) {
+          case Scoring.GREEN: {
+            tile.classList.add('char-feedback-green');
+            break;
+          }
+          case Scoring.YELLOW: {
+            tile.classList.add('char-feedback-yellow');
+            break;
+          }
+          default: {
+            tile.classList.add('char-feedback-gray');
+            break;
+          }
+        }
       }
     }
   }
@@ -139,13 +146,6 @@ import { GUESSES } from "../../lib/config";
     } else {
       rowHeadShake();
     }
-  }
-
-  /**
-   * mogus
-   */
-  export function testFun() {
-
   }
 
   /**
@@ -211,7 +211,7 @@ import { GUESSES } from "../../lib/config";
    */
   function rowHeadShake() {
     window.dispatchEvent(new CustomEvent("headShake", {
-      detail: {row: game.guesses_used}
+      detail: {row: currentGame.guesses_used}
     }));
   }
 
@@ -219,7 +219,7 @@ import { GUESSES } from "../../lib/config";
    * Updates the character tiles.
    */
   async function updateGrid() {
-    if (game.current_guess_valid) {
+    if (currentGame.current_guess_valid) {
       await charHighlighting();
 
       cursor.x = 0;
@@ -227,9 +227,9 @@ import { GUESSES } from "../../lib/config";
       cursor.selfSet = false;
     }
 
-    cursor.y = game.guesses_used;
+    cursor.y = currentGame.guesses_used;
     cursor.addSelection(charTiles);
-    Game?.guesses?.forEach((guess, rowIdx) => {
+    currentGame?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(WORD_LENGTH)) {
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }

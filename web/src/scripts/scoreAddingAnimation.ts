@@ -1,4 +1,4 @@
-const wait = (duration: number = 500) => new Promise((resolve) => setTimeout(resolve, duration));
+import { wait } from "../lib/helpers";
 
 export async function animateScoreAdding(tile: HTMLDivElement, score: number, destinationLabel: HTMLSpanElement) {
   await wait(300);

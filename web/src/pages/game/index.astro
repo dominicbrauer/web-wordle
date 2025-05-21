@@ -8,274 +8,254 @@ import Layout from "../../layouts/Layout.astro"
 ---
 
 <Layout title="Classic Game">
-  <div class="game-frame">
-    <div class="upper-area">
-      <div class="side left">
-        <LogoSection />
-        <Assistant />
-      </div>
-      <WordGrid />
-      <div class="side right">
-        <ScoreBoard />
-      </div>      
-    </div>
-    
-    <DigitalKeyboard />
-  </div>
+	<div class="game-frame">
+		<div class="upper-area">
+			<div class="side left">
+				<LogoSection />
+				<Assistant />
+			</div>
+			<WordGrid />
+			<div class="side right">
+				<ScoreBoard />
+			</div>      
+		</div>
+		
+		<DigitalKeyboard />
+	</div>
 </Layout>
 
 <style>
-  .game-frame {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: fit-content;
-    height: 100%;
-    margin: 1rem auto;
-    gap: 1rem;
-  }
+	.game-frame {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		width: fit-content;
+		height: 100%;
+		margin: 1rem auto;
+		gap: 1rem;
+	}
 
-  .upper-area {
-    display: flex;
-    flex-direction: row;
-    height: fit-content;
-    justify-content: center;
-    gap: 2rem;
-  }
+	.upper-area {
+		display: flex;
+		flex-direction: row;
+		height: fit-content;
+		justify-content: center;
+		gap: 2rem;
+	}
 
-  .side {
-    display: flex;
-    padding: 1.5rem;
-    width: 400px;
-    height: 100%;
-  }
+	.side {
+		display: flex;
+		padding: 1.5rem;
+		width: 400px;
+		height: 100%;
+	}
 
-  .side.left {
-    flex-direction: column;
-    gap: 1rem;
-    justify-content: center;
-  }
+	.side.left {
+		flex-direction: column;
+		gap: 1rem;
+		justify-content: center;
+	}
 
-  .side.right {
-    align-items: center;
-    justify-content: left;
-  }
+	.side.right {
+		align-items: center;
+		justify-content: left;
+	}
 
-  body {
-    display: flex;
-    flex-direction: column;
-  }
+	body {
+		display: flex;
+		flex-direction: column;
+	}
 </style>
 
 <script>
-  import { ROW_MULTIPLIERS } from "../../lib/config";
-  import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
-  import type { Game} from "../../lib/Game";
-  import { addScores } from "../../lib/helpers";
-  import { submitGuess, requestGame, requestNextGame, submitLostGame } from "../../scripts/gameRequests"
+	import { ROW_MULTIPLIERS } from "../../lib/config";
+	import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
+	import type { Game, GameSession, Scoring} from "../../lib/models";
+	import { addScores } from "../../lib/helpers";
+	import { submitGuess, requestGameSession } from "../../scripts/gameRequests"
 
-  const pageBody = document.querySelector('body') as HTMLBodyElement;
+	const pageBody = document.querySelector('body') as HTMLBodyElement;
 
-  let Game: Game;
-  try {
-    Game = await requestGame();
-  } catch (error) {
-    updateAssistantMessage("I couldn't connect to the server!");
-  }
+	let currentGameSession: GameSession;
+	let currentGame: Game;
+	
 
-  pageBody?.addEventListener('keydown', (e) => {
-    const keyInput: string = e.key.toUpperCase();
+	pageBody?.addEventListener('keydown', (e) => {
+		const keyInput: string = e.key.toUpperCase();
 
-    if (!validKeyInput(keyInput)) return;
-    const event = new CustomEvent("keyInput", {
-      detail: {
-        keyInput: keyInput,
-      }
-    });
-    window.dispatchEvent(event);
-  });
+		if (!validKeyInput(keyInput)) return;
+		window.dispatchEvent(new CustomEvent("keyInput", {
+			detail: { keyInput: keyInput }
+		}));
+	});
 
-  window.addEventListener("submitGuess", async (e) => {
-    game.current_guess = (e as CustomEvent).detail.word;
-    game.status = "submit_guess";
+	window.addEventListener("submitGuess", async (e) => {
+		currentGame.current_guess = (e as CustomEvent).detail.word;
 
-    Game = await submitGuess(Game);
-    triggerUpdate();
-  });
+		currentGameSession.status = "submit_guess";
+		currentGameSession.games[currentGameSession.game_index] = currentGame;
 
-  window.addEventListener("analyseGameState", () => {
-    analyseGameState();
-  });
+		currentGameSession = await submitGuess(currentGameSession);
 
-  /**
-   * Updates the shown text in the Assistant container.
-   * @param msg Message to display
-   */
-  function updateAssistantMessage(msg: string) {
-    window.dispatchEvent(new CustomEvent("showAssistantMessage", {
-      detail: {msg: msg}
-    }));
-  }
+		if (currentGameSession.status != "next_game") {
+			currentGame = currentGameSession.games[currentGameSession.game_index];
+		} else {
+			currentGame = currentGameSession.games[currentGameSession.game_index - 1];
+		}
+		triggerUpdate();
+	});
 
-  /**
-   * Validates an input key
-   * @param key - keyboard key
-   * @returns Whether the key is valid
-   */
-   function validKeyInput(key: string): boolean {
-    let found: boolean = false;
+	window.addEventListener("analyseGameState", async () => {
+		await analyseGameState();
+	});
 
-    KEYBOARD_KEYS?.forEach(row => {
-      if (row.includes(key) || ['ENTER', 'BACKSPACE'].includes(key)) found = true;
-    });
+	/**
+	 * Updates the shown text in the Assistant container.
+	 * @param msg Message to display
+	 */
+	function updateAssistantMessage(msg: string) {
+		window.dispatchEvent(new CustomEvent("showAssistantMessage", {
+			detail: {msg: msg}
+		}));
+	}
 
-    return found;
-  }
+	/**
+	 * Validates an input key
+	 * @param key - keyboard key
+	 * @returns Whether the key is valid
+	 */
+	 function validKeyInput(key: string): boolean {
+		let found: boolean = false;
 
-  /**
-   * Transmits the current Game as an event.
-   */
-  function triggerUpdate() {
-    // Invalid guess
-    if (!game.current_guess_valid) {
-      window.dispatchEvent(new CustomEvent("headShake", {
-        detail: {row: game.guesses_used}
-      }));
-    }
+		KEYBOARD_KEYS?.forEach(row => {
+			if (row.includes(key) || ['ENTER', 'BACKSPACE'].includes(key)) found = true;
+		});
 
-    if (game.guesses_used < GUESSES) {
-      window.dispatchEvent(new CustomEvent("initWordRows", {
-        detail: {Game: Game}
-      }));
-    }
+		return found;
+	}
 
-    window.dispatchEvent(new CustomEvent("updateWordGrid", {
-      detail: {Game: Game}
-    }));
+	/**
+	 * Transmits the current Game as an event.
+	 */
+	function triggerUpdate() {
+		// Invalid guess
+		if (!currentGame.current_guess_valid && currentGameSession.status == "return_feedback") {
+			window.dispatchEvent(new CustomEvent("headShake", {
+				detail: {row: currentGame.guesses_used}
+			}));
+		}
 
-    window.dispatchEvent(new CustomEvent("updateDigitalKeyboard", {
-      detail: {Game: Game}
-    }));
+		if (currentGame.guesses_used < GUESSES) {
+			window.dispatchEvent(new CustomEvent("initWordRows", {
+				detail: {currentGame: currentGame}
+			}));
+		}
 
-    window.dispatchEvent(new CustomEvent("updateScoreBoard", {
-      detail: {Game: Game, scores: calcScores()}
-    }));
-  }
+		window.dispatchEvent(new CustomEvent("updateWordGrid", {
+			detail: {currentGame: currentGame, currentGameSession: currentGameSession}
+		}));
 
-  /**
-   * Calculates the scores for each guess
-   * based on the feedback colors.
-   * @return 2D-array with score values
-   */
-  function calcScores(): Array<Array<number>> {
-    // Empty scores 2D-array
-    const scores: number[][] = Array.from({ length: GUESSES }, () =>
-      Array(WORD_LENGTH).fill(0)
-    );
-    
-    game.guesses?.forEach((guess, i) => {
-      const colors: Array<string> = [];
-      
-      // Gets the colors of a word
-      guess.character_info.forEach(char => {
-        colors.push(char.scoring);
-      });
+		window.dispatchEvent(new CustomEvent("updateDigitalKeyboard", {
+			detail: {currentGame: currentGame}
+		}));
 
-      // Colors and their score values
-      const colorMap: Record<string, number> = {
-        gray: GRAY_TILE_VALUE,
-        yellow: YELLOW_TILE_VALUE,
-        green: GREEN_TILE_VALUE
-      };
+		window.dispatchEvent(new CustomEvent("updateScoreBoard", {
+			detail: {currentGame: currentGame, currentGameSession: currentGameSession, scores: calcScores()}
+		}));
+	}
 
-      // Adds score values to scores[]
-      colors?.forEach((color, j) => {
-        scores[i][j] = colorMap[color];
-      });
-    });
+	/**
+	 * Calculates the scores for each guess
+	 * based on the feedback colors.
+	 * @return 2D-array with score values
+	 */
+	function calcScores(): Array<Array<number>> {
+		// Empty scores 2D-array
+		const scores: number[][] = Array.from({ length: GUESSES }, () =>
+			Array(WORD_LENGTH).fill(0)
+		);
 
-    return scores;
-  }
+		currentGame.guesses?.forEach((guess, i) => {
+			const colors: Array<Scoring> = [];
+			
+			// Gets the colors of a word
+			guess.character_info.forEach(char => {
+				colors.push(char.scoring);
+			});
 
-  /**
-   * Analyses the current game state for
-   * winning/losing conditions.
-   */
-  async function analyseGameState() {
-    // Correct guess: Win
-    if (game.guesses_used > 0 && game.guesses[game.guesses_used - 1].was_correct) {
-      await handleWin();
-      return;
-    }
+			// Colors and their score values
+			const colorMap: Record<Scoring, number> = {
+				GRAY: GRAY_TILE_VALUE,
+				YELLOW: YELLOW_TILE_VALUE,
+				GREEN: GREEN_TILE_VALUE
+			};
 
-    // No guesses left: Lose
-    if (game.guesses_used >= GUESSES) {
-      await handleLose();
-      return;
-    }
-  }
+			// Adds score values to scores[]
+			colors?.forEach((color, j) => {
+				scores[i][j] = colorMap[color];
+			});
+		});
 
-  /**
-   * Handles winning the game (correct word).
-   */
-  async function handleWin() {
-    const newScores: number[] = game.scores;
-    const score = addScores(calcScores())
-      * (1 + game.current_game_index * 0.1)
-      * ROW_MULTIPLIERS[game.guesses_used - 1];
-    newScores.push(Math.floor(score));
+		return scores;
+	}
 
-    const sendGame: Game = {
-      status: "request_next_game",
-      guesses_used: game.guesses_used,
-      current_guess: game.current_guess,
-      current_guess_valid: game.current_guess_valid,
-      guesses: game.guesses,
-      current_game_index: game.current_game_index,
-      scores: newScores
-    };
+	/**
+	 * Analyses the current game state for
+	 * winning/losing conditions.
+	 */
+	async function analyseGameState() {
+		// Correct guess: Win
+		if (currentGameSession.status == "next_game" && currentGame.guesses[currentGame.guesses_used - 1]?.was_correct) {
+			console.log("WIIN");
+			await handleWin();
+			return;
+		}
 
-    Game = await requestNextGame(sendGame);
+		// No guesses left: Lose
+		if (currentGame.guesses_used >= GUESSES) {
+			console.log("LOOOSE");
+			await handleLose();
+			return;
+		}
+	}
 
-    triggerUpdate();
+	/**
+	 * Handles winning the game (correct word).
+	 */
+	async function handleWin() {
+		currentGame = currentGameSession.games[currentGameSession.game_index];
+		// const score = addScores(calcScores()) * (1 + currentGameSession.game_index * 0.1) * ROW_MULTIPLIERS[currentGame.guesses_used - 1];
 
-    window.dispatchEvent(new CustomEvent("resetWordGrid", {
-      detail: {Game: Game}
-    }));
-  }
+		// handle win
 
-  /**
-   * Handles losing the game (all guesses used).
-   */
-  async function handleLose() {
-    window.dispatchEvent(new CustomEvent("showAssistantMessage", {
-      detail: {msg: "Oh no, you lost! You have no guesses left... Next time you'll win!"}
-    }));
+		window.dispatchEvent(new CustomEvent("resetWordGrid", {
+			detail: {currentGame: currentGame}
+		}));
 
-    const newScores: number[] = game.scores;
-    const score = addScores(calcScores())
-      * (1 + game.current_game_index * 0.1)
-      * ROW_MULTIPLIERS[game.guesses_used - 1];
-    newScores.push(Math.floor(score));
+		triggerUpdate();
+	}
 
-    const sendGame: Game = {
-      status: "game_over",
-      guesses_used: game.guesses_used,
-      current_guess: game.current_guess,
-      current_guess_valid: game.current_guess_valid,
-      guesses: game.guesses,
-      current_game_index: game.current_game_index,
-      scores: newScores
-    };
+	/**
+	 * Handles losing the game (all guesses used).
+	 */
+	async function handleLose() {
+		window.dispatchEvent(new CustomEvent("showAssistantMessage", {
+			detail: {msg: "Oh no, you lost! You have no guesses left... Next time you'll win!"}
+		}));
 
-    await submitLostGame(sendGame);
+		// handle lose
 
-    alert("No more guesses left!");
-    window.location.href = "http://localhost:4321";
-  }
+		alert("No more guesses left!");
+		// window.location.replace("/");
+	}
 
-  triggerUpdate();
-  analyseGameState();
+	try {
+		currentGameSession = await requestGameSession();
+		currentGame = currentGameSession.games[currentGameSession.game_index]!;
+		triggerUpdate();
+	} catch (error) {
+		window.location.replace("/error?type=backend");
+	}
 </script>

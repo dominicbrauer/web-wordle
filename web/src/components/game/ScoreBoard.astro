@@ -3,199 +3,202 @@ import UserIcon from "../../assets/icons/user.svg"
 ---
 
 <div class=score-board>
-  <div class="user-info-container">
-    <div class="user-picture-container">
-      <div class="user-picture">
-        <UserIcon class="user-icon" />
-      </div>
-    </div>
-    <span class="user-name">Anonymous</span>
-  </div>
-  <hr>
-  <div class="game-info-container">
-    <span class="round-count">N/A</span>
-    <div class="score-info-container">
-      <span class="current-score">0P</span>
-      <span class="current-multiplier">N/A</span>
-    </div>
-  </div>
-  <hr>
-  <div class="total-score-container">
-    <span class="total-score">N/A</span>
-  </div>
+	<div class="user-info-container">
+		<div class="user-picture-container">
+			<div class="user-picture">
+				<UserIcon class="user-icon" />
+			</div>
+		</div>
+		<span class="user-name">Anonymous</span>
+	</div>
+	<hr>
+	<div class="game-info-container">
+		<span class="round-count">N/A</span>
+		<div class="score-info-container">
+			<span class="current-score">0P</span>
+			<span class="current-multiplier">N/A</span>
+		</div>
+	</div>
+	<hr>
+	<div class="total-score-container">
+		<span class="total-score">N/A</span>
+	</div>
 </div>
 
 <style>
-  .score-board {
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    height: 100%;
-    background-color: var(--primary);
-    border: 1rem solid var(--primary-border);
-    border-radius: 2rem;
-    padding: 1.5rem;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0;
-  }
+	.score-board {
+		display: flex;
+		flex-direction: column;
+		width: 90%;
+		height: 100%;
+		background-color: var(--primary);
+		border: 1rem solid var(--primary-border);
+		border-radius: 2rem;
+		padding: 1.5rem;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0;
+	}
 
-  hr {
-    margin: 0;
-    width: 100%;
-    height: 3px;
-    background-color: var(--primary-border);
-    border-width: 0;
-  }
+	hr {
+		margin: 0;
+		width: 100%;
+		height: 3px;
+		background-color: var(--primary-border);
+		border-width: 0;
+	}
 
-  .user-info-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    gap: 1rem;
-    padding: .5rem;
-    z-index: 0;
-  }
+	.user-info-container {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		gap: 1rem;
+		padding: .5rem;
+		z-index: 0;
+	}
 
-  .user-picture-container {
-    position: relative;
-    width: 5rem;
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
+	.user-picture-container {
+		position: relative;
+		width: 5rem;
+		height: auto;
+		aspect-ratio: 1 / 1;
+	}
 
-  .user-picture {
-    width: 100%;
-    height: 100%;
-    border-radius: var(--br-medium);
-    background-color: var(--background);
-    outline: 2px solid var(--primary-border);
-  }
+	.user-picture {
+		width: 100%;
+		height: 100%;
+		border-radius: var(--br-medium);
+		background-color: var(--background);
+		outline: 2px solid var(--primary-border);
+	}
 
-  .user-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 3rem;
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
+	.user-icon {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 3rem;
+		height: auto;
+		aspect-ratio: 1 / 1;
+	}
 
-  .user-name {
-    font-size: 1.5em;
-    overflow-wrap: anywhere;
-  }
+	.user-name {
+		font-size: 1.5em;
+		overflow-wrap: anywhere;
+	}
 
-  .game-info-container {
-    display: flex;
-    flex-direction: column;
-    padding: .5rem;
-    justify-content: center;
-    align-items: center;
-    gap: .5rem;
-    width: 100%;
-  }
+	.game-info-container {
+		display: flex;
+		flex-direction: column;
+		padding: .5rem;
+		justify-content: center;
+		align-items: center;
+		gap: .5rem;
+		width: 100%;
+	}
 
-  .round-count {
-    font-size: 1.5em;
-  }
+	.round-count {
+		font-size: 1.5em;
+	}
 
-  .score-info-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-  }
+	.score-info-container {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-  .current-score {
-    font-size: 2em;
-    width: 100%;
-    text-align: center;
-  }
+	.current-score {
+		font-size: 2em;
+		width: 100%;
+		text-align: center;
+	}
 
-  .current-multiplier {
-    font-size: 2em;
-    text-align: center;
-    width: 100%;
-  }
+	.current-multiplier {
+		font-size: 2em;
+		text-align: center;
+		width: 100%;
+	}
 
-  .total-score-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: .5rem;
-  }
+	.total-score-container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: .5rem;
+	}
 
-  .total-score {
-    font-size: 2.5em;
-  }
+	.total-score {
+		font-size: 2.5em;
+	}
 </style>
 
 <script>
-  import { WORD_LENGTH } from "../../lib/config";
-  import { Cursor } from "../../lib/cursor";
-  import type { Game } from "../../lib/Game";
-  import { range } from "../../lib/helpers";
-  import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
-  import { addScores } from "../../lib/helpers"
+	import { WORD_LENGTH } from "../../lib/config";
+	import { Cursor } from "../../lib/cursor";
+	import type { Game, GameSession } from "../../lib/models";
+	import { range, wait } from "../../lib/helpers";
+	import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
+	import { addScores } from "../../lib/helpers"
 
-  const roundCountLabel = document.querySelector<HTMLSpanElement>('.round-count');
-  const currentScoreLabel = document.querySelector<HTMLSpanElement>('.current-score');
-  const currentMultiplierLabel = document.querySelector<HTMLSpanElement>('.current-multiplier');
-  const totalScoreLabel = document.querySelector<HTMLSpanElement>('.total-score');
-  const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
+	const roundCountLabel = document.querySelector<HTMLSpanElement>('.round-count');
+	const currentScoreLabel = document.querySelector<HTMLSpanElement>('.current-score');
+	const currentMultiplierLabel = document.querySelector<HTMLSpanElement>('.current-multiplier');
+	const totalScoreLabel = document.querySelector<HTMLSpanElement>('.total-score');
+	const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
 
-  window.addEventListener("updateScoreBoard", async (e) => {
-    const Game: Game = (e as CustomEvent).detail.Game;
-    const scores: Array<Array<number>> = (e as CustomEvent).detail.scores;
+	let currentGameSession: GameSession;
+	let currentGame: Game;
 
-    await updateScoreBoard(Game, scores);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    window.dispatchEvent(new CustomEvent("analyseGameState"));
-  });
+	window.addEventListener("updateScoreBoard", async (e) => {
+		currentGameSession = (e as CustomEvent).detail.currentGameSession;
+		currentGame = (e as CustomEvent).detail.currentGame;
+		const scores: Array<Array<number>> = (e as CustomEvent).detail.scores;
 
-  async function updateScoreBoard(Game: Game, scores: Array<Array<number>>) {
-    // Set round count
-    const roundCountText = `Game ${game.current_game_index + 1}`;
-    roundCountLabel!.textContent = roundCountText;
+		await updateScoreBoard(scores);
+		await wait(500);
+		window.dispatchEvent(new CustomEvent("analyseGameState"));
+	});
 
-    // Set current score
-    if (game.status == "game_found" || game.status == "next_game") {
-      const totalScore: number = addScores(scores);
-      currentScoreLabel!.textContent = `${totalScore}P`;
-    }
-    // Animate scores if feedback is returned
-    else if (game.status == "return_feedback" && game.current_guess_valid) {
-      window.dispatchEvent(new CustomEvent("showAssistantMessage", {
-        detail: {msg: "That was great! Keep going."}
-      }));
+	async function updateScoreBoard(scores: Array<Array<number>>) {
+		// Set round count
+		const roundCountText = `Game ${currentGameSession.game_index + 1}`;
+		roundCountLabel!.textContent = roundCountText;
 
-      const rowBefore = game.guesses_used - 1;
-      for await (const i of range(WORD_LENGTH)) {
-        const charTile = charTiles[Cursor.coordToIdx(i, rowBefore)];
-        await animateScoreAdding(
-          charTile,
-          scores[rowBefore][i],
-          currentScoreLabel!
-        );
-      }
-      console.log("FIRE");
-    }
+		// Set current score
+		if (currentGameSession.status == "session_found") {
+			const totalScore: number = addScores(scores);
+			currentScoreLabel!.textContent = `${totalScore}P`;
+		}
+		// Animate scores if feedback is returned
+		else if ((currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") && currentGame.current_guess_valid) {
+			window.dispatchEvent(new CustomEvent("showAssistantMessage", {
+				detail: {msg: "That was great! Keep going."}
+			}));
 
-    // Set multiplier
-    const multiplierText = `x${(1 + game.current_game_index * 0.1).toFixed(1)}`;
-    currentMultiplierLabel!.textContent = multiplierText;
+			const rowBefore = currentGame.guesses_used - 1;
+			for await (const i of range(WORD_LENGTH)) {
+				const charTile = charTiles[Cursor.coordToIdx(i, rowBefore)];
+				await animateScoreAdding(
+					charTile,
+					scores[rowBefore][i],
+					currentScoreLabel!
+				);
+			}
+		}
 
-    // Set total score
-    let total: number = 0;
-    game.scores?.forEach(score => {
-      total += score;
-    });
-    totalScoreLabel!.textContent = `${total}P`;
-  }
+		// Set multiplier
+		const multiplierText = `x${(1 + currentGameSession.game_index * 0.1).toFixed(1)}`;
+		currentMultiplierLabel!.textContent = multiplierText;
+
+		// Set total score
+		let total: number = 0;
+		currentGameSession.games?.forEach(game => {
+			total += game.final_score;
+		});
+		totalScoreLabel!.textContent = `${total}P`;
+	}
 </script>

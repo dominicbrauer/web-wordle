@@ -47,7 +47,6 @@ public class GameController {
 
 		session.setAttribute("currentSolutionWord", gameService.getRandomWord());
 		session.setAttribute("gameSession", newGameSession);
-							System.out.println(session.getAttribute("currentSolutionWord").toString());
 		
 		return ResponseEntity.ok(newGameSession);
 	}
@@ -67,7 +66,7 @@ public class GameController {
 		gameSession.games().add(updatedGame);
 
 		GameSession updatedGameSession = new GameSession(
-			"running",
+			"return_feedback",
 			gameSession.game_index(),
 			gameSession.games()
 		);
@@ -85,23 +84,5 @@ public class GameController {
 		session.setAttribute("gameSession", updatedGameSession);
 		return ResponseEntity.ok(updatedGameSession);
 	}
-
-	// @PostMapping("/game-over")
-	// @CrossOrigin(
-	// 	allowedHeaders = "*",
-	// 	exposedHeaders = "*",
-	// 	methods = {RequestMethod.POST, RequestMethod.OPTIONS},
-	// 	allowCredentials = "true",
-	// 	origins = "http://localhost:4321"
-	// )
-	// public ResponseEntity<String> handleGameOver(@RequestBody Game Game, HttpSession session) {
-
-	// 	System.out.println(game.scores());
-	// 	// score saves
-
-	// 	session.invalidate();
-
-	// 	return ResponseEntity.ok("Progress data has been saved!");
-	// }
 
 }

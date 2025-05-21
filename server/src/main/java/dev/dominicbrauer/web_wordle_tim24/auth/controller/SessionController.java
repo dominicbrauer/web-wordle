@@ -15,7 +15,6 @@ import dev.dominicbrauer.web_wordle_tim24.auth.service.SessionService;
 @RequestMapping("/session")
 public class SessionController {
 
-  @Autowired
   private SessionService sessionService;
 
   @PostMapping("/get-user")

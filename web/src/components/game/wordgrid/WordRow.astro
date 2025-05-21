@@ -19,17 +19,17 @@ import CharTile from "./CharTile.astro";
 </style>
 
 <script>
-  import type { Game } from "../../../lib/Game";
+  import type { Game } from "../../../lib/models";
   import { headShake } from "../../../scripts/headshakeAnimation"
 
 
   const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
-  let Game: Game;
+  let currentGame: Game;
 
 
   // Connection to exchange the Game after each fetch
   window.addEventListener("initWordRows", (e) => {
-    Game = (e as CustomEvent).detail.Game;
+    currentGame = (e as CustomEvent).detail.currentGame;
     shiftRow();
   });
 
@@ -52,7 +52,7 @@ import CharTile from "./CharTile.astro";
       });
     });
 
-    Array.from(wordRows[game.guesses_used].children).forEach(char => {
+    Array.from(wordRows[currentGame.guesses_used].children).forEach(char => {
       char.classList.add('active');
     });
   }

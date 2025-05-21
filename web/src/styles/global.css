@@ -37,6 +37,7 @@
   box-sizing: border-box;
   word-spacing: -.25em;
   letter-spacing: -.05em;
+  margin: 0;
 }
 
 html, body {

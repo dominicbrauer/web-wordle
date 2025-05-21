@@ -1,9 +1,11 @@
 import { SETTINGS } from "../lib/config";
+import { wait } from "../lib/helpers";
+import { Scoring } from "../lib/models";
 
-export async function flipTile(tile: HTMLDivElement, color: string): Promise<void> {
+export async function flipTile(tile: HTMLDivElement, color: Scoring | string, delay: number) {
   const duration: number = SETTINGS.charTileFlipAnimationDuration / 2;
   let animationAngle: string;
-  if (color == "reset") {
+  if (color == "RESET") {
     animationAngle = 'X';
   } else {
     animationAngle = SETTINGS.charTileFlipAnimationDirection;
@@ -18,25 +20,36 @@ export async function flipTile(tile: HTMLDivElement, color: string): Promise<voi
     fill: 'forwards'
   });
 
-  await new Promise((resolve) => {
-    firstHalf.onfinish = async () => {
-      if (color == "reset") {
-        tile.classList.remove('char-feedback-gray', 'char-feedback-yellow', 'char-feedback-green');
-        tile.firstElementChild!.textContent = "";
-      } else {
-        tile.classList.add(`char-feedback-${color}`);
+  firstHalf.onfinish = async () => {
+    if (color == "RESET") {
+      tile.classList.remove('char-feedback-gray', 'char-feedback-yellow', 'char-feedback-green');
+      tile.firstElementChild!.textContent = "";
+    } else {
+      switch(color) {
+        case Scoring.GREEN: {
+          tile.classList.add('char-feedback-green');
+          break;
+        }
+        case Scoring.YELLOW: {
+          tile.classList.add('char-feedback-yellow');
+          break;
+        }
+        case Scoring.GRAY: {
+          tile.classList.add('char-feedback-gray');
+          break;
+        }
       }
+    }
 
-      tile.animate([
-        { transform: `rotate${animationAngle}(270deg)` },
-        { transform: `rotate${animationAngle}(360deg)` }
-      ], {
-        duration: duration,
-        easing: 'linear',
-        fill: 'forwards'
-      });
+    tile.animate([
+      { transform: `rotate${animationAngle}(270deg)` },
+      { transform: `rotate${animationAngle}(360deg)` }
+    ], {
+      duration: duration,
+      easing: 'linear',
+      fill: 'forwards'
+    });
+  }
 
-      resolve('');
-    };
-  });
+  await wait(delay);
 }

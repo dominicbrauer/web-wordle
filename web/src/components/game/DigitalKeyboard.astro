@@ -36,14 +36,14 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 </style>
 
 <script>
-  import type { Game } from "../../lib/Game";
+  import { Scoring, type Game } from "../../lib/models";
 
   const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
-  let Game: Game;
+  let currentGame: Game;
 
   // Gets current Game and updates the keyboard
   window.addEventListener("updateDigitalKeyboard", (e) => {
-    Game = (e as CustomEvent).detail.Game;
+    currentGame = (e as CustomEvent).detail.currentGame;
     keyHighlighting();
   });
 
@@ -69,13 +69,13 @@ import { KEYBOARD_KEYS } from "../../lib/config";
    * Reads the scoring values for all guesses made.
    * @returns A map with the color and the corresponding characters.
    */
-  function extractGuessFeedback(): Map<string, string[]> {
-    const map = new Map<string, string[]>();
-    map.set("green", []);
-    map.set("gray", []);
-    map.set("yellow", []);
+  function extractGuessFeedback(): Map<Scoring, string[]> {
+    const map = new Map<Scoring, string[]>();
+    map.set(Scoring.GREEN, []);
+    map.set(Scoring.YELLOW, []);
+    map.set(Scoring.GRAY, []);
 
-    game.guesses?.forEach(guess => {
+    currentGame.guesses?.forEach(guess => {
       guess.character_info.forEach(char => {
         map.get(char.scoring)?.push(char.character.toUpperCase());
       });
@@ -94,7 +94,7 @@ import { KEYBOARD_KEYS } from "../../lib/config";
     });
     
     // Get characters and colors
-    const map: Map<string, string[]> = extractGuessFeedback();
+    const map: Map<Scoring, string[]> = extractGuessFeedback();
 
     keyTiles.forEach(tile => {
       const char = tile.firstElementChild?.textContent;
@@ -105,7 +105,20 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 
       map.forEach((value, key) => {
         if (value.includes(char)) {
-          tile.classList.add(`key-feedback-${key}`);
+          switch(key) {
+            case Scoring.GREEN: {
+              tile.classList.add('key-feedback-green');
+              break;
+            }
+            case Scoring.YELLOW: {
+              tile.classList.add('key-feedback-yellow');
+              break;
+            }
+            case Scoring.GRAY: {
+              tile.classList.add('key-feedback-gray');
+              break;
+            }
+          }
         }
       });
     });

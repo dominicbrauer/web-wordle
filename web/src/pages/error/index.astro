@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+
+---
+
+<Layout title="An error occured">
+	<div class="error-container">
+		<h1>Error page</h1>
+		<p>mogus</p>
+		<a href="/">Back to Home</a>
+	</div>
+</Layout>
+
+<style>
+	.error-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		top: 30%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		box-shadow: 0 1px 8px 0px black;
+		border-radius: var(--br-medium);
+		padding: 2rem 4rem;
+	}
+
+	.error-container p {
+		text-wrap: nowrap;
+		margin: 1rem;
+	}
+
+	.error-container a {
+		text-decoration: none;
+		color: var(--accent);
+	}
+
+	.error-container a:hover {
+		text-decoration: underline;
+	}
+</style>
+
+<script>
+	const params = new URLSearchParams(document.location.search);
+	const errorType = params.get("type");
+	const errorMessageContainer = document.querySelector<HTMLSpanElement>('.error-container p');
+
+	switch(errorType) {
+		case "backend": {
+			errorMessageContainer!.textContent = "Could'nt connect to the server!";
+			break;
+		}
+		default: {
+			errorMessageContainer!.textContent = "An unexpected error has occured!";
+			break;
+		}
+	}
+</script>

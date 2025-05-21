@@ -1,5 +1,7 @@
 export enum Scoring {
-  GRAY, YELLOW, GREEN
+  GRAY = "GRAY",
+  YELLOW = "YELLOW",
+  GREEN = "GREEN"
 }
 
 export interface Char {
@@ -14,7 +16,6 @@ export interface Guess {
 }
 
 export interface Game {
-  status: string;
   guesses_used: number;
   current_guess: string;
   current_guess_valid: boolean;
