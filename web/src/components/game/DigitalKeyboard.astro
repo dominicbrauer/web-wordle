@@ -36,14 +36,14 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 </style>
 
 <script>
-  import type { GameSession } from "../../lib/gameSession";
+  import type { Game } from "../../lib/Game";
 
   const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
-  let gameSession: GameSession;
+  let Game: Game;
 
-  // Gets current gameSession and updates the keyboard
+  // Gets current Game and updates the keyboard
   window.addEventListener("updateDigitalKeyboard", (e) => {
-    gameSession = (e as CustomEvent).detail.gameSession;
+    Game = (e as CustomEvent).detail.Game;
     keyHighlighting();
   });
 
@@ -75,7 +75,7 @@ import { KEYBOARD_KEYS } from "../../lib/config";
     map.set("gray", []);
     map.set("yellow", []);
 
-    gameSession.guesses?.forEach(guess => {
+    game.guesses?.forEach(guess => {
       guess.character_info.forEach(char => {
         map.get(char.scoring)?.push(char.character.toUpperCase());
       });

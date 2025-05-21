@@ -72,15 +72,15 @@ import Layout from "../../layouts/Layout.astro"
 <script>
   import { ROW_MULTIPLIERS } from "../../lib/config";
   import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
-  import type { GameSession} from "../../lib/gameSession";
+  import type { Game} from "../../lib/Game";
   import { addScores } from "../../lib/helpers";
-  import { submitGuess, requestGameSession, requestNextGame, submitLostGame } from "../../scripts/gameRequests"
+  import { submitGuess, requestGame, requestNextGame, submitLostGame } from "../../scripts/gameRequests"
 
   const pageBody = document.querySelector('body') as HTMLBodyElement;
 
-  let gameSession: GameSession;
+  let Game: Game;
   try {
-    gameSession = await requestGameSession();
+    Game = await requestGame();
   } catch (error) {
     updateAssistantMessage("I couldn't connect to the server!");
   }
@@ -98,10 +98,10 @@ import Layout from "../../layouts/Layout.astro"
   });
 
   window.addEventListener("submitGuess", async (e) => {
-    gameSession.current_guess = (e as CustomEvent).detail.word;
-    gameSession.status = "submit_guess";
+    game.current_guess = (e as CustomEvent).detail.word;
+    game.status = "submit_guess";
 
-    gameSession = await submitGuess(gameSession);
+    Game = await submitGuess(Game);
     triggerUpdate();
   });
 
@@ -135,32 +135,32 @@ import Layout from "../../layouts/Layout.astro"
   }
 
   /**
-   * Transmits the current gameSession as an event.
+   * Transmits the current Game as an event.
    */
   function triggerUpdate() {
     // Invalid guess
-    if (!gameSession.current_guess_valid) {
+    if (!game.current_guess_valid) {
       window.dispatchEvent(new CustomEvent("headShake", {
-        detail: {row: gameSession.guesses_used}
+        detail: {row: game.guesses_used}
       }));
     }
 
-    if (gameSession.guesses_used < GUESSES) {
+    if (game.guesses_used < GUESSES) {
       window.dispatchEvent(new CustomEvent("initWordRows", {
-        detail: {gameSession: gameSession}
+        detail: {Game: Game}
       }));
     }
 
     window.dispatchEvent(new CustomEvent("updateWordGrid", {
-      detail: {gameSession: gameSession}
+      detail: {Game: Game}
     }));
 
     window.dispatchEvent(new CustomEvent("updateDigitalKeyboard", {
-      detail: {gameSession: gameSession}
+      detail: {Game: Game}
     }));
 
     window.dispatchEvent(new CustomEvent("updateScoreBoard", {
-      detail: {gameSession: gameSession, scores: calcScores()}
+      detail: {Game: Game, scores: calcScores()}
     }));
   }
 
@@ -175,7 +175,7 @@ import Layout from "../../layouts/Layout.astro"
       Array(WORD_LENGTH).fill(0)
     );
     
-    gameSession.guesses?.forEach((guess, i) => {
+    game.guesses?.forEach((guess, i) => {
       const colors: Array<string> = [];
       
       // Gets the colors of a word
@@ -205,13 +205,13 @@ import Layout from "../../layouts/Layout.astro"
    */
   async function analyseGameState() {
     // Correct guess: Win
-    if (gameSession.guesses_used > 0 && gameSession.guesses[gameSession.guesses_used - 1].was_correct) {
+    if (game.guesses_used > 0 && game.guesses[game.guesses_used - 1].was_correct) {
       await handleWin();
       return;
     }
 
     // No guesses left: Lose
-    if (gameSession.guesses_used >= GUESSES) {
+    if (game.guesses_used >= GUESSES) {
       await handleLose();
       return;
     }
@@ -221,28 +221,28 @@ import Layout from "../../layouts/Layout.astro"
    * Handles winning the game (correct word).
    */
   async function handleWin() {
-    const newScores: number[] = gameSession.scores;
+    const newScores: number[] = game.scores;
     const score = addScores(calcScores())
-      * (1 + gameSession.current_game_index * 0.1)
-      * ROW_MULTIPLIERS[gameSession.guesses_used - 1];
+      * (1 + game.current_game_index * 0.1)
+      * ROW_MULTIPLIERS[game.guesses_used - 1];
     newScores.push(Math.floor(score));
 
-    const sendGameSession: GameSession = {
+    const sendGame: Game = {
       status: "request_next_game",
-      guesses_used: gameSession.guesses_used,
-      current_guess: gameSession.current_guess,
-      current_guess_valid: gameSession.current_guess_valid,
-      guesses: gameSession.guesses,
-      current_game_index: gameSession.current_game_index,
+      guesses_used: game.guesses_used,
+      current_guess: game.current_guess,
+      current_guess_valid: game.current_guess_valid,
+      guesses: game.guesses,
+      current_game_index: game.current_game_index,
       scores: newScores
     };
 
-    gameSession = await requestNextGame(sendGameSession);
+    Game = await requestNextGame(sendGame);
 
     triggerUpdate();
 
     window.dispatchEvent(new CustomEvent("resetWordGrid", {
-      detail: {gameSession: gameSession}
+      detail: {Game: Game}
     }));
   }
 
@@ -254,23 +254,23 @@ import Layout from "../../layouts/Layout.astro"
       detail: {msg: "Oh no, you lost! You have no guesses left... Next time you'll win!"}
     }));
 
-    const newScores: number[] = gameSession.scores;
+    const newScores: number[] = game.scores;
     const score = addScores(calcScores())
-      * (1 + gameSession.current_game_index * 0.1)
-      * ROW_MULTIPLIERS[gameSession.guesses_used - 1];
+      * (1 + game.current_game_index * 0.1)
+      * ROW_MULTIPLIERS[game.guesses_used - 1];
     newScores.push(Math.floor(score));
 
-    const sendGameSession: GameSession = {
+    const sendGame: Game = {
       status: "game_over",
-      guesses_used: gameSession.guesses_used,
-      current_guess: gameSession.current_guess,
-      current_guess_valid: gameSession.current_guess_valid,
-      guesses: gameSession.guesses,
-      current_game_index: gameSession.current_game_index,
+      guesses_used: game.guesses_used,
+      current_guess: game.current_guess,
+      current_guess_valid: game.current_guess_valid,
+      guesses: game.guesses,
+      current_game_index: game.current_game_index,
       scores: newScores
     };
 
-    await submitLostGame(sendGameSession);
+    await submitLostGame(sendGame);
 
     alert("No more guesses left!");
     window.location.href = "http://localhost:4321";

@@ -1,6 +1,10 @@
+export enum Scoring {
+  GRAY, YELLOW, GREEN
+}
+
 export interface Char {
   character: string;
-  scoring: string;
+  scoring: Scoring;
 }
 
 export interface Guess {
@@ -9,12 +13,17 @@ export interface Guess {
   character_info: Array<Char>;
 }
 
-export interface GameSession {
+export interface Game {
   status: string;
   guesses_used: number;
   current_guess: string;
   current_guess_valid: boolean;
   guesses: Array<Guess>;
-  current_game_index: number;
-  scores: Array<number>;
+  final_score: number;
+}
+
+export interface GameSession {
+  status: string;
+  game_index: number;
+  games: Array<Game>;
 }

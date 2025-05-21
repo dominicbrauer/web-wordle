@@ -19,17 +19,17 @@ import CharTile from "./CharTile.astro";
 </style>
 
 <script>
-  import type { GameSession } from "../../../lib/gameSession";
+  import type { Game } from "../../../lib/Game";
   import { headShake } from "../../../scripts/headshakeAnimation"
 
 
   const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
-  let gameSession: GameSession;
+  let Game: Game;
 
 
-  // Connection to exchange the gameSession after each fetch
+  // Connection to exchange the Game after each fetch
   window.addEventListener("initWordRows", (e) => {
-    gameSession = (e as CustomEvent).detail.gameSession;
+    Game = (e as CustomEvent).detail.Game;
     shiftRow();
   });
 
@@ -52,7 +52,7 @@ import CharTile from "./CharTile.astro";
       });
     });
 
-    Array.from(wordRows[gameSession.guesses_used].children).forEach(char => {
+    Array.from(wordRows[game.guesses_used].children).forEach(char => {
       char.classList.add('active');
     });
   }

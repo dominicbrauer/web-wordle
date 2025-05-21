@@ -9,125 +9,99 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.dominicbrauer.web_wordle_tim24.game.model.Game;
 import dev.dominicbrauer.web_wordle_tim24.game.model.GameSession;
 import dev.dominicbrauer.web_wordle_tim24.game.service.GameService;
-import dev.dominicbrauer.web_wordle_tim24.game.service.GuessFeedbackService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/game")
 public class GameController {
 
-  private final GameService gameService;
-  private final GuessFeedbackService guessFeedbackService;
+	private final GameService gameService;
 
-  public GameController(GameService gameService, GuessFeedbackService guessFeedbackService) {
-    this.gameService = gameService;
-    this.guessFeedbackService = guessFeedbackService;
-  }
+	public GameController(GameService gameService) {
+		this.gameService = gameService;
+	}
 
-  @GetMapping
-  @CrossOrigin(
-    allowedHeaders = "*",
-    exposedHeaders = "*",
-    methods = {RequestMethod.GET, RequestMethod.OPTIONS},
-    allowCredentials = "true",
-    origins = "http://localhost:4321"
-  )
-  public ResponseEntity<String> index() {
-    return ResponseEntity.ok("API is working! 🔤");
-  }
 
-  @GetMapping("/start-game")
-  @CrossOrigin(
-    allowedHeaders = "*",
-    exposedHeaders = "*",
-    methods = {RequestMethod.GET, RequestMethod.OPTIONS},
-    allowCredentials = "true",
-    origins = "http://localhost:4321"
-  )
-  public ResponseEntity<GameSession> initNewGame(HttpSession session) {
-    if (!session.isNew()) {
-      GameSession knownSession = (GameSession) session.getAttribute("gameSession");
-      return ResponseEntity.ok(new GameSession(
-        "game_found",
-        knownSession.guesses_used(),
-        knownSession.current_guess(),
-        true,
-        knownSession.guesses(),
-        knownSession.current_game_index(),
-        knownSession.scores()
-      ));
-    }
+	@GetMapping("/start")
+	@CrossOrigin(
+		allowedHeaders = "*",
+		exposedHeaders = "*",
+		methods = {RequestMethod.GET, RequestMethod.OPTIONS},
+		allowCredentials = "true",
+		origins = "http://localhost:4321"
+	)
+	public ResponseEntity<GameSession> requestGameSession(HttpSession session) {
+		if (!session.isNew()) {
+			GameSession knownSession = (GameSession) session.getAttribute("gameSession");
+			return ResponseEntity.ok(new GameSession(
+				"session_found",
+				knownSession.game_index(),
+				knownSession.games()
+			));
+		}
 
-    GameSession newGameSession = gameService.createNewGameSession();
+		GameSession newGameSession = gameService.createNewGameSession();
 
-    session.setAttribute("solutionWord", gameService.getRandomWord());
-    session.setAttribute("gameSession", newGameSession);
-    System.out.println(session.getAttribute("solutionWord").toString());
-    
-    return ResponseEntity.ok(newGameSession);
-  }
+		session.setAttribute("currentSolutionWord", gameService.getRandomWord());
+		session.setAttribute("gameSession", newGameSession);
+							System.out.println(session.getAttribute("currentSolutionWord").toString());
+		
+		return ResponseEntity.ok(newGameSession);
+	}
 
-  @PostMapping("/guess")
-  @CrossOrigin(
-    allowedHeaders = "*",
-    exposedHeaders = "*",
-    methods = {RequestMethod.POST, RequestMethod.OPTIONS},
-    allowCredentials = "true",
-    origins = "http://localhost:4321"
-  )
-  public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {    
-    GameSession updatedGameSession = guessFeedbackService.updateGameState(gameSession, session);
 
-    session.setAttribute("gameSession", updatedGameSession);
-    return ResponseEntity.ok(updatedGameSession);
-  }
+	@PostMapping("/guess")
+	@CrossOrigin(
+		allowedHeaders = "*",
+		exposedHeaders = "*",
+		methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+		allowCredentials = "true",
+		origins = "http://localhost:4321"
+	)
+	public ResponseEntity<GameSession> submitGuess(@RequestBody GameSession gameSession, HttpSession session) {
+		Game updatedGame = gameService.processGuess(gameSession.games().getLast(), session);
+		gameSession.games().removeLast();
+		gameSession.games().add(updatedGame);
 
-  @PostMapping("/game-continue")
-  @CrossOrigin(
-    allowedHeaders = "*",
-    exposedHeaders = "*",
-    methods = {RequestMethod.POST, RequestMethod.OPTIONS},
-    allowCredentials = "true",
-    origins = "http://localhost:4321"
-  )
-  public ResponseEntity<GameSession> nextRound(@RequestBody GameSession gameSession, HttpSession session) {
-    System.out.println("Scores: " + gameSession.scores());
+		GameSession updatedGameSession = new GameSession(
+			"running",
+			gameSession.game_index(),
+			gameSession.games()
+		);
 
-    GameSession nextGameSession = new GameSession(
-      "next_game",
-      0,
-      null,
-      false,
-      null,
-      gameSession.current_game_index() + 1,
-      gameSession.scores()
-    );
-    
-    session.setAttribute("solutionWord", gameService.getRandomWord());
-    session.setAttribute("gameSession", nextGameSession);
-    System.out.println(session.getAttribute("solutionWord").toString());
+		if (updatedGame.guesses().getLast().was_correct()) {
+			updatedGameSession = new GameSession(
+				"next_game",
+				gameSession.game_index() + 1,
+				gameSession.games()
+			);
+			updatedGameSession.games().add(gameService.createNewGame());
+			session.setAttribute("currentSolutionWord", gameService.getRandomWord());
+		}
 
-    return ResponseEntity.ok(nextGameSession);
-  }
+		session.setAttribute("gameSession", updatedGameSession);
+		return ResponseEntity.ok(updatedGameSession);
+	}
 
-  @PostMapping("/game-over")
-  @CrossOrigin(
-    allowedHeaders = "*",
-    exposedHeaders = "*",
-    methods = {RequestMethod.POST, RequestMethod.OPTIONS},
-    allowCredentials = "true",
-    origins = "http://localhost:4321"
-  )
-  public ResponseEntity<String> handleGameOver(@RequestBody GameSession gameSession, HttpSession session) {
+	// @PostMapping("/game-over")
+	// @CrossOrigin(
+	// 	allowedHeaders = "*",
+	// 	exposedHeaders = "*",
+	// 	methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+	// 	allowCredentials = "true",
+	// 	origins = "http://localhost:4321"
+	// )
+	// public ResponseEntity<String> handleGameOver(@RequestBody Game Game, HttpSession session) {
 
-    System.out.println(gameSession.scores());
-    // score saves
+	// 	System.out.println(game.scores());
+	// 	// score saves
 
-    session.invalidate();
+	// 	session.invalidate();
 
-    return ResponseEntity.ok("Progress data has been saved!");
-  }
+	// 	return ResponseEntity.ok("Progress data has been saved!");
+	// }
 
 }

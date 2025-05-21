@@ -30,19 +30,19 @@ import { GUESSES } from "../../lib/config";
 <script>
   import { WORD_LENGTH } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
-  import type { GameSession } from "../../lib/gameSession";
+  import type { Game } from "../../lib/Game";
   import { range } from "../../lib/helpers";
   import { flipTile } from "../../scripts/flipTileAnimation"
 
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
   const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
   const cursor: Cursor = new Cursor(0, 0, false, false);
-  let gameSession: GameSession;
+  let Game: Game;
   let blockUserInput: boolean = false;
 
-  // Connection to exchange the gameSession after each fetch
+  // Connection to exchange the Game after each fetch
   window.addEventListener("updateWordGrid", async (e) => {
-    gameSession = (e as CustomEvent).detail.gameSession;
+    Game = (e as CustomEvent).detail.Game;
     await updateGrid();
 
     blockUserInput = false;
@@ -50,7 +50,7 @@ import { GUESSES } from "../../lib/config";
 
   // Connection to reset the word grid
   window.addEventListener("resetWordGrid", (e) => {
-    gameSession = (e as CustomEvent).detail.gameSession;
+    Game = (e as CustomEvent).detail.Game;
     charTiles.forEach(charTile => {
       flipTile(charTile, "reset");
     });
@@ -84,10 +84,10 @@ import { GUESSES } from "../../lib/config";
    * Color codes the character tiles in the word grid.
    */
   async function charHighlighting() {
-    if (gameSession.status == "return_feedback") {
+    if (game.status == "return_feedback") {
       for (const i of range(WORD_LENGTH)) {
-        const charIdx: number = cursor.coordToIdx(i, gameSession.guesses_used - 1);
-        const color: string = gameSession.guesses[gameSession.guesses_used - 1].character_info[i].scoring;
+        const charIdx: number = cursor.coordToIdx(i, game.guesses_used - 1);
+        const color: string = game.guesses[game.guesses_used - 1].character_info[i].scoring;
 
         await flipTile(charTiles[charIdx], color);
       }
@@ -95,9 +95,9 @@ import { GUESSES } from "../../lib/config";
     }
 
     // Colors all tiles at page reload
-    for (const i of range(gameSession.guesses_used)) {
+    for (const i of range(game.guesses_used)) {
       for (const j of range(WORD_LENGTH)) {
-        const charScoring = gameSession.guesses[i].character_info[j].scoring;
+        const charScoring = game.guesses[i].character_info[j].scoring;
         const tile = charTiles[cursor.coordToIdx(j, i)];
 
         const classMap: Record<string, string> = {
@@ -211,7 +211,7 @@ import { GUESSES } from "../../lib/config";
    */
   function rowHeadShake() {
     window.dispatchEvent(new CustomEvent("headShake", {
-      detail: {row: gameSession.guesses_used}
+      detail: {row: game.guesses_used}
     }));
   }
 
@@ -219,7 +219,7 @@ import { GUESSES } from "../../lib/config";
    * Updates the character tiles.
    */
   async function updateGrid() {
-    if (gameSession.current_guess_valid) {
+    if (game.current_guess_valid) {
       await charHighlighting();
 
       cursor.x = 0;
@@ -227,9 +227,9 @@ import { GUESSES } from "../../lib/config";
       cursor.selfSet = false;
     }
 
-    cursor.y = gameSession.guesses_used;
+    cursor.y = game.guesses_used;
     cursor.addSelection(charTiles);
-    gameSession?.guesses?.forEach((guess, rowIdx) => {
+    Game?.guesses?.forEach((guess, rowIdx) => {
       for (const i of range(WORD_LENGTH)) {
         charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
       }

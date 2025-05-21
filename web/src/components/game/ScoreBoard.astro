@@ -139,7 +139,7 @@ import UserIcon from "../../assets/icons/user.svg"
 <script>
   import { WORD_LENGTH } from "../../lib/config";
   import { Cursor } from "../../lib/cursor";
-  import type { GameSession } from "../../lib/gameSession";
+  import type { Game } from "../../lib/Game";
   import { range } from "../../lib/helpers";
   import { animateScoreAdding } from "../../scripts/scoreAddingAnimation";
   import { addScores } from "../../lib/helpers"
@@ -151,31 +151,31 @@ import UserIcon from "../../assets/icons/user.svg"
   const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
 
   window.addEventListener("updateScoreBoard", async (e) => {
-    const gameSession: GameSession = (e as CustomEvent).detail.gameSession;
+    const Game: Game = (e as CustomEvent).detail.Game;
     const scores: Array<Array<number>> = (e as CustomEvent).detail.scores;
 
-    await updateScoreBoard(gameSession, scores);
+    await updateScoreBoard(Game, scores);
     await new Promise((resolve) => setTimeout(resolve, 500));
     window.dispatchEvent(new CustomEvent("analyseGameState"));
   });
 
-  async function updateScoreBoard(gameSession: GameSession, scores: Array<Array<number>>) {
+  async function updateScoreBoard(Game: Game, scores: Array<Array<number>>) {
     // Set round count
-    const roundCountText = `Game ${gameSession.current_game_index + 1}`;
+    const roundCountText = `Game ${game.current_game_index + 1}`;
     roundCountLabel!.textContent = roundCountText;
 
     // Set current score
-    if (gameSession.status == "game_found" || gameSession.status == "next_game") {
+    if (game.status == "game_found" || game.status == "next_game") {
       const totalScore: number = addScores(scores);
       currentScoreLabel!.textContent = `${totalScore}P`;
     }
     // Animate scores if feedback is returned
-    else if (gameSession.status == "return_feedback" && gameSession.current_guess_valid) {
+    else if (game.status == "return_feedback" && game.current_guess_valid) {
       window.dispatchEvent(new CustomEvent("showAssistantMessage", {
         detail: {msg: "That was great! Keep going."}
       }));
 
-      const rowBefore = gameSession.guesses_used - 1;
+      const rowBefore = game.guesses_used - 1;
       for await (const i of range(WORD_LENGTH)) {
         const charTile = charTiles[Cursor.coordToIdx(i, rowBefore)];
         await animateScoreAdding(
@@ -188,12 +188,12 @@ import UserIcon from "../../assets/icons/user.svg"
     }
 
     // Set multiplier
-    const multiplierText = `x${(1 + gameSession.current_game_index * 0.1).toFixed(1)}`;
+    const multiplierText = `x${(1 + game.current_game_index * 0.1).toFixed(1)}`;
     currentMultiplierLabel!.textContent = multiplierText;
 
     // Set total score
     let total: number = 0;
-    gameSession.scores?.forEach(score => {
+    game.scores?.forEach(score => {
       total += score;
     });
     totalScoreLabel!.textContent = `${total}P`;
