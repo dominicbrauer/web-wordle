@@ -92,13 +92,13 @@ import Layout from "../../layouts/Layout.astro"
 	});
 
 	window.addEventListener("submitGuess", async (e) => {
-		currentGame.current_guess = (e as CustomEvent).detail.word;
+		currentGame.currentGuess = (e as CustomEvent).detail.word;
 
 		currentGameSession.status = "submit_guess";
-		currentGameSession.games[currentGameSession.game_index] = currentGame;
+		currentGameSession.games[currentGameSession.gameIndex] = currentGame;
 
 		currentGameSession = await submitGuess(currentGameSession);
-		currentGame = currentGameSession.games[currentGameSession.game_index];
+		currentGame = currentGameSession.games[currentGameSession.gameIndex];
 
 		triggerUpdate();
 	});
@@ -137,13 +137,13 @@ import Layout from "../../layouts/Layout.astro"
 	 */
 	function triggerUpdate() {
 		// Invalid guess
-		if (!currentGame.current_guess_valid && currentGameSession.status == "return_feedback") {
+		if (!currentGame.currentGuess_valid && currentGameSession.status == "return_feedback") {
 			window.dispatchEvent(new CustomEvent("headShake", {
-				detail: {row: currentGame.guesses_used}
+				detail: {row: currentGame.guessesUsed}
 			}));
 		}
 
-		if (currentGame.guesses_used < GUESSES) {
+		if (currentGame.guessesUsed < GUESSES) {
 			window.dispatchEvent(new CustomEvent("initWordRows", {
 				detail: {currentGame: currentGame}
 			}));
@@ -177,7 +177,7 @@ import Layout from "../../layouts/Layout.astro"
 			const colors: Array<Scoring> = [];
 			
 			// Gets the colors of a word
-			guess.character_info.forEach(char => {
+			guess.characterInfo.forEach(char => {
 				colors.push(char.scoring);
 			});
 
@@ -203,14 +203,14 @@ import Layout from "../../layouts/Layout.astro"
 	 */
 	async function analyseGameState() {
 		// Correct guess: Win
-		if (currentGame.guesses[currentGame.guesses_used - 1]?.was_correct) {
+		if (currentGame.guesses[currentGame.guessesUsed - 1]?.wasCorrect) {
 			console.log("WIIN");
 			await handleWin();
 			return;
 		}
 
 		// No guesses left: Lose
-		if (currentGame.guesses_used >= GUESSES) {
+		if (currentGame.guessesUsed >= GUESSES) {
 			console.log("LOOOSE");
 			await handleLose();
 			return;
@@ -224,18 +224,18 @@ import Layout from "../../layouts/Layout.astro"
 	 */
 	function calcFinalScore(): number {
 		return addScores(calcScores())
-			* ROW_MULTIPLIERS[currentGame.guesses_used - 1]
-			* (1 + currentGameSession.game_index * 0.1);
+			* ROW_MULTIPLIERS[currentGame.guessesUsed - 1]
+			* (1 + currentGameSession.gameIndex * 0.1);
 	}
 
 	/**
 	 * Handles winning the game (correct word).
 	 */
 	async function handleWin() {
-		currentGameSession.games[currentGameSession.game_index].final_score = calcFinalScore();
+		currentGameSession.games[currentGameSession.gameIndex].finalScore = calcFinalScore();
 
 		currentGameSession = await requestNextGame(currentGameSession);
-		currentGame = currentGameSession.games[currentGameSession.game_index];
+		currentGame = currentGameSession.games[currentGameSession.gameIndex];
 
 		// handle win
 
@@ -262,7 +262,7 @@ import Layout from "../../layouts/Layout.astro"
 
 	try {
 		currentGameSession = await requestGameSession();
-		currentGame = currentGameSession.games[currentGameSession.game_index]!;
+		currentGame = currentGameSession.games[currentGameSession.gameIndex]!;
 		triggerUpdate();
 	} catch (error) {
 		window.location.replace("/error?type=backend");

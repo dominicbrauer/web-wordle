@@ -8,17 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.dominicbrauer.web_wordle_tim24.auth.model.SessionEntity;
-import dev.dominicbrauer.web_wordle_tim24.auth.model.User;
 import dev.dominicbrauer.web_wordle_tim24.auth.repository.SessionH2Repository;
-import dev.dominicbrauer.web_wordle_tim24.auth.repository.UserH2Repository;
 
 @Service
 public class SessionService {
 
   @Autowired
   private SessionH2Repository sessionRepository;
-  @Autowired
-  private UserH2Repository userRepository;
 
   private final Long WEEK = 1000 * 60 * 60 * 24 * 7L;
 

@@ -52,7 +52,7 @@ import CharTile from "./CharTile.astro";
       });
     });
 
-    Array.from(wordRows[currentGame.guesses_used].children).forEach(char => {
+    Array.from(wordRows[currentGame.guessesUsed].children).forEach(char => {
       char.classList.add('active');
     });
   }

@@ -74,15 +74,15 @@ public class GameService {
 	 */
 	public Game processGuess(Game currentGame, HttpSession session) {
 		String solutionWord = (String) session.getAttribute("currentSolutionWord");
-		String currentGuess = currentGame.current_guess();
+		String currentGuess = currentGame.currentGuess();
 
 		if (!apiService.validWord(currentGuess)) {
 			Game responseGame = new Game(
-				currentGame.guesses_used(),
+				currentGame.guessesUsed(),
 				currentGuess,
 				false,
 				currentGame.guesses(),
-				currentGame.final_score()
+				currentGame.finalScore()
 			);
 			return responseGame;
 		}
@@ -101,11 +101,11 @@ public class GameService {
 
 		// Build game
 		Game responseGame = new Game(
-			currentGame.guesses_used() + 1,
+			currentGame.guessesUsed() + 1,
 			currentGuess,
 			true,
 			currentGame.guesses(),
-			currentGame.final_score()
+			currentGame.finalScore()
 		);
 		responseGame.guesses().add(new Guess(
 			currentGuess,

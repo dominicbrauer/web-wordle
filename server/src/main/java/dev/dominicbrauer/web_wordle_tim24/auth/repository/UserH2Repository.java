@@ -8,7 +8,7 @@ import dev.dominicbrauer.web_wordle_tim24.auth.model.UserEntity;
 
 
 public interface UserH2Repository extends JpaRepository<UserEntity, Long> {
-  
-  Optional<UserEntity> findByEmail(String email);
+
+	Optional<UserEntity> findByEmail(String email);
 
 }

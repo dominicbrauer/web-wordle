@@ -1,5 +1,8 @@
 ---
 import UserIcon from "../../assets/icons/user.svg"
+import type { User } from "../../lib/models"
+
+const userData: User = Astro.locals.user;
 ---
 
 <div class=score-board>
@@ -9,7 +12,7 @@ import UserIcon from "../../assets/icons/user.svg"
 				<UserIcon class="user-icon" />
 			</div>
 		</div>
-		<span class="user-name">Anonymous</span>
+		<span class="user-name">{ userData?.userName || "Player" }</span>
 	</div>
 	<hr>
 	<div class="game-info-container">
@@ -169,7 +172,7 @@ import UserIcon from "../../assets/icons/user.svg"
 	 */
 	async function updateScoreBoard(scores: Array<Array<number>>) {
 		// Set round count
-		const roundCountText = `Game ${currentGameSession.game_index + 1}`;
+		const roundCountText = `Game ${currentGameSession.gameIndex + 1}`;
 		roundCountLabel!.textContent = roundCountText;
 
 		// Set current score
@@ -178,12 +181,12 @@ import UserIcon from "../../assets/icons/user.svg"
 			currentScoreLabel!.textContent = `${totalScore}P`;
 		}
 		// Animate scores if feedback is returned
-		else if ((currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") && currentGame.current_guess_valid) {
+		else if ((currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") && currentGame.currentGuess_valid) {
 			window.dispatchEvent(new CustomEvent("showAssistantMessage", {
 				detail: {msg: "That was great! Keep going."}
 			}));
 
-			const rowBefore = currentGame.guesses_used - 1;
+			const rowBefore = currentGame.guessesUsed - 1;
 			for await (const i of range(WORD_LENGTH)) {
 				const charTile = charTiles[Cursor.coordToIdx(i, rowBefore)];
 				await animateScoreAdding(
@@ -195,13 +198,13 @@ import UserIcon from "../../assets/icons/user.svg"
 		}
 
 		// Set multiplier
-		const multiplierText = `x${(1 + currentGameSession.game_index * 0.1).toFixed(1)}`;
+		const multiplierText = `x${(1 + currentGameSession.gameIndex * 0.1).toFixed(1)}`;
 		currentMultiplierLabel!.textContent = multiplierText;
 
 		// Set total score
 		let total: number = 0;
 		currentGameSession.games?.forEach(game => {
-			total += game.final_score;
+			total += game.finalScore;
 		});
 		totalScoreLabel!.textContent = `${total}P`;
 	}

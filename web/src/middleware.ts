@@ -8,11 +8,10 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
 		return next();
 	}
 
-	const userData: User = await requestUserBySession(sessionCookie.value);
-	ctx.locals.user = userData;
-
-	const currentTime: number = Date.now();
-	console.log(currentTime);
+	try {
+		const userData: User = await requestUserBySession(sessionCookie.value);
+		ctx.locals.user = userData;
+	} catch (e) {}
 
 	return next();
 });

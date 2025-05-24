@@ -85,8 +85,8 @@ import { GUESSES } from "../../lib/config";
 	async function charHighlighting() {
 		if (currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") {
 			for (const i of range(WORD_LENGTH)) {
-				const charIdx: number = cursor.coordToIdx(i, currentGame.guesses_used - 1);
-				const color: Scoring = currentGame.guesses[currentGame.guesses_used - 1].character_info[i].scoring;
+				const charIdx: number = cursor.coordToIdx(i, currentGame.guessesUsed - 1);
+				const color: Scoring = currentGame.guesses[currentGame.guessesUsed - 1].characterInfo[i].scoring;
 
 				await flipTile(charTiles[charIdx], color, 250);
 			}
@@ -94,9 +94,9 @@ import { GUESSES } from "../../lib/config";
 		}
 
 		// Colors all tiles at page reload
-		for (const i of range(currentGame.guesses_used)) {
+		for (const i of range(currentGame.guessesUsed)) {
 			for (const j of range(WORD_LENGTH)) {
-				const charScoring: Scoring = currentGame.guesses[i].character_info[j].scoring;
+				const charScoring: Scoring = currentGame.guesses[i].characterInfo[j].scoring;
 				const tile = charTiles[cursor.coordToIdx(j, i)];
 
 				switch(charScoring) {
@@ -211,7 +211,7 @@ import { GUESSES } from "../../lib/config";
 	 */
 	function rowHeadShake() {
 		window.dispatchEvent(new CustomEvent("headShake", {
-			detail: {row: currentGame.guesses_used}
+			detail: {row: currentGame.guessesUsed}
 		}));
 	}
 
@@ -219,7 +219,7 @@ import { GUESSES } from "../../lib/config";
 	 * Updates the character tiles.
 	 */
 	async function updateGrid() {
-		if (currentGame.current_guess_valid) {
+		if (currentGame.currentGuess_valid) {
 			await charHighlighting();
 
 			cursor.x = 0;
@@ -227,7 +227,7 @@ import { GUESSES } from "../../lib/config";
 			cursor.selfSet = false;
 		}
 
-		cursor.y = currentGame.guesses_used;
+		cursor.y = currentGame.guessesUsed;
 		cursor.addSelection(charTiles);
 		currentGame?.guesses?.forEach((guess, rowIdx) => {
 			for (const i of range(WORD_LENGTH)) {

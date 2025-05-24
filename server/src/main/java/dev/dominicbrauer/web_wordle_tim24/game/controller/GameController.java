@@ -40,7 +40,7 @@ public class GameController {
 			GameSession knownSession = (GameSession) session.getAttribute("gameSession");
 			return ResponseEntity.ok(new GameSession(
 				"session_found",
-				knownSession.game_index(),
+				knownSession.gameIndex(),
 				knownSession.games()
 			));
 		}
@@ -69,7 +69,7 @@ public class GameController {
 
 		GameSession updatedGameSession = new GameSession(
 			"return_feedback",
-			gameSession.game_index(),
+			gameSession.gameIndex(),
 			gameSession.games()
 		);
 
@@ -87,10 +87,10 @@ public class GameController {
 		origins = "http://localhost:4321"
 	)
 	public ResponseEntity<GameSession> requestNextGame(@RequestBody GameSession gameSession, HttpSession session) {
-		System.out.println(gameSession.games().getLast().final_score());
+		System.out.println(gameSession.games().getLast().finalScore());
 		GameSession updatedGameSession = new GameSession(
 			"next_game",
-			gameSession.game_index() + 1,
+			gameSession.gameIndex() + 1,
 			gameSession.games()
 		);
 		updatedGameSession.games().add(gameService.createNewGame());

@@ -16,15 +16,26 @@ import dev.dominicbrauer.web_wordle_tim24.auth.model.User;
 import dev.dominicbrauer.web_wordle_tim24.auth.model.UserEntity;
 import dev.dominicbrauer.web_wordle_tim24.auth.service.AuthService;
 import dev.dominicbrauer.web_wordle_tim24.auth.service.SessionService;
+import dev.dominicbrauer.web_wordle_tim24.statistics.model.Statistics;
+import dev.dominicbrauer.web_wordle_tim24.statistics.model.StatisticsEntity;
+import dev.dominicbrauer.web_wordle_tim24.statistics.service.StatisticsService;
 
 @RestController
 @RequestMapping("/session")
 public class SessionController {
+	
+	@Autowired
+	private final AuthService authService;
+	@Autowired
+	private final SessionService sessionService;
+	@Autowired
+	private final StatisticsService statisticsService;
 
-	@Autowired
-	private SessionService sessionService;
-	@Autowired
-	private AuthService authService;
+	public SessionController(AuthService authService, SessionService sessionService, StatisticsService statisticsService) {
+    this.authService = authService;
+    this.sessionService = sessionService;
+		this.statisticsService = statisticsService;
+  }
 
 	@PostMapping("/get-user")
 	@CrossOrigin(
@@ -41,16 +52,18 @@ public class SessionController {
 			return ResponseEntity.notFound().build();
 		}
 
-		Optional<UserEntity> user = authService.getUserById(session.get().getUserId());
-
-		if (user.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+		UserEntity user = authService.getUserById(session.get().getUserId()).get();
+		StatisticsEntity userStats = statisticsService.getByUserId(user.getId()).get();
 
 		User foundUser = new User(
-			user.get().getUserName(),
-			user.get().getEmail(),
-			null
+			user.getUserName(),
+			user.getEmail(),
+			new Statistics(
+				userStats.getHighestScoreTotal(),
+				userStats.getHighestGameReached(),
+				userStats.getHighestScoreGame(),
+				userStats.getTotalGamesPlayed()
+			)
 		);
 	
 		return ResponseEntity.ok(foundUser);

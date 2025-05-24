@@ -4,6 +4,6 @@ import java.util.ArrayList;
 
 public record GameSession(
 	String status,
-	int game_index,
+	int gameIndex,
 	ArrayList<Game> games
 ) {}

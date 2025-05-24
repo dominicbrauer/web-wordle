@@ -76,7 +76,7 @@ import { KEYBOARD_KEYS } from "../../lib/config";
     map.set(Scoring.GRAY, []);
 
     currentGame.guesses?.forEach(guess => {
-      guess.character_info.forEach(char => {
+      guess.characterInfo.forEach(char => {
         map.get(char.scoring)?.push(char.character.toUpperCase());
       });
     });
