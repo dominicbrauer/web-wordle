@@ -73,13 +73,13 @@ public class AuthController {
 		statisticsService.initStatistics(savedUser.getId());
 		SessionEntity session = sessionService.createSession(savedUser.getId());
 
-		headers.setLocation(URI.create("http://localhost:4321/api/login?token=" + session.getSessionToken().toString()));
+		headers.setLocation(URI.create("http://localhost:4321/api/signin?token=" + session.getSessionToken().toString()));
 		return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 	}
 
 
 	@PostMapping(
-		path = "/login",
+		path = "/signin",
 		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
 	)
 	@CrossOrigin(
@@ -89,29 +89,29 @@ public class AuthController {
 		allowCredentials = "true",
 		origins = "http://localhost:4321"
 	)
-	public ResponseEntity<Void> loginUser(LogInRequest loginForm) {
+	public ResponseEntity<Void> signinUser(LogInRequest signinForm) {
 		HttpHeaders headers = new HttpHeaders();
 
-		if (!authService.validEmail(loginForm.email())) {
-			headers.setLocation(URI.create("http://localhost:4321/login?error=wrong_credentials"));
+		if (!authService.validEmail(signinForm.email())) {
+			headers.setLocation(URI.create("http://localhost:4321/signin?error=wrong_credentials"));
 			return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 		}
 
-		Optional<UserEntity> savedUser = authService.userByEmail(loginForm.email());
+		Optional<UserEntity> savedUser = authService.userByEmail(signinForm.email());
 
 		if (savedUser.isEmpty()) {
-			headers.setLocation(URI.create("http://localhost:4321/login?error=wrong_credentials"));
+			headers.setLocation(URI.create("http://localhost:4321/signin?error=wrong_credentials"));
 			return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 		}
 
-		if (!BCrypt.checkpw(loginForm.password(), savedUser.get().getPassword())) {
-			headers.setLocation(URI.create("http://localhost:4321/login?error=wrong_credentials"));
+		if (!BCrypt.checkpw(signinForm.password(), savedUser.get().getPassword())) {
+			headers.setLocation(URI.create("http://localhost:4321/signin?error=wrong_credentials"));
 			return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 		}
 
 		SessionEntity session = sessionService.createSession(savedUser.get().getId());
 
-		headers.setLocation(URI.create("http://localhost:4321/api/login?token=" + session.getSessionToken().toString()));
+		headers.setLocation(URI.create("http://localhost:4321/api/signin?token=" + session.getSessionToken().toString()));
 		return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 	}
 }

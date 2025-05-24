@@ -1,24 +1,107 @@
 ---
 import Main from "../../layouts/Main.astro";
+import StatisticsBoard from "../../components/StatisticsBoard.astro"
 import type { User } from "../../lib/models";
 
 const userData: User = Astro.locals.user;
 ---
 
 <Main title="Account">
-	<div class="container">
-		<span>Name: { userData?.name }</span>
-		<span>E-Mail: { userData?.email }</span>
-		<span>highestGameReached: { userData?.stats.highestGameReached }</span>
-		<span>highestScoreGame: { userData?.stats.highestScoreGame }</span>
-		<span>highestScoreTotal: { userData?.stats.highestScoreTotal }</span>
-		<span>totalGamesPlayed: { userData?.stats.totalGamesPlayed }</span>
-	</div>
+	<main>
+		<div class="info-side">
+			<h1>{ userData?.name }</h1>
+			<hr>
+			<div class="user-info-container">
+				<div class="categories col">
+					<span>E-Mail:</span>
+					<span>Password:</span>
+				</div>
+				<div class="infos col">
+					<div class="info-entry">
+						<span>{ userData?.email }</span>
+						<a href="">Change</a>
+					</div>
+					<div class="info-entry">
+						<span>●●●●●●●●●●</span>
+						<a href="">Change</a>
+					</div>
+				</div>
+			</div>
+			<a class="sign-out-link" href="">Sign out</a>
+		</div>
+		<StatisticsBoard />
+	</main>
 </Main>
 <style>
-	.container {
+	main {
+		position: relative;
+		padding: 2rem;
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		justify-content: space-between;
+	}
+
+	h1 {
+		width: fit-content;
+	}
+
+	hr {
+		margin: 1rem 0;
+		width: 100%;
+		height: 2px;
+		border-width: 0;
+		background-color: var(--border);
+	}
+
+	.info-side {
+		width: fit-content;
+	}
+
+	.user-info-container {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		width: fit-content;
+		gap: 4rem;
+		padding: 1rem 0 4rem 0;
+	}
+
+	.user-info-container .col {
 		display: flex;
 		flex-direction: column;
-		padding: 2rem;
+		gap: 1rem;
+	}
+
+	.info-entry {
+		display: flex;
+		gap: 2rem;
+		justify-content: flex-end;
+		align-items: center;
+	}
+
+	.info-entry a {
+		font-size: .75em;
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.info-entry a:hover {
+		text-decoration: underline;
+	}
+
+	.sign-out-link {
+		text-decoration: none;
+		color: var(--red);
+	}
+
+	.sign-out-link:hover {
+		text-decoration: underline;
+	}
+
+	@media (max-width: 1475px) {
+		main {
+			flex-direction: column;
+		}
 	}
 </style>

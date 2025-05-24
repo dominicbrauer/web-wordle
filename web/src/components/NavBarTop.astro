@@ -10,7 +10,11 @@ const userData: User = Astro.locals.user;
 
 <div class="nav-bar-top">
   <span class="website-link">{url.host}</span>
-  <a class=`account-link ${ userData && "logged-in" } button-primary` href={ userData ? "/account" : "/login" }>
+  <a
+    class="account-link button-primary"
+    class:list={{ "logged-in": !!userData }}
+    href={ userData ? "/account" : "/signin" }
+  >
     { userData ? <UserIcon class="user-icon" /> : "Sign in" }
   </a>
   <a href="https://github.com/dominicbrauer/web-wordle" target="_blank" class="github-link">
@@ -47,7 +51,7 @@ const userData: User = Astro.locals.user;
     width: auto;
   }
 
-  .account-link.logged-in {
+  .account-link .logged-in {
     padding: 4px;
   }
 

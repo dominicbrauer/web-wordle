@@ -1,0 +1,70 @@
+---
+import type { User } from "../lib/models";
+
+const userData: User = Astro.locals.user;
+---
+
+<div class="statistics-board">
+	<h2>Statistics</h2>
+	<hr>
+	<div class="entries-container">
+		<div class="entry">
+			<span>Total games played:</span>
+			<span>{ userData?.stats.totalGamesPlayed }</span>
+		</div>
+		<div class="entry">
+			<span>Highscore (Classic Mode - Total):</span>
+			<span>{ userData?.stats.highestScoreTotal }</span>
+		</div>
+		<div class="entry">
+			<span>Highscore (Classic Mode - Game):</span>
+			<span>{ userData?.stats.highestScoreGame }</span>
+		</div>
+		<div class="entry">
+			<span>Highest game reached (Classic Mode):</span>
+			<span>{ userData?.stats.highestGameReached }</span>
+		</div>
+	</div>
+</div>
+
+<style>
+	h2 {
+		font-size: 1.75em;
+	}
+
+	hr {
+		margin: 0;
+		width: 100%;
+		height: 2px;
+		background-color: var(--primary-border);
+		border-width: 0;
+		margin-top: .5rem;
+		margin-bottom: 1rem;
+	}
+
+	.statistics-board {
+		display: flex;
+		flex-direction: column;
+		height: fit-content;
+		background-color: var(--primary);
+		border: 4px solid var(--primary-border);
+		border-radius: var(--br-medium);
+		padding: 1.5rem;
+		align-items: flex-start;
+		width: fit-content;
+	}
+
+	.entries-container {
+		display: flex;
+		flex-direction: column;
+		gap: .5rem;
+	}
+
+	.entry {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+	}
+</style>

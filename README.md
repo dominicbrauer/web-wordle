@@ -3,17 +3,18 @@
 ## TO-DO List
 
 ### Account Management
-- Account page (display data, change password, logout)
+- sign out (cookie management)
+- statistics board
 
 ### Data Base
-- save statistics for users
+- update statistics
 
 ### Game page
 - save game data
-- get profile picture and name from user if user available
+- handle lose
 
 ### Other
-- beautify overall webpages
+- beautify
 - comment code
 - remove unnecessary code
 - plan presentation
