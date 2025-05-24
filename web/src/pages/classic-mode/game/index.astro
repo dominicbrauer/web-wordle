@@ -1,10 +1,10 @@
 ---
-import Assistant from "../../components/game/Assistant.astro"
-import DigitalKeyboard from "../../components/game/DigitalKeyboard.astro"
-import LogoSection from "../../components/game/LogoSection.astro"
-import ScoreBoard from "../../components/game/ScoreBoard.astro"
-import WordGrid from "../../components/game/WordGrid.astro"
-import Layout from "../../layouts/Layout.astro"
+import Assistant from "../../../components/game/Assistant.astro"
+import DigitalKeyboard from "../../../components/game/DigitalKeyboard.astro"
+import LogoSection from "../../../components/game/LogoSection.astro"
+import ScoreBoard from "../../../components/game/ScoreBoard.astro"
+import WordGrid from "../../../components/game/WordGrid.astro"
+import Layout from "../../../layouts/Layout.astro"
 ---
 
 <Layout title="Classic Game">
@@ -70,11 +70,11 @@ import Layout from "../../layouts/Layout.astro"
 </style>
 
 <script>
-	import { ROW_MULTIPLIERS } from "../../lib/config";
-	import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
-	import type { Game, GameSession, Scoring} from "../../lib/models";
-	import { addScores } from "../../lib/helpers";
-	import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
+	import { ROW_MULTIPLIERS } from "../../../lib/config";
+	import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../../lib/config";
+	import type { Game, GameSession, Scoring} from "../../../lib/models";
+	import { addScores } from "../../../lib/helpers";
+	import { submitGuess, requestGameSession, requestNextGame } from "../../../scripts/gameRequests"
 
 	const pageBody = document.querySelector('body') as HTMLBodyElement;
 

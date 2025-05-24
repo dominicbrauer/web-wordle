@@ -9,7 +9,7 @@ import SwordsIcon from "../assets/icons/swords.svg"
 
 <div class="nav-bar-side">
   <section class="title-section">
-    <Image src={logoImage} alt="A logo with the letter 'w' wearing a little crown. The top and bottow show five-letter word rows in the colors gray, yellow and green." class="logo" />
+    <Image src={ logoImage } alt="A logo with the letter 'w' wearing a little crown. The top and bottow show five-letter word rows in the colors gray, yellow and green." class="logo" />
     <div class="title">
       <span class="title-one">wordle</span>
       <span class="title-two">CHAMPIONS</span>
@@ -18,21 +18,21 @@ import SwordsIcon from "../assets/icons/swords.svg"
   <section class="navigation-section">
     <div class="sidebar-card home-card">
       <HomeIcon />
-      <span>Home</span>
+      <a href="/">Home</a>
     </div>
     <div class="sidebar-card tutorial-card">
       <BookIcon />
-      <span>How to Play</span>
+      <a href="/how-to-play">How to Play</a>
     </div>
     <div class="category">
       <span class="subheading">GAMING</span>
       <div class="sidebar-card classic-mode-card">
         <GridIcon />
-        <span>Classic Mode</span>
+        <a href="/classic-mode">Classic Mode</a>
       </div>
       <div class="sidebar-card duel-mode-card">
         <SwordsIcon />
-        <span>Duel Mode</span>
+        <a href="/duel-mode">Duel Mode</a>
       </div>
     </div>    
   </section>
@@ -105,7 +105,8 @@ import SwordsIcon from "../assets/icons/swords.svg"
       aspect-ratio: 1 / 1;
       transition: all 100ms ease;
     }
-    span {
+    a {
+      text-decoration: none;
       font-size: 1.25em;
       color: var(--text-secondary);
       transition: all 100ms ease;
@@ -122,7 +123,7 @@ import SwordsIcon from "../assets/icons/swords.svg"
     svg {
       stroke: var(--text-primary);
     }
-    span {
+    a {
       color: var(--text-primary);
     }
   }

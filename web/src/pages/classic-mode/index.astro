@@ -1,7 +1,27 @@
 ---
-import Main from "../../layouts/Main.astro";
+import Main from '../../layouts/Main.astro'
+import '../../styles/global.css'
 ---
 
-<Main title="Play Classic Mode">
-
+<Main title="Home">
+	<main>
+		<h1>Classic Mode</h1>
+		<p>in progress...</p>
+		<a class="game-link button-primary" href="/classic-mode/game">Play</a>
+	</main>
 </Main>
+
+<style>
+	main {
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		width: fit-content;
+		gap: 1rem;
+	}
+
+	.game-link {
+		padding: .5rem 1rem;
+		width: fit-content;
+	}
+</style>

@@ -1,70 +1,21 @@
 ---
-import Home from '../components/sections/Home.astro'
-import Tutorial from '../components/sections/Tutorial.astro'
-import ClassicMode from '../components/sections/ClassicMode.astro'
-import DuelMode from '../components/sections/DuelMode.astro'
 import Main from '../layouts/Main.astro'
 import '../styles/global.css'
 ---
 
 <Main title=Home>
   <main>
-    <div class="content">
-      <Home />
-      <Tutorial />
-      <ClassicMode />
-      <DuelMode />
-    </div>
+    <h1>Welcome</h1>
+    <p>in progress...</p>
   </main>
 </Main>
 
 <style>
   main {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .content {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 400%;
-    scroll-snap-align: start;
-  }
-
-  .game-link {
-    font-size: 1.5em;
+    padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		width: fit-content;
+		gap: 1rem;
   }
 </style>
-
-<script>
-  const sidebarCards = document.querySelectorAll<HTMLDivElement>('.sidebar-card');
-  const main = document.querySelector<HTMLDivElement>('main');
-  let currentSection = 0;
-
-
-  // Resizing the page by any means instantly
-  // realigns the sections correctly
-  window.addEventListener('resize', (e) => {
-    const mainWidth = main?.clientWidth!;
-    main?.scrollTo({
-      left: mainWidth * currentSection,
-      behavior: 'instant',
-    });
-  });
-
-
-  // Clicking a card in the sidebar will scroll
-  // the page to the corresponding section.
-  sidebarCards.forEach((card, index) => {
-    card.addEventListener('click', (e) => {
-      currentSection = index;
-      const mainWidth = main?.clientWidth!;
-      main?.scrollTo({
-        left: mainWidth * currentSection,
-        behavior: 'smooth',
-      });
-    })
-  });
-</script>

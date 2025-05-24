@@ -4,7 +4,7 @@
 
 ### Account Management
 - sign out (cookie management)
-- statistics board
+- disallow access if not logged in or server unreachable
 
 ### Data Base
 - update statistics
