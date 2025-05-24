@@ -56,7 +56,7 @@ public class SessionController {
 		StatisticsEntity userStats = statisticsService.getByUserId(user.getId()).get();
 
 		User foundUser = new User(
-			user.getUserName(),
+			user.getName(),
 			user.getEmail(),
 			new Statistics(
 				userStats.getHighestScoreTotal(),

@@ -22,7 +22,7 @@ public class AuthService {
    */
   public UserEntity addUser(SignUpRequest signupForm) {
     UserEntity userEntity = new UserEntity(
-      signupForm.userName(),
+      signupForm.name(),
       signupForm.email(),
       PasswordEncryption.hashPassword(signupForm.password())
     );

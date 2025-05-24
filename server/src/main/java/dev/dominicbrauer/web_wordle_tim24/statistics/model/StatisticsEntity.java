@@ -21,6 +21,8 @@ public class StatisticsEntity {
 	private int highestGameReached;
 	private int highestScoreGame;
 	private int totalGamesPlayed;
+	// averageGuessesNeeded
+	// favoriteWord
 
   public StatisticsEntity(
 		Long userId,

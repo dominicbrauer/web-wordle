@@ -12,7 +12,7 @@ const userData: User = Astro.locals.user;
 				<UserIcon class="user-icon" />
 			</div>
 		</div>
-		<span class="user-name">{ userData?.userName || "Player" }</span>
+		<span class="user-name">{ userData?.name || "Player" }</span>
 	</div>
 	<hr>
 	<div class="game-info-container">

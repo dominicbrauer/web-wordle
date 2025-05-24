@@ -1,0 +1,24 @@
+---
+import Main from "../../layouts/Main.astro";
+import type { User } from "../../lib/models";
+
+const userData: User = Astro.locals.user;
+---
+
+<Main title="Account">
+	<div class="container">
+		<span>Name: { userData?.name }</span>
+		<span>E-Mail: { userData?.email }</span>
+		<span>highestGameReached: { userData?.stats.highestGameReached }</span>
+		<span>highestScoreGame: { userData?.stats.highestScoreGame }</span>
+		<span>highestScoreTotal: { userData?.stats.highestScoreTotal }</span>
+		<span>totalGamesPlayed: { userData?.stats.totalGamesPlayed }</span>
+	</div>
+</Main>
+<style>
+	.container {
+		display: flex;
+		flex-direction: column;
+		padding: 2rem;
+	}
+</style>

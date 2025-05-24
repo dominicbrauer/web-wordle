@@ -52,7 +52,6 @@ html, body {
   background-color: var(--primary);
   border-radius: var(--br-medium);
   border: 1px solid var(--primary-border);
-  padding: .5rem 1rem;
   text-decoration: none;
   transition: background-color 100ms ease;
 }

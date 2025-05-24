@@ -7,11 +7,11 @@ import '../../styles/forms.css'
   <h1>Sign Up</h1>
   <form name="signup-form" class="signup-form" method="post" action="http://localhost:8080/auth/register">
     <div class="form-element">
-      <label for="userName">Name:</label>
+      <label for="name">Name:</label>
       <input
         type="text"
-        name="userName"
-        id="userName"
+        name="name"
+        id="name"
         placeholder="ProGamer42"
         required>
     </div>
@@ -51,7 +51,7 @@ import '../../styles/forms.css'
 </div>
 
 <script>
-  const nameInput = document.getElementById('userName') as HTMLInputElement;
+  const nameInput = document.getElementById('name') as HTMLInputElement;
   const mailInput = document.getElementById('email') as HTMLInputElement;
   const pwInputOne = document.getElementById('password') as HTMLInputElement;
   const pwInputTwo = document.getElementById('verifyPassword') as HTMLInputElement;
