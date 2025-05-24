@@ -4,22 +4,16 @@
 
 ### Account Management
 - Account page (display data, change password, logout)
-- create account (signup logic, signup page)
-- login to account (login logic, login page)
 
 ### Data Base
-- save users
-- save sessions
-- save played games for users
+- save statistics for users
 
 ### Game page
 - save game data
 - get profile picture and name from user if user available
 
-### Root page
-- beautify sections
-
 ### Other
+- beautify overall webpages
 - comment code
 - remove unnecessary code
 - plan presentation

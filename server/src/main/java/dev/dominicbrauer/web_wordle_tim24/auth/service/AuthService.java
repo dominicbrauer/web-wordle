@@ -33,6 +33,13 @@ public class AuthService {
   /**
    * 
    */
+  public Optional<UserEntity> getUserById(Long userId) {
+    return userRepository.findById(userId);
+  }
+
+  /**
+   * 
+   */
   public List<UserEntity> getAllUsers() {
     return userRepository.findAll();
   }

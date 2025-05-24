@@ -1,0 +1,7 @@
+package dev.dominicbrauer.web_wordle_tim24.auth.model;
+
+public record User(
+	String userName,
+	String email,
+	Statistics stats
+) {}

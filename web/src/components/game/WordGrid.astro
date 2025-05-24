@@ -4,235 +4,235 @@ import { GUESSES } from "../../lib/config";
 ---
 
 <div class="word-grid">
-  {Array.from({ length: GUESSES }).map(() => (
-    <WordRow />
-  ))}
+	{Array.from({ length: GUESSES }).map(() => (
+		<WordRow />
+	))}
 </div>
 
 <style>
-  .word-grid {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background);
-    width: fit-content;
-    height: fit-content;
-  }
+	.word-grid {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		background-color: var(--background);
+		width: fit-content;
+		height: fit-content;
+	}
 
-  .game-won {
-    border: 4px solid var(--green);
-  }
-  .game-lost {
-    border: 4px solid var(--red);
-  }
+	.game-won {
+		border: 4px solid var(--green);
+	}
+	.game-lost {
+		border: 4px solid var(--red);
+	}
 </style>
 
 <script>
-  import { WORD_LENGTH } from "../../lib/config";
-  import { Cursor } from "../../lib/cursor";
-  import { Scoring, type Game, type GameSession } from "../../lib/models";
-  import { range } from "../../lib/helpers";
-  import { flipTile } from "../../scripts/flipTileAnimation";
+	import { WORD_LENGTH } from "../../lib/config";
+	import { Cursor } from "../../lib/cursor";
+	import { Scoring, type Game, type GameSession } from "../../lib/models";
+	import { range } from "../../lib/helpers";
+	import { flipTile } from "../../scripts/flipTileAnimation";
 
-  const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
-  const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
-  const cursor: Cursor = new Cursor(0, 0, false, false);
-  let currentGameSession: GameSession;
-  let currentGame: Game;
-  let blockUserInput: boolean = false;
+	const charTiles = document.querySelectorAll<HTMLDivElement>('.char-tile');
+	const charTileLabels = document.querySelectorAll<HTMLSpanElement>('.char-tile-label');
+	const cursor: Cursor = new Cursor(0, 0, false, false);
+	let currentGameSession: GameSession;
+	let currentGame: Game;
+	let blockUserInput: boolean = false;
 
-  window.addEventListener("updateWordGrid", async (e) => {
-    currentGameSession = (e as CustomEvent).detail.currentGameSession;
-    currentGame = (e as CustomEvent).detail.currentGame;
+	window.addEventListener("updateWordGrid", async (e) => {
+		currentGameSession = (e as CustomEvent).detail.currentGameSession;
+		currentGame = (e as CustomEvent).detail.currentGame;
 
-    await updateGrid();
+		await updateGrid();
 
-    blockUserInput = false;
-  });
+		blockUserInput = false;
+	});
 
-  window.addEventListener("resetWordGrid", (e) => {
-    currentGame = (e as CustomEvent).detail.currentGame;
-    charTiles.forEach(charTile => {
-      flipTile(charTile, "RESET", 0);
-    });
-    updateGrid();
-  });
+	window.addEventListener("resetWordGrid", (e) => {
+		currentGame = (e as CustomEvent).detail.currentGame;
+		charTiles.forEach(charTile => {
+			flipTile(charTile, "RESET", 0);
+		});
+		updateGrid();
+	});
 
-  window.addEventListener("keyInput", (e) => {
-    if (blockUserInput) {
-      return;
-    }
-    handleKeyboardInput((e as CustomEvent).detail.keyInput);
-  });
+	window.addEventListener("keyInput", (e) => {
+		if (blockUserInput) {
+			return;
+		}
+		handleKeyboardInput((e as CustomEvent).detail.keyInput);
+	});
 
-  charTiles?.forEach((tile, idx) => {
-    tile.addEventListener('click', () => {
-      if (blockUserInput || !tile.classList.contains('active')) {
-        return;
-      }
+	charTiles?.forEach((tile, idx) => {
+		tile.addEventListener('click', () => {
+			if (blockUserInput || !tile.classList.contains('active')) {
+				return;
+			}
 
-      cursor.selfSet = true;
-      cursor.oob = false;
-      cursor.removeSelection(charTiles);
-      [cursor.x, cursor.y] = cursor.idxToCoord(idx);
-      cursor.addSelection(charTiles);
-    });
-  });
+			cursor.selfSet = true;
+			cursor.oob = false;
+			cursor.removeSelection(charTiles);
+			[cursor.x, cursor.y] = cursor.idxToCoord(idx);
+			cursor.addSelection(charTiles);
+		});
+	});
 
-  /**
-   * Color codes the character tiles in the word grid.
-   */
-  async function charHighlighting() {
-    if (currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") {
-      for (const i of range(WORD_LENGTH)) {
-        const charIdx: number = cursor.coordToIdx(i, currentGame.guesses_used - 1);
-        const color: Scoring = currentGame.guesses[currentGame.guesses_used - 1].character_info[i].scoring;
+	/**
+	 * Color codes the character tiles in the word grid.
+	 */
+	async function charHighlighting() {
+		if (currentGameSession.status == "return_feedback" || currentGameSession.status == "next_game") {
+			for (const i of range(WORD_LENGTH)) {
+				const charIdx: number = cursor.coordToIdx(i, currentGame.guesses_used - 1);
+				const color: Scoring = currentGame.guesses[currentGame.guesses_used - 1].character_info[i].scoring;
 
-        await flipTile(charTiles[charIdx], color, 250);
-      }
-      return;
-    }
+				await flipTile(charTiles[charIdx], color, 250);
+			}
+			return;
+		}
 
-    // Colors all tiles at page reload
-    for (const i of range(currentGame.guesses_used)) {
-      for (const j of range(WORD_LENGTH)) {
-        const charScoring: Scoring = currentGame.guesses[i].character_info[j].scoring;
-        const tile = charTiles[cursor.coordToIdx(j, i)];
+		// Colors all tiles at page reload
+		for (const i of range(currentGame.guesses_used)) {
+			for (const j of range(WORD_LENGTH)) {
+				const charScoring: Scoring = currentGame.guesses[i].character_info[j].scoring;
+				const tile = charTiles[cursor.coordToIdx(j, i)];
 
-        switch(charScoring) {
-          case Scoring.GREEN: {
-            tile.classList.add('char-feedback-green');
-            break;
-          }
-          case Scoring.YELLOW: {
-            tile.classList.add('char-feedback-yellow');
-            break;
-          }
-          default: {
-            tile.classList.add('char-feedback-gray');
-            break;
-          }
-        }
-      }
-    }
-  }
+				switch(charScoring) {
+					case Scoring.GREEN: {
+						tile.classList.add('char-feedback-green');
+						break;
+					}
+					case Scoring.YELLOW: {
+						tile.classList.add('char-feedback-yellow');
+						break;
+					}
+					default: {
+						tile.classList.add('char-feedback-gray');
+						break;
+					}
+				}
+			}
+		}
+	}
 
-  /**
-   * Redirects a keyboard input based on its type.
-   * @param key A keyboard key
-   */
-  function handleKeyboardInput(key: string) {
-    switch(key) {
-      case 'ENTER': handleEnterInput(); break;
-      case 'BACKSPACE': handleBackspaceInput(); break;
-      default: handleCharacterInput(key); break;
-    }
-    cursor.selfSet = false;
-  }
+	/**
+	 * Redirects a keyboard input based on its type.
+	 * @param key A keyboard key
+	 */
+	function handleKeyboardInput(key: string) {
+		switch(key) {
+			case 'ENTER': handleEnterInput(); break;
+			case 'BACKSPACE': handleBackspaceInput(); break;
+			default: handleCharacterInput(key); break;
+		}
+		cursor.selfSet = false;
+	}
 
-  /**
-   * Performs character removal if possible.
-   */
-  function handleBackspaceInput() {
-    if ((cursor.selfSet || cursor.oob) && charTileLabels[cursor.getPos()].textContent !== '') {
-      cursor.oob = false;
-      charTileLabels[cursor.getPos()].textContent = '';
-      cursor.addSelection(charTiles);
-    } else if (cursor.x > 0) {
-      charTileLabels[cursor.getPos()-1].textContent = '';
-      cursor.removeSelection(charTiles);
-      cursor.x--;
-      cursor.addSelection(charTiles);
-    } else {
-      rowHeadShake();
-    }
-  }
+	/**
+	 * Performs character removal if possible.
+	 */
+	function handleBackspaceInput() {
+		if ((cursor.selfSet || cursor.oob) && charTileLabels[cursor.getPos()].textContent !== '') {
+			cursor.oob = false;
+			charTileLabels[cursor.getPos()].textContent = '';
+			cursor.addSelection(charTiles);
+		} else if (cursor.x > 0) {
+			charTileLabels[cursor.getPos()-1].textContent = '';
+			cursor.removeSelection(charTiles);
+			cursor.x--;
+			cursor.addSelection(charTiles);
+		} else {
+			rowHeadShake();
+		}
+	}
 
-  /**
-   * Inserts a keyboard key into the word grid.
-   * @param key a valid character
-   */
-  function handleCharacterInput(key: string) {
-    if (cursor.oob) {
-      rowHeadShake();
-      return;
-    }
-    charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
-    if (cursor.x < WORD_LENGTH - 1) {
-      cursor.removeSelection(charTiles);
-      cursor.x++;
-      cursor.addSelection(charTiles);
-    } else {
-      cursor.oob = true;
-      cursor.removeSelection(charTiles);
-    }
-  }
+	/**
+	 * Inserts a keyboard key into the word grid.
+	 * @param key a valid character
+	 */
+	function handleCharacterInput(key: string) {
+		if (cursor.oob) {
+			rowHeadShake();
+			return;
+		}
+		charTileLabels[cursor.getPos()].textContent = key.toUpperCase();
+		if (cursor.x < WORD_LENGTH - 1) {
+			cursor.removeSelection(charTiles);
+			cursor.x++;
+			cursor.addSelection(charTiles);
+		} else {
+			cursor.oob = true;
+			cursor.removeSelection(charTiles);
+		}
+	}
 
-  /**
-   * Reads the characters in the current row.
-   * If every tile in the row contains a character,
-   * the guess is sent to the server.
-   */
-  function handleEnterInput() {
-    const characters: string[] = [];
+	/**
+	 * Reads the characters in the current row.
+	 * If every tile in the row contains a character,
+	 * the guess is sent to the server.
+	 */
+	function handleEnterInput() {
+		const characters: string[] = [];
 
-    for (const i of range(WORD_LENGTH)) {
-      const divText: string | null = charTileLabels[cursor.coordToIdx(i, undefined)].textContent;
-      characters.push(divText !== null ? divText : '');
-    }
+		for (const i of range(WORD_LENGTH)) {
+			const divText: string | null = charTileLabels[cursor.coordToIdx(i, undefined)].textContent;
+			characters.push(divText !== null ? divText : '');
+		}
 
-    // row is not full
-    if (characters.includes('')) {
-      rowHeadShake();
-      return;
-    }
-    
-    const word: string = characters.join('').toLowerCase();
-    sendWord(word);
-  }
+		// row is not full
+		if (characters.includes('')) {
+			rowHeadShake();
+			return;
+		}
+		
+		const word: string = characters.join('').toLowerCase();
+		sendWord(word);
+	}
 
-  /**
-   * Transmits a guessRequest event.
-   * @param word Five-letter word guess
-   */
-  function sendWord(word: string) {
-    blockUserInput = true;
+	/**
+	 * Transmits a guessRequest event.
+	 * @param word Five-letter word guess
+	 */
+	function sendWord(word: string) {
+		blockUserInput = true;
 
-    const event = new CustomEvent("submitGuess", {
-      detail: {
-        word: word,
-      }
-    });
-    window.dispatchEvent(event);
-  }
+		const event = new CustomEvent("submitGuess", {
+			detail: {
+				word: word,
+			}
+		});
+		window.dispatchEvent(event);
+	}
 
-  /**
-   * Requests the current row to run its headshake animation.
-   */
-  function rowHeadShake() {
-    window.dispatchEvent(new CustomEvent("headShake", {
-      detail: {row: currentGame.guesses_used}
-    }));
-  }
+	/**
+	 * Requests the current row to run its headshake animation.
+	 */
+	function rowHeadShake() {
+		window.dispatchEvent(new CustomEvent("headShake", {
+			detail: {row: currentGame.guesses_used}
+		}));
+	}
 
-  /**
-   * Updates the character tiles.
-   */
-  async function updateGrid() {
-    if (currentGame.current_guess_valid) {
-      await charHighlighting();
+	/**
+	 * Updates the character tiles.
+	 */
+	async function updateGrid() {
+		if (currentGame.current_guess_valid) {
+			await charHighlighting();
 
-      cursor.x = 0;
-      cursor.oob = false;
-      cursor.selfSet = false;
-    }
+			cursor.x = 0;
+			cursor.oob = false;
+			cursor.selfSet = false;
+		}
 
-    cursor.y = currentGame.guesses_used;
-    cursor.addSelection(charTiles);
-    currentGame?.guesses?.forEach((guess, rowIdx) => {
-      for (const i of range(WORD_LENGTH)) {
-        charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
-      }
-    });
-  }
+		cursor.y = currentGame.guesses_used;
+		cursor.addSelection(charTiles);
+		currentGame?.guesses?.forEach((guess, rowIdx) => {
+			for (const i of range(WORD_LENGTH)) {
+				charTileLabels[cursor.coordToIdx(i, rowIdx)].textContent = guess.word.charAt(i).toUpperCase();
+			}
+		});
+	}
 </script>

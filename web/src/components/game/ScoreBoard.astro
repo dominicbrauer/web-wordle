@@ -159,17 +159,21 @@ import UserIcon from "../../assets/icons/user.svg"
 		const scores: Array<Array<number>> = (e as CustomEvent).detail.scores;
 
 		await updateScoreBoard(scores);
-		await wait(500);
+		await wait(750);
 		window.dispatchEvent(new CustomEvent("analyseGameState"));
 	});
 
+	/**
+	 * 
+	 * @param scores 
+	 */
 	async function updateScoreBoard(scores: Array<Array<number>>) {
 		// Set round count
 		const roundCountText = `Game ${currentGameSession.game_index + 1}`;
 		roundCountLabel!.textContent = roundCountText;
 
 		// Set current score
-		if (currentGameSession.status == "session_found") {
+		if (currentGameSession.status == "session_found" || currentGameSession.status == "next_game") {
 			const totalScore: number = addScores(scores);
 			currentScoreLabel!.textContent = `${totalScore}P`;
 		}

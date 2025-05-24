@@ -38,3 +38,22 @@ export async function submitGuess(gameSession: GameSession): Promise<GameSession
   }
   return await response.json() as GameSession;
 }
+
+/**
+ * 
+ */
+export async function requestNextGame(gameSession: GameSession): Promise<GameSession> {
+  const response = await fetch('http://localhost:8080/game/next-game', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(gameSession),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
+  }
+  return await response.json() as GameSession;
+}

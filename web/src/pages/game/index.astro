@@ -74,7 +74,7 @@ import Layout from "../../layouts/Layout.astro"
 	import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../lib/config";
 	import type { Game, GameSession, Scoring} from "../../lib/models";
 	import { addScores } from "../../lib/helpers";
-	import { submitGuess, requestGameSession } from "../../scripts/gameRequests"
+	import { submitGuess, requestGameSession, requestNextGame } from "../../scripts/gameRequests"
 
 	const pageBody = document.querySelector('body') as HTMLBodyElement;
 
@@ -98,12 +98,8 @@ import Layout from "../../layouts/Layout.astro"
 		currentGameSession.games[currentGameSession.game_index] = currentGame;
 
 		currentGameSession = await submitGuess(currentGameSession);
+		currentGame = currentGameSession.games[currentGameSession.game_index];
 
-		if (currentGameSession.status != "next_game") {
-			currentGame = currentGameSession.games[currentGameSession.game_index];
-		} else {
-			currentGame = currentGameSession.games[currentGameSession.game_index - 1];
-		}
 		triggerUpdate();
 	});
 
@@ -192,7 +188,7 @@ import Layout from "../../layouts/Layout.astro"
 				GREEN: GREEN_TILE_VALUE
 			};
 
-			// Adds score values to scores[]
+			// Adds score values to scores[][]
 			colors?.forEach((color, j) => {
 				scores[i][j] = colorMap[color];
 			});
@@ -207,7 +203,7 @@ import Layout from "../../layouts/Layout.astro"
 	 */
 	async function analyseGameState() {
 		// Correct guess: Win
-		if (currentGameSession.status == "next_game" && currentGame.guesses[currentGame.guesses_used - 1]?.was_correct) {
+		if (currentGame.guesses[currentGame.guesses_used - 1]?.was_correct) {
 			console.log("WIIN");
 			await handleWin();
 			return;
@@ -222,11 +218,24 @@ import Layout from "../../layouts/Layout.astro"
 	}
 
 	/**
+	 * Calculates the final score if a game
+	 * has been won.
+	 * @returns the final score with all multipliers applied
+	 */
+	function calcFinalScore(): number {
+		return addScores(calcScores())
+			* ROW_MULTIPLIERS[currentGame.guesses_used - 1]
+			* (1 + currentGameSession.game_index * 0.1);
+	}
+
+	/**
 	 * Handles winning the game (correct word).
 	 */
 	async function handleWin() {
+		currentGameSession.games[currentGameSession.game_index].final_score = calcFinalScore();
+
+		currentGameSession = await requestNextGame(currentGameSession);
 		currentGame = currentGameSession.games[currentGameSession.game_index];
-		// const score = addScores(calcScores()) * (1 + currentGameSession.game_index * 0.1) * ROW_MULTIPLIERS[currentGame.guesses_used - 1];
 
 		// handle win
 

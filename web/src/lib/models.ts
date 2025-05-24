@@ -28,3 +28,9 @@ export interface GameSession {
   game_index: number;
   games: Array<Game>;
 }
+
+export interface User {
+  userName: string;
+  email: string;
+  stats: null;
+}

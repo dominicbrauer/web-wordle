@@ -1,5 +1,6 @@
 package dev.dominicbrauer.web_wordle_tim24.game.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/game")
 public class GameController {
 
+	@Autowired
 	private final GameService gameService;
 
 	public GameController(GameService gameService) {
@@ -71,15 +73,28 @@ public class GameController {
 			gameSession.games()
 		);
 
-		if (updatedGame.guesses().getLast().was_correct()) {
-			updatedGameSession = new GameSession(
-				"next_game",
-				gameSession.game_index() + 1,
-				gameSession.games()
-			);
-			updatedGameSession.games().add(gameService.createNewGame());
-			session.setAttribute("currentSolutionWord", gameService.getRandomWord());
-		}
+		session.setAttribute("gameSession", updatedGameSession);
+		return ResponseEntity.ok(updatedGameSession);
+	}
+
+
+	@PostMapping("/next-game")
+	@CrossOrigin(
+		allowedHeaders = "*",
+		exposedHeaders = "*",
+		methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+		allowCredentials = "true",
+		origins = "http://localhost:4321"
+	)
+	public ResponseEntity<GameSession> requestNextGame(@RequestBody GameSession gameSession, HttpSession session) {
+		System.out.println(gameSession.games().getLast().final_score());
+		GameSession updatedGameSession = new GameSession(
+			"next_game",
+			gameSession.game_index() + 1,
+			gameSession.games()
+		);
+		updatedGameSession.games().add(gameService.createNewGame());
+		session.setAttribute("currentSolutionWord", gameService.getRandomWord());
 
 		session.setAttribute("gameSession", updatedGameSession);
 		return ResponseEntity.ok(updatedGameSession);

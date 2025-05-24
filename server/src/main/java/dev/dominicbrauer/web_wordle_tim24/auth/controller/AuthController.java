@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +26,9 @@ import dev.dominicbrauer.web_wordle_tim24.auth.service.SessionService;
 @RequestMapping("/auth")
 public class AuthController {
 
+  @Autowired
   private AuthService authService;
+  @Autowired
   private SessionService sessionService;
 
   @PostMapping(
