@@ -14,4 +14,5 @@
 - comment code
 - remove unnecessary code
 - plan presentation
+- responsive design
 - penetration testing
