@@ -114,4 +114,5 @@ public class AuthController {
 		headers.setLocation(URI.create("http://localhost:4321/api/signin?token=" + session.getSessionToken().toString()));
 		return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 	}
+
 }

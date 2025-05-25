@@ -37,6 +37,7 @@ public class SessionController {
 		this.statisticsService = statisticsService;
   }
 
+
 	@PostMapping("/get-user")
 	@CrossOrigin(
 		allowedHeaders = "*",
@@ -67,6 +68,20 @@ public class SessionController {
 		);
 	
 		return ResponseEntity.ok(foundUser);
+	}
+
+
+	@PostMapping("/signout")
+	@CrossOrigin(
+		allowedHeaders = "*",
+		exposedHeaders = "*",
+		methods = {RequestMethod.POST, RequestMethod.OPTIONS},
+		allowCredentials = "true",
+		origins = "http://localhost:4321"
+	)
+	public ResponseEntity<Void> signoutUser(@RequestBody String cookieValue) {
+		sessionService.invalidateSession(cookieValue);
+		return ResponseEntity.ok().build();
 	}
 
 }

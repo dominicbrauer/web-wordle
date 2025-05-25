@@ -74,7 +74,7 @@ import Layout from "../../../layouts/Layout.astro"
 	import { GUESSES, KEYBOARD_KEYS, WORD_LENGTH, GRAY_TILE_VALUE, YELLOW_TILE_VALUE, GREEN_TILE_VALUE } from "../../../lib/config";
 	import type { Game, GameSession, Scoring} from "../../../lib/models";
 	import { addScores } from "../../../lib/helpers";
-	import { submitGuess, requestGameSession, requestNextGame } from "../../../scripts/gameRequests"
+	import { submitGuess, requestGameSession, requestNextGame, saveGameData } from "../../../scripts/gameRequests"
 
 	const pageBody = document.querySelector('body') as HTMLBodyElement;
 
@@ -254,7 +254,7 @@ import Layout from "../../../layouts/Layout.astro"
 			detail: {msg: "Oh no, you lost! You have no guesses left... Next time you'll win!"}
 		}));
 
-		// handle lose
+		await saveGameData(currentGameSession);
 
 		alert("No more guesses left!");
 		// window.location.replace("/");

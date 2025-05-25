@@ -1,9 +1,12 @@
 ---
 import Main from "../../layouts/Main.astro";
-import StatisticsBoard from "../../components/StatisticsBoard.astro"
+import StatisticsBoard from "../../components/StatisticsBoard.astro";
 import type { User } from "../../lib/models";
 
 const userData: User = Astro.locals.user;
+if (!userData) {
+	return Astro.redirect("/");
+}
 ---
 
 <Main title="Account">
@@ -27,7 +30,7 @@ const userData: User = Astro.locals.user;
 					</div>
 				</div>
 			</div>
-			<a class="sign-out-link" href="">Sign out</a>
+			<a class="sign-out-link" href="/api/signout">Sign out</a>
 		</div>
 		<StatisticsBoard />
 	</main>

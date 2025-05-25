@@ -87,7 +87,6 @@ public class GameController {
 		origins = "http://localhost:4321"
 	)
 	public ResponseEntity<GameSession> requestNextGame(@RequestBody GameSession gameSession, HttpSession session) {
-		System.out.println(gameSession.games().getLast().finalScore());
 		GameSession updatedGameSession = new GameSession(
 			"next_game",
 			gameSession.gameIndex() + 1,
