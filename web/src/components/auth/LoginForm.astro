@@ -1,10 +1,9 @@
 ---
-import '../../styles/global.css'
-import '../../styles/forms.css'
+import '../../styles/forms.css';
 ---
 
 <div class="form-container">
-	<h1>Log In</h1>
+	<h1>Sign in</h1>
 	<form name="signin-form" class="signin-form" method="post" action="http://localhost:8080/auth/signin">
 		<div class="form-element">
 			<label for="email">EMAIL</label>
@@ -22,13 +21,12 @@ import '../../styles/forms.css'
 				id="password"
 				required>
 		</div>
-		
 		<button type="submit" name="submit-btn" id="submit-btn" class="submit-btn" disabled="true">Submit</button>
 	</form>
-	<span class="redirect-text">
-		No account yet?
-		<a href="/signup">Sign Up</a>
-	</span>
+	<div class="redirect-container">
+		<span>No account?</span>
+		<a href="/signup">Create one</a>
+	</div>
 </div>
 
 <script>

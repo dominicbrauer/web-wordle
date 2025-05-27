@@ -3,12 +3,12 @@
 	display: flex;
 	flex-direction: column;
 	width: 24rem;
-	border: 4px solid var(--border);
-	padding:  2rem 3rem;
+	height: fit-content;
+	padding: 1rem 2rem;
 	left: 50%;
 	top: 50%;
+	gap: 1rem;
 	transform: translate(-50%, -50%);
-	border-radius: 8px;
 	align-items: center;
 }
 
@@ -18,53 +18,62 @@
 	height: 3rem;
 }
 
-.redirect-text {
-	font-size: .75em;
-	color: var(--text-secondary);
+.redirect-container {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	gap: .25rem;
+	font-size: .85em;
 	align-items: center;
-	a {
-		color: var(--accent);
-		text-decoration: none;
-	}
-	a:hover {
-		text-decoration: underline;
-	}
+	justify-content: space-between;
+}
+
+.redirect-container span {
+	color: var(--text-secondary);
+}
+
+.redirect-container a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.redirect-container a:hover {
+	text-decoration: underline;
 }
 
 form {
+	position: relative;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 1rem;
 	width: 100%;
 }
 
-button {
+.submit-btn {
 	color: var(--text-primary);
-	margin: 1rem;
 	border-radius: 4px;
 	font-size: 1em;
 	background-color: var(--primary);
 	border: none;
-	width: 80%;
-}
-
-button:hover,
-button:disabled {
-	background-color: var(--primary-hover);
-}
-
-button:active:not(:disabled) {
-	transform: scale(0.98);
-}
-
-button:active:disabled {
-	transform: scale(1);
+	width: 100%;
+	height: 3rem;
 	outline: none;
 }
 
-button:disabled {
+.submit-btn:hover,
+.submit-btn:disabled {
+	background-color: var(--primary-hover);
+}
+
+.submit-btn:active:not(:disabled) {
+	transform: scale(0.98);
+}
+
+.submit-btn:active:disabled {
+	transform: scale(1);
+}
+
+.submit-btn:disabled {
 	opacity: 0.6;
 }
 
