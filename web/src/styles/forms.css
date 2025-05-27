@@ -99,7 +99,7 @@ input {
 }
 
 input:hover {
-	outline: 2px solid var(--primary-border);
+	outline: 2px solid var(--primary-hover);
 }
 
 input:focus {
