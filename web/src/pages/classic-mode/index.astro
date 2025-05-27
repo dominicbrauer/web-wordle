@@ -1,26 +1,74 @@
 ---
 import Main from '../../layouts/Main.astro';
+import ArrowIcon from '../../assets/icons/arrow-big-right.svg';
 ---
 
-<Main title="Home">
+<Main title="Classic Mode">
 	<main>
-		<h1>Classic Mode</h1>
-		<p>in progress...</p>
-		<a class="game-link button-primary" href="/classic-mode/game">Play</a>
+		<div class="interaction-container">
+			<div class="text-section">
+				<h1>Classic Mode</h1>
+				<p>
+					The classic wordle CHAMPIONS experience.
+					<br>
+					Game after game, you can score high
+					<br>
+					by guessing fast and consistently.
+				</p>
+			</div>
+			<a class="game-link button-primary" href="/classic-mode/game">
+				<ArrowIcon />
+			</a>
+		</div>
 	</main>
 </Main>
 
 <style>
 	main {
 		padding: 2rem;
+		width: 100%;
+	}
+
+	p {
+		line-height: 1.75em;
+		text-align: left;
+	}
+
+	.interaction-container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		align-items: center;
+		height: 7.5rem;
+	}
+
+	.text-section {
 		display: flex;
 		flex-direction: column;
-		width: fit-content;
-		gap: 1rem;
+		align-items: flex-start;
+		gap: .5rem;
+		padding-left: 1rem;
+		border-left: 3px solid var(--border);
 	}
 
 	.game-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		padding: .5rem 1rem;
 		width: fit-content;
+		height: 100%;
+		width: 6rem;
+		cursor: default;
+	}
+
+	.game-link svg {
+		aspect-ratio: 1 / 1;
+		width: 2.5rem;
+		height: auto;
 	}
 </style>

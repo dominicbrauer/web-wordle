@@ -3,18 +3,47 @@ import Main from '../../layouts/Main.astro';
 ---
 
 <Main title="Duel Mode">
-  <main>
-    <h1>Duel Mode</h1>
-    <p>in progress...</p>
-  </main>
+	<main>
+		<div class="interaction-container">
+			<div class="text-section">
+				<h1>Duel Mode</h1>
+				<p>
+					Work in progress...
+				</p>
+			</div>
+		</div>
+	</main>
 </Main>
 
 <style>
-  main {
-    padding: 2rem;
+	main {
+		padding: 2rem;
+		width: 100%;
+	}
+
+	p {
+		line-height: 1.75em;
+		text-align: left;
+	}
+
+	.interaction-container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		align-items: center;
+		height: 7.5rem;
+	}
+
+	.text-section {
 		display: flex;
 		flex-direction: column;
-		width: fit-content;
-		gap: 1rem;
-  }
+		align-items: flex-start;
+		gap: .5rem;
+		padding-left: 1rem;
+		border-left: 3px solid var(--border);
+	}
 </style>

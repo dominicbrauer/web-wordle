@@ -9,7 +9,6 @@
 - add expiration check with deletion
 
 ### Game page
-- handle lose
 - add assistant feedback messages
 
 ### Other

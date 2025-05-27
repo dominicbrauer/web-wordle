@@ -8,7 +8,7 @@ import GameOverPopup from "../../../components/GameOverPopup.astro";
 import Layout from "../../../layouts/Layout.astro";
 ---
 
-<Layout title="Classic Game">
+<Layout title="Classic Mode Game">
 	<div class="game-frame">
 		<div class="upper-area">
 			<div class="side left">
@@ -256,7 +256,9 @@ import Layout from "../../../layouts/Layout.astro";
 			detail: {msg: "Oh no, you lost! You have no guesses left... Next time you'll win!"}
 		}));
 
-		await saveGameData(currentGameSession);
+		try {
+			await saveGameData(currentGameSession);
+		} catch(e) {}
 
 		const overlay = document.createElement('div');
 		document.body.appendChild(overlay);
