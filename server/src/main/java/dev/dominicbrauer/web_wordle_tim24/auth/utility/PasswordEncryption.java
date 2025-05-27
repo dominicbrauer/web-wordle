@@ -7,15 +7,15 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class PasswordEncryption {
 
-  private static final String SALT = "$2a$10$GvalEO8g464bMiGLfZW0re";
+	private static final String SALT = "$2a$10$GvalEO8g464bMiGLfZW0re";
 
-  /**
-   * Hashes a password using BCrypt.
-   * @param password - The password to hash.
-   * @return The hashed password
-   */
-  public static String hashPassword(String password) {
-    return BCrypt.hashpw(password, SALT);
-  }
+	/**
+	 * Hashes a password using BCrypt.
+	 * @param password - The password to hash.
+	 * @return The hashed password
+	 */
+	public static String hashPassword(String password) {
+		return BCrypt.hashpw(password, SALT);
+	}
 
 }

@@ -32,10 +32,10 @@ public class SessionController {
 	private final StatisticsService statisticsService;
 
 	public SessionController(AuthService authService, SessionService sessionService, StatisticsService statisticsService) {
-    this.authService = authService;
-    this.sessionService = sessionService;
+		this.authService = authService;
+		this.sessionService = sessionService;
 		this.statisticsService = statisticsService;
-  }
+	}
 
 
 	@PostMapping("/get-user")

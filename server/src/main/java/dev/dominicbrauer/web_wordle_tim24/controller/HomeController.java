@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class HomeController {
 
-  @GetMapping
+	@GetMapping
 	@CrossOrigin(
 		allowedHeaders = "*",
 		exposedHeaders = "*",
@@ -19,12 +19,12 @@ public class HomeController {
 		allowCredentials = "true",
 		origins = "http://localhost:4321"
 	)
-  public ResponseEntity<String> index() {
-    return ResponseEntity.ok("Welcome to Wordle 🔤");
-  }
+	public ResponseEntity<String> index() {
+		return ResponseEntity.ok("Welcome to Wordle 🔤");
+	}
 
 
-  @GetMapping("/api")
+	@GetMapping("/api")
 	@CrossOrigin(
 		allowedHeaders = "*",
 		exposedHeaders = "*",
@@ -32,8 +32,8 @@ public class HomeController {
 		allowCredentials = "true",
 		origins = "http://localhost:4321"
 	)
-  public ResponseEntity<String> api() {
-    return ResponseEntity.ok("API is running smoothly!");
-  }
+	public ResponseEntity<String> api() {
+		return ResponseEntity.ok("API is running smoothly!");
+	}
 
 }

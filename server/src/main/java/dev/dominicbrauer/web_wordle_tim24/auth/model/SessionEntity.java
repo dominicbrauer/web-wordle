@@ -16,16 +16,16 @@ import lombok.Setter;
 @Table(name = "Sessions")
 public class SessionEntity {
 
-  @Id
-  private UUID sessionToken;
+	@Id
+	private UUID sessionToken;
 
-  private Long userId;
-  private Long expireTime;
+	private Long userId;
+	private Long expireTime;
 
-  public SessionEntity(UUID sessionToken, Long userId, Long expireTime) {
-    this.sessionToken = sessionToken;
-    this.userId = userId;
-    this.expireTime = expireTime;
-  }
+	public SessionEntity(UUID sessionToken, Long userId, Long expireTime) {
+		this.sessionToken = sessionToken;
+		this.userId = userId;
+		this.expireTime = expireTime;
+	}
 
 }

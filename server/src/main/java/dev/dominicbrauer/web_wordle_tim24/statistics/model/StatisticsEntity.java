@@ -14,8 +14,8 @@ import lombok.Setter;
 @Table(name = "Statistics")
 public class StatisticsEntity {
 
-  @Id
-  private Long userId;
+	@Id
+	private Long userId;
 
 	private Long highestScoreTotal;
 	private int highestGameReached;
@@ -24,7 +24,7 @@ public class StatisticsEntity {
 	// averageGuessesNeeded
 	// favoriteWord
 
-  public StatisticsEntity(
+	public StatisticsEntity(
 		Long userId,
 		Long highestScoreTotal,
 		int highestGameReached,
@@ -33,9 +33,9 @@ public class StatisticsEntity {
 	) {
 		this.userId = userId;
 		this.highestScoreTotal = highestScoreTotal;
-    this.highestGameReached = highestGameReached;
+		this.highestGameReached = highestGameReached;
 		this.highestScoreGame = highestScoreGame;
 		this.totalGamesPlayed = totalGamesPlayed;
-  }
+	}
 
 }
