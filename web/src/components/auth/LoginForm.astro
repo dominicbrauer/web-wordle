@@ -4,57 +4,47 @@ import '../../styles/forms.css'
 ---
 
 <div class="form-container">
-  <h1>Log In</h1>
-  <form name="signin-form" class="signin-form" method="post" action="http://localhost:8080/auth/signin">
-    <div class="form-element">
-      <label for="email">E-Mail:</label>
-      <input
-        type="email"
-        name="email"
-        id="email"
-        placeholder="example@mail.com"
-        required>
-    </div>
-    <div class="form-element">
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="Example123"
-        required>
-    </div>
-    
-    <button type="submit" name="submit-btn" id="submit-btn" class="submit-btn" disabled="true">Submit</button>
-  </form>
-  <span class="redirect-text">
-    No account yet?
-    <a href="/signup">Sign Up</a>
-  </span>
+	<h1>Log In</h1>
+	<form name="signin-form" class="signin-form" method="post" action="http://localhost:8080/auth/signin">
+		<div class="form-element">
+			<label for="email">EMAIL</label>
+			<input
+				type="email"
+				name="email"
+				id="email"
+				required>
+		</div>
+		<div class="form-element">
+			<label for="password">PASSWORD</label>
+			<input
+				type="password"
+				name="password"
+				id="password"
+				required>
+		</div>
+		
+		<button type="submit" name="submit-btn" id="submit-btn" class="submit-btn" disabled="true">Submit</button>
+	</form>
+	<span class="redirect-text">
+		No account yet?
+		<a href="/signup">Sign Up</a>
+	</span>
 </div>
 
 <script>
-  const mailInput = document.getElementById('email') as HTMLInputElement;
-  const pwInput = document.getElementById('password') as HTMLInputElement;
-  const submitButton = document.getElementById('submit-btn') as HTMLButtonElement;
+	const mailInput = document.getElementById('email') as HTMLInputElement;
+	const pwInput = document.getElementById('password') as HTMLInputElement;
+	const submitButton = document.getElementById('submit-btn') as HTMLButtonElement;
 
-  const inputElements = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+	const inputElements = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
 
-  let mailInputEmpty: boolean = true;
-  let pwInputEmpty: boolean = true;
+	let mailInputEmpty: boolean = true;
+	let pwInputEmpty: boolean = true;
 
-  inputElements?.forEach(input => {
-    input?.addEventListener('input', () => {
-      pwInputEmpty = pwInput.value != "" ? false : true;
-      mailInputEmpty = mailInput.value != "" ? false : true;
-      toggleButton();
-  })});
-
-  function toggleButton() {
-    if (!(mailInputEmpty || pwInputEmpty)) {
-      submitButton.disabled = false;
-    } else {
-      submitButton.disabled = true;
-    }
-  }
+	inputElements?.forEach(input => {
+		input?.addEventListener('input', () => {
+			pwInputEmpty = pwInput.value != "" ? false : true;
+			mailInputEmpty = mailInput.value != "" ? false : true;
+			submitButton.disabled = mailInputEmpty || pwInputEmpty;
+	})});
 </script>
