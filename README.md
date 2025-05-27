@@ -5,6 +5,9 @@
 ### Account Management
 - change credentials
 
+# Sessions
+- add expiration check with deletion
+
 ### Game page
 - handle lose
 - add assistant feedback messages
