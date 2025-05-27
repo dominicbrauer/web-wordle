@@ -10,12 +10,7 @@ import Image from 'astro/components/Image.astro';
 			<div class="text-section">
 				<h1>How to Play</h1>
 				<p>
-					In wordle CHAMPIONS, you can play as many Wordle games in a row as you want.
-          The more important question is: How far can you make it? <br> Instead of one word per day,
-          you will get a new word each time you guessed one correctly. Based on how close your
-          guesses are to the solution, you will receive points. You will also receive points for how
-          fast you guess correctly and how long you endure. <br> After six unsuccessful guesses, it's
-          over. What will your highscore be?
+					play
 				</p>
 			</div>
 			<Image src={ ExampleImage } class:list={'example-image'} alt="An example picture of the wordle CHAMPIONS Classic Mode gameplay.">
@@ -34,9 +29,9 @@ import Image from 'astro/components/Image.astro';
 		text-align: left;
 	}
 
-  br {
-    height: .2rem;
-  }
+	br {
+		height: .2rem;
+	}
 
 	.interaction-container {
 		position: absolute;
@@ -46,9 +41,9 @@ import Image from 'astro/components/Image.astro';
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
-    padding-left: 1rem;
+		padding-left: 1rem;
 		border-left: 3px solid var(--border);
-    width: 48rem;
+		width: 48rem;
 	}
 
 	.text-section {
@@ -58,11 +53,11 @@ import Image from 'astro/components/Image.astro';
 		gap: .5rem;
 	}
 
-  .example-image {
-    aspect-ratio: 1171 / 716;
-    width: 80%;
-    height: auto;
-    box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.5);
-    margin: 0 auto;
-  }
+	.example-image {
+		aspect-ratio: 1171 / 716;
+		width: 80%;
+		height: auto;
+		box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.5);
+		margin: 0 auto;
+	}
 </style>

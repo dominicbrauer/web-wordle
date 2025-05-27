@@ -3,72 +3,72 @@
 ---
 
 <div class="char-tile">
-  <span class="char-tile-label"></span>
+	<span class="char-tile-label"></span>
 </div>
 
 <style>
-  .char-tile {
-    position: relative;
-    width: 4.25rem;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    background-color: var(--background);
-    border: 2px solid var(--secondary-border);
-    border-radius: var(--br-light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: .25rem;
-    overflow: hidden;
-    user-select: none;
-  }
+	.char-tile {
+		position: relative;
+		width: 4.25rem;
+		height: auto;
+		aspect-ratio: 1 / 1;
+		background-color: var(--background);
+		border: 2px solid var(--secondary-border);
+		border-radius: var(--br-light);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: .25rem;
+		overflow: hidden;
+		user-select: none;
+	}
 
-  .active::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: var(--primary);
-    opacity: 0;
-  }
+	.active::before {
+		content: '';
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-color: var(--primary);
+		opacity: 0;
+	}
 
-  .active:hover::before,
-  .char-tile-selected::before {
-    opacity: 0.2;
-    transition: opacity 100ms ease;
-  }
+	.active:hover::before,
+	.char-tile-selected::before {
+		opacity: 0.2;
+		transition: opacity 100ms ease;
+	}
 
-  .char-tile-selected,
-  .active:hover {
-    cursor: pointer;
-    border-color: var(--primary);
-    transition: border-color 100ms ease;
-  }
+	.char-tile-selected,
+	.active:hover {
+		cursor: pointer;
+		border-color: var(--primary);
+		transition: border-color 100ms ease;
+	}
 
-  .char-tile-label {
-    font-size: 2.25em;
-    font-weight: bold;
-    z-index: 1;
-  }
+	.char-tile-label {
+		font-size: 2.25em;
+		font-weight: bold;
+		z-index: 1;
+	}
 
-  .char-feedback-gray {
-    background-color: var(--gray);
-  }
-  .char-feedback-yellow {
-    background-color: var(--yellow);
-  }
-  .char-feedback-green {
-    background-color: var(--green);
-  }
-  .char-feedback-gray,
-  .char-feedback-yellow,
-  .char-feedback-green {
-    border-color: var(--background);
-  }
+	.char-feedback-gray {
+		background-color: var(--gray);
+	}
+	.char-feedback-yellow {
+		background-color: var(--yellow);
+	}
+	.char-feedback-green {
+		background-color: var(--green);
+	}
+	.char-feedback-gray,
+	.char-feedback-yellow,
+	.char-feedback-green {
+		border-color: var(--background);
+	}
 
-  :is(.char-feedback-gray,
-  .char-feedback-yellow,
-  .char-feedback-green):hover {
-    
-  }
+	:is(.char-feedback-gray,
+	.char-feedback-yellow,
+	.char-feedback-green):hover {
+		
+	}
 </style>

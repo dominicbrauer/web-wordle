@@ -10,27 +10,27 @@ if (!!userData) {
 ---
 
 <Layout title="Sign Up">
-  <SignupForm />
+	<SignupForm />
 </Layout>
 
 <script>
-  const params = new URLSearchParams(document.location.search);
-  const error = params.get("error");
+	const params = new URLSearchParams(document.location.search);
+	const error = params.get("error");
 
-  switch(error) {
-    case "passwords": {
-      alert("Both passwords must be equal!");
-      break;
-    }
-    case "invalid_email": {
-      alert("Invalid email address!");
-      break;
-    }
-    case "email_taken": {
-      alert("Email is already in use!");
-      break;
-    }
-  }
+	switch(error) {
+		case "passwords": {
+			alert("Both passwords must be equal!");
+			break;
+		}
+		case "invalid_email": {
+			alert("Invalid email address!");
+			break;
+		}
+		case "email_taken": {
+			alert("Email is already in use!");
+			break;
+		}
+	}
 
-  window.history.pushState('', '', "/signup");
+	window.history.pushState('', '', "/signup");
 </script>

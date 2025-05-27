@@ -4,63 +4,63 @@ import assistantImg from "../../assets/images/assistant.png"
 ---
 
 <div class="game-assistant">
-  <div class="character-container">
-    <Image src={assistantImg} alt="Giga Shrek" class="picture" />
-    <span>Wolfle</span>
-  </div>
-  <p class="text-container">
-    Hey, I'm Wolfle. I am your personal emotional helper!
-  </p>
+	<div class="character-container">
+		<Image src={assistantImg} alt="Giga Shrek" class="picture" />
+		<span>Wolfle</span>
+	</div>
+	<p class="text-container">
+		Hey, I'm Wolfle. I am your personal emotional helper!
+	</p>
 </div>
 
 <style>
-  .game-assistant {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    width: 100%;
-    height: 50%;
-    gap: 1rem;
-    border-left: 2px solid var(--border);
-    padding: .5rem 1rem;
-  }
+	.game-assistant {
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		width: 100%;
+		height: 50%;
+		gap: 1rem;
+		border-left: 2px solid var(--border);
+		padding: .5rem 1rem;
+	}
 
-  .character-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: .5rem;
-    span {
-      font-size: 1.5em;
-      color: var(--text-secondary);
-    }
-    .picture {
-      width: 6rem;
-      height: auto;
-      aspect-ratio: 1080 / 1069;
-    }
-  }
+	.character-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: start;
+		align-items: center;
+		gap: .5rem;
+		span {
+			font-size: 1.5em;
+			color: var(--text-secondary);
+		}
+		.picture {
+			width: 6rem;
+			height: auto;
+			aspect-ratio: 1080 / 1069;
+		}
+	}
 
-  .text-container {
-    margin: 0;
-    font-size: 1em;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    line-height: 1.5em;
-  }
+	.text-container {
+		margin: 0;
+		font-size: 1em;
+		white-space: normal;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+		line-height: 1.5em;
+	}
 </style>
 
 <script>
-  const textContainer = document.querySelector<HTMLParagraphElement>('.text-container');
+	const textContainer = document.querySelector<HTMLParagraphElement>('.text-container');
 
 
-  window.addEventListener('showAssistantMessage', (e) => {
-    const event = e as CustomEvent;
-    const msg = event.detail.msg;
-    if (textContainer !== null) {
-      textContainer.textContent = msg;
-    }
-  });
+	window.addEventListener('showAssistantMessage', (e) => {
+		const event = e as CustomEvent;
+		const msg = event.detail.msg;
+		if (textContainer !== null) {
+			textContainer.textContent = msg;
+		}
+	});
 </script>

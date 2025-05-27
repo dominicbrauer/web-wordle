@@ -7,120 +7,120 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 ---
 
 <div class="keyboard-container">
-  <KeyRow keys={KEYBOARD_KEYS[0]}></KeyRow>
-  <KeyRow keys={KEYBOARD_KEYS[1]}></KeyRow>
-  <KeyRow keys={KEYBOARD_KEYS[2]}>
-    <KeyTile slot="enter-key" class="enter-key">
-      ENTER
-    </KeyTile>
-    <KeyTile slot="delete-key" class="delete-key">
-      <DeleteIcon class="delete-icon" />
-    </KeyTile>
-  </KeyRow>
+	<KeyRow keys={KEYBOARD_KEYS[0]}></KeyRow>
+	<KeyRow keys={KEYBOARD_KEYS[1]}></KeyRow>
+	<KeyRow keys={KEYBOARD_KEYS[2]}>
+		<KeyTile slot="enter-key" class="enter-key">
+			ENTER
+		</KeyTile>
+		<KeyTile slot="delete-key" class="delete-key">
+			<DeleteIcon class="delete-icon" />
+		</KeyTile>
+	</KeyRow>
 </div>
 
 <style>
-  .keyboard-container {
-    position: relative;
-    width: fit-content;
-    border: 2px solid var(--secondary-border);
-    padding: .5rem 1rem;
-    border-radius: .5rem;
-  }
+	.keyboard-container {
+		position: relative;
+		width: fit-content;
+		border: 2px solid var(--secondary-border);
+		padding: .5rem 1rem;
+		border-radius: .5rem;
+	}
 
-  .delete-icon {
-    width: 1.5rem;
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
+	.delete-icon {
+		width: 1.5rem;
+		height: auto;
+		aspect-ratio: 1 / 1;
+	}
 </style>
 
 <script>
-  import { Scoring, type Game } from "../../lib/models";
+	import { Scoring, type Game } from "../../lib/models";
 
-  const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
-  let currentGame: Game;
+	const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
+	let currentGame: Game;
 
-  // Gets current Game and updates the keyboard
-  window.addEventListener("updateDigitalKeyboard", (e) => {
-    currentGame = (e as CustomEvent).detail.currentGame;
-    keyHighlighting();
-  });
+	// Gets current Game and updates the keyboard
+	window.addEventListener("updateDigitalKeyboard", (e) => {
+		currentGame = (e as CustomEvent).detail.currentGame;
+		keyHighlighting();
+	});
 
-  // Listen for keyboard usage
-  keyTiles.forEach(keyTile => {
-    keyTile.addEventListener('click', () => {
-      const key = (() => {
-        if (keyTile.classList.contains('enter-key')) return "ENTER";
-        if (keyTile.classList.contains('delete-key')) return "BACKSPACE";
-        return keyTile.firstElementChild?.textContent;
-      })();
-      
-      const event = new CustomEvent("keyInput", {
-        detail: {
-          keyInput: key,
-        }
-      });
-      window.dispatchEvent(event);
-    });
-  });
+	// Listen for keyboard usage
+	keyTiles.forEach(keyTile => {
+		keyTile.addEventListener('click', () => {
+			const key = (() => {
+				if (keyTile.classList.contains('enter-key')) return "ENTER";
+				if (keyTile.classList.contains('delete-key')) return "BACKSPACE";
+				return keyTile.firstElementChild?.textContent;
+			})();
+			
+			const event = new CustomEvent("keyInput", {
+				detail: {
+					keyInput: key,
+				}
+			});
+			window.dispatchEvent(event);
+		});
+	});
 
-  /**
-   * Reads the scoring values for all guesses made.
-   * @returns A map with the color and the corresponding characters.
-   */
-  function extractGuessFeedback(): Map<Scoring, string[]> {
-    const map = new Map<Scoring, string[]>();
-    map.set(Scoring.GREEN, []);
-    map.set(Scoring.YELLOW, []);
-    map.set(Scoring.GRAY, []);
+	/**
+	 * Reads the scoring values for all guesses made.
+	 * @returns A map with the color and the corresponding characters.
+	 */
+	function extractGuessFeedback(): Map<Scoring, string[]> {
+		const map = new Map<Scoring, string[]>();
+		map.set(Scoring.GREEN, []);
+		map.set(Scoring.YELLOW, []);
+		map.set(Scoring.GRAY, []);
 
-    currentGame.guesses?.forEach(guess => {
-      guess.characterInfo.forEach(char => {
-        map.get(char.scoring)?.push(char.character.toUpperCase());
-      });
-    });
+		currentGame.guesses?.forEach(guess => {
+			guess.characterInfo.forEach(char => {
+				map.get(char.scoring)?.push(char.character.toUpperCase());
+			});
+		});
 
-    return map;
-  }
+		return map;
+	}
 
-  /**
-   * Colors the keyboard tiles.
-   */
-  function keyHighlighting(): void {
-    // Reset the keyboard colors
-    keyTiles.forEach(keyTile => {
-      keyTile.classList.remove('key-feedback-gray', 'key-feedback-yellow', 'key-feedback-green');
-    });
-    
-    // Get characters and colors
-    const map: Map<Scoring, string[]> = extractGuessFeedback();
+	/**
+	 * Colors the keyboard tiles.
+	 */
+	function keyHighlighting(): void {
+		// Reset the keyboard colors
+		keyTiles.forEach(keyTile => {
+			keyTile.classList.remove('key-feedback-gray', 'key-feedback-yellow', 'key-feedback-green');
+		});
+		
+		// Get characters and colors
+		const map: Map<Scoring, string[]> = extractGuessFeedback();
 
-    keyTiles.forEach(tile => {
-      const char = tile.firstElementChild?.textContent;
-      // 'Enter' and 'Backspace' are excluded
-      if (char == null || char.length > 1) {
-        return; 
-      }
+		keyTiles.forEach(tile => {
+			const char = tile.firstElementChild?.textContent;
+			// 'Enter' and 'Backspace' are excluded
+			if (char == null || char.length > 1) {
+				return; 
+			}
 
-      map.forEach((value, key) => {
-        if (value.includes(char)) {
-          switch(key) {
-            case Scoring.GREEN: {
-              tile.classList.add('key-feedback-green');
-              break;
-            }
-            case Scoring.YELLOW: {
-              tile.classList.add('key-feedback-yellow');
-              break;
-            }
-            case Scoring.GRAY: {
-              tile.classList.add('key-feedback-gray');
-              break;
-            }
-          }
-        }
-      });
-    });
-  }
+			map.forEach((value, key) => {
+				if (value.includes(char)) {
+					switch(key) {
+						case Scoring.GREEN: {
+							tile.classList.add('key-feedback-green');
+							break;
+						}
+						case Scoring.YELLOW: {
+							tile.classList.add('key-feedback-yellow');
+							break;
+						}
+						case Scoring.GRAY: {
+							tile.classList.add('key-feedback-gray');
+							break;
+						}
+					}
+				}
+			});
+		});
+	}
 </script>

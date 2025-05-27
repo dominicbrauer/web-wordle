@@ -5,21 +5,21 @@ const { keys } = Astro.props;
 ---
 
 <div class="key-row">
-  <slot name="enter-key" />
+	<slot name="enter-key" />
 
-  {keys.map((char: string) => (
-    <KeyTile>{char}</KeyTile>
-  ))}
+	{keys.map((char: string) => (
+		<KeyTile>{char}</KeyTile>
+	))}
 
-  <slot name="delete-key" />
+	<slot name="delete-key" />
 </div>
 
 <style>
-  .key-row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-    padding: 4px 0;
-  }
+	.key-row {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		justify-content: center;
+		padding: 4px 0;
+	}
 </style>

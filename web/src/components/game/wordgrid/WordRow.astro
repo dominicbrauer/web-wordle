@@ -4,56 +4,56 @@ import CharTile from "./CharTile.astro";
 ---
 
 <div class="word-row">
-  {Array.from({ length: WORD_LENGTH }).map(() => (
-    <CharTile />
-  ))}
+	{Array.from({ length: WORD_LENGTH }).map(() => (
+		<CharTile />
+	))}
 </div>
 
 <style>
-  .word-row {
-    display: flex;
-    flex-direction: row;
-    background-color: var(--background-color);
-    width: fit-content;
-  }
+	.word-row {
+		display: flex;
+		flex-direction: row;
+		background-color: var(--background-color);
+		width: fit-content;
+	}
 </style>
 
 <script>
-  import type { Game } from "../../../lib/models";
-  import { headShake } from "../../../scripts/headshakeAnimation"
+	import type { Game } from "../../../lib/models";
+	import { headShake } from "../../../scripts/headshakeAnimation"
 
 
-  const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
-  let currentGame: Game;
+	const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
+	let currentGame: Game;
 
 
-  // Connection to exchange the Game after each fetch
-  window.addEventListener("initWordRows", (e) => {
-    currentGame = (e as CustomEvent).detail.currentGame;
-    shiftRow();
-  });
+	// Connection to exchange the Game after each fetch
+	window.addEventListener("initWordRows", (e) => {
+		currentGame = (e as CustomEvent).detail.currentGame;
+		shiftRow();
+	});
 
 
-  window.addEventListener("headShake", (e) => {
-    const rowIdx = (e as CustomEvent).detail.row;
-    const row = wordRows[rowIdx];
-    headShake(row);
-  });
+	window.addEventListener("headShake", (e) => {
+		const rowIdx = (e as CustomEvent).detail.row;
+		const row = wordRows[rowIdx];
+		headShake(row);
+	});
 
 
-  /**
-   * Activates the current row based on `cursor.y`
-   * and deactivates all other ones.
-   */
-  function shiftRow(): void {
-    wordRows.forEach(row => {
-      Array.from(row.children).forEach(char => {
-        char.classList.remove('active', 'char-tile-selected');
-      });
-    });
+	/**
+	 * Activates the current row based on `cursor.y`
+	 * and deactivates all other ones.
+	 */
+	function shiftRow(): void {
+		wordRows.forEach(row => {
+			Array.from(row.children).forEach(char => {
+				char.classList.remove('active', 'char-tile-selected');
+			});
+		});
 
-    Array.from(wordRows[currentGame.guessesUsed].children).forEach(char => {
-      char.classList.add('active');
-    });
-  }
+		Array.from(wordRows[currentGame.guessesUsed].children).forEach(char => {
+			char.classList.add('active');
+		});
+	}
 </script>
