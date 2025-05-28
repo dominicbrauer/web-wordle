@@ -4,8 +4,9 @@ A Wordle web application. In this version of Wordle, you can earn points and set
 
 ## Getting Started
 The frontend is built on Astro, which needs Node.js to operate.
+The backend uses Java SpringBoot (JDK 21).
 
-All commands are run from the root of the project, from a terminal:
+All Astro-related commands are run from the `/web` directory, from a terminal:
 
 | Command                | Action                                           |
 | :----------------------| :----------------------------------------------- |
@@ -16,7 +17,18 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `pnpm astro -- --help` | Get help using the Astro CLI                     |
 
-The backend uses Java SpringBoot.
+To run the SpringBoot server, navigate into `/server` and run:
+```sh
+gradle build
+gradle bootRun
+```
+
+## Tech Stack
+The following main technologies were used for this application:
+- Frontend: [Astro v5.7.4](https://astro.build/)
+- Backend: [Java SpringBoot v3.4.4](https://spring.io/projects/spring-boot)
+
+The database is running on **H2**, which stores data inside a `.db` file in `server/data`. To communicate between SpringBoot and the DB, we use **Spring Data JPA**.
 
 ## TO-DO List
 - add name/email/password change options
