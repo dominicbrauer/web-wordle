@@ -59,20 +59,13 @@ import '../../styles/forms.css';
 	let pwInputOneEmpty: boolean = true;
 	let pwInputTwoEmpty: boolean = true;
 
+	// Activates submit button only if all inputs are filled
 	inputElements?.forEach(input => {
 		input?.addEventListener('input', () => {
 			nameInputEmpty = nameInput.value != "" ? false : true;
 			pwInputOneEmpty = pwInputOne.value != "" ? false : true;
 			pwInputTwoEmpty = pwInputTwo.value != "" ? false : true;
 			mailInputEmpty = mailInput.value != "" ? false : true;
-			toggleButton();
+			submitButton.disabled = mailInputEmpty || pwInputOneEmpty || pwInputTwoEmpty || nameInputEmpty;
 	})});
-
-	function toggleButton() {
-		if (!(mailInputEmpty || pwInputOneEmpty || pwInputTwoEmpty || nameInputEmpty)) {
-			submitButton.disabled = false;
-		} else {
-			submitButton.disabled = true;
-		}
-	}
 </script>

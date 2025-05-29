@@ -21,7 +21,10 @@ export async function requestGameSession(): Promise<GameSession> {
 }
 
 /**
- * 
+ * Posts the current gameSession to the server to get feedback
+ * for the current guess.
+ * @param gameSession the current gameSession
+ * @returns updated gameSession with updated game
  */
 export async function submitGuess(gameSession: GameSession): Promise<GameSession> {
 	const response = await fetch('http://localhost:8080/game/guess', {
@@ -40,7 +43,10 @@ export async function submitGuess(gameSession: GameSession): Promise<GameSession
 }
 
 /**
- * 
+ * Posts the current gameSession to the server and requests
+ * to continue (get a new game).
+ * @param gameSession the current gameSession
+ * @returns updated gameSession with a new game
  */
 export async function requestNextGame(gameSession: GameSession): Promise<GameSession> {
 	const response = await fetch('http://localhost:8080/game/next-game', {
@@ -58,6 +64,11 @@ export async function requestNextGame(gameSession: GameSession): Promise<GameSes
 	return await response.json() as GameSession;
 }
 
+/**
+ * Posts gameSession data to the server and saves it in the
+ * users statistics table if possible.
+ * @param gameSession the current gameSession.
+ */
 export async function saveGameData(gameSession: GameSession) {
 	const response = await fetch('http://localhost:8080/stats/save', {
 		method: 'POST',

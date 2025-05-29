@@ -22,10 +22,8 @@ import CharTile from "./CharTile.astro";
 	import type { Game } from "../../../lib/models";
 	import { headShake } from "../../../scripts/headshakeAnimation"
 
-
 	const wordRows = document.querySelectorAll<HTMLDivElement>('.word-row');
 	let currentGame: Game;
-
 
 	// Connection to exchange the Game after each fetch
 	window.addEventListener("initWordRows", (e) => {
@@ -33,19 +31,17 @@ import CharTile from "./CharTile.astro";
 		shiftRow();
 	});
 
-
 	window.addEventListener("headShake", (e) => {
 		const rowIdx = (e as CustomEvent).detail.row;
 		const row = wordRows[rowIdx];
 		headShake(row);
 	});
 
-
 	/**
 	 * Activates the current row based on `cursor.y`
 	 * and deactivates all other ones.
 	 */
-	function shiftRow(): void {
+	function shiftRow() {
 		wordRows.forEach(row => {
 			Array.from(row.children).forEach(char => {
 				char.classList.remove('active', 'char-tile-selected');

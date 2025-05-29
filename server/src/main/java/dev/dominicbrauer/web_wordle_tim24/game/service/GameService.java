@@ -61,7 +61,6 @@ public class GameService {
 		do {
 			word = apiService.fetchRandomWord(Constants.WORD_LENGTH);
 		} while (!apiService.validWord(word));
-		System.out.println(word);
 		return word;
 	}
 

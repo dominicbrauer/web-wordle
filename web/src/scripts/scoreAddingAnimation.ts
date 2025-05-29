@@ -1,5 +1,11 @@
 import { wait } from "../lib/helpers";
 
+/**
+ * Animates a floating score label which is getting added to another label.
+ * @param tile the tile element where the score comes from
+ * @param score the score that should be granted
+ * @param destinationLabel the element where the score should float and be added to
+ */
 export async function animateScoreAdding(tile: HTMLDivElement, score: number, destinationLabel: HTMLSpanElement) {
 	await wait(300);
 

@@ -2,6 +2,12 @@ import { SETTINGS } from "../lib/config";
 import { wait } from "../lib/helpers";
 import { Scoring } from "../lib/models";
 
+/**
+ * Animates a tile to flip and change its color.
+ * @param tile the tile element to be flipped
+ * @param color the color to be applied
+ * @param delay the time it should wait before exiting the function
+ */
 export async function flipTile(tile: HTMLDivElement, color: Scoring | string, delay: number) {
 	const duration: number = SETTINGS.charTileFlipAnimationDuration / 2;
 	let animationAngle: string;

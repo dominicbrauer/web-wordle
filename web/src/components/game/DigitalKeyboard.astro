@@ -41,7 +41,7 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 	const keyTiles = document.querySelectorAll<HTMLDivElement>('.key-tile');
 	let currentGame: Game;
 
-	// Gets current Game and updates the keyboard
+	// Gets currentGame and updates the keyboard
 	window.addEventListener("updateDigitalKeyboard", (e) => {
 		currentGame = (e as CustomEvent).detail.currentGame;
 		keyHighlighting();
@@ -87,7 +87,7 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 	/**
 	 * Colors the keyboard tiles.
 	 */
-	function keyHighlighting(): void {
+	function keyHighlighting() {
 		// Reset the keyboard colors
 		keyTiles.forEach(keyTile => {
 			keyTile.classList.remove('key-feedback-gray', 'key-feedback-yellow', 'key-feedback-green');
@@ -99,25 +99,22 @@ import { KEYBOARD_KEYS } from "../../lib/config";
 		keyTiles.forEach(tile => {
 			const char = tile.firstElementChild?.textContent;
 			// 'Enter' and 'Backspace' are excluded
-			if (char == null || char.length > 1) {
-				return; 
-			}
+			if (char == null || char.length > 1) return;
 
 			map.forEach((value, key) => {
-				if (value.includes(char)) {
-					switch(key) {
-						case Scoring.GREEN: {
-							tile.classList.add('key-feedback-green');
-							break;
-						}
-						case Scoring.YELLOW: {
-							tile.classList.add('key-feedback-yellow');
-							break;
-						}
-						case Scoring.GRAY: {
-							tile.classList.add('key-feedback-gray');
-							break;
-						}
+				if (!value.includes(char)) return;
+				switch(key) {
+					case Scoring.GREEN: {
+						tile.classList.add('key-feedback-green');
+						break;
+					}
+					case Scoring.YELLOW: {
+						tile.classList.add('key-feedback-yellow');
+						break;
+					}
+					case Scoring.GRAY: {
+						tile.classList.add('key-feedback-gray');
+						break;
 					}
 				}
 			});

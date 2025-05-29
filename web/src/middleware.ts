@@ -17,7 +17,9 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
 });
 
 /**
- * 
+ * Requests a User from the backend based on a session token.
+ * @param cookieValue the cookieValue of 'session'
+ * @returns the userData if available
  */
 async function requestUserBySession(cookieValue: string) {
 	const response = await fetch('http://localhost:8080/session/get-user', {

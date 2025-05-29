@@ -5,7 +5,7 @@ import assistantImg from "../../assets/images/assistant.png"
 
 <div class="game-assistant">
 	<div class="character-container">
-		<Image src={assistantImg} alt="Giga Shrek" class="picture" />
+		<Image src={assistantImg} alt="A picture of Wolfle." class="picture" />
 		<span>Wolfle</span>
 	</div>
 	<p class="text-container">
@@ -55,11 +55,9 @@ import assistantImg from "../../assets/images/assistant.png"
 <script>
 	const textContainer = document.querySelector<HTMLParagraphElement>('.text-container');
 
-
 	window.addEventListener('showAssistantMessage', (e) => {
-		const event = e as CustomEvent;
-		const msg = event.detail.msg;
-		if (textContainer !== null) {
+		const msg = (e as CustomEvent).detail.msg;
+		if (!!textContainer) {
 			textContainer.textContent = msg;
 		}
 	});

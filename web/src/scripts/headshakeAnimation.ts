@@ -1,4 +1,8 @@
-export function headShake(row: HTMLDivElement): void {
+/**
+ * Animates a word row to shake as a form of feedback.
+ * @param row the row to be shaken
+ */
+export function headShake(row: HTMLDivElement) {
 	const animation = row.animate([
 		{ transform: 'translate(0)', percentage: 0 },
 		{ transform: 'translate(-6px) rotateY(-9deg)', percentage: 6.5 },

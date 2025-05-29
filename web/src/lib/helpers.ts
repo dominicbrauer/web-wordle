@@ -1,14 +1,14 @@
 /**
- * 
- * @param n 
- * @returns 
+ * Represents a copy of the Python 'range' function for loops.
+ * @param n amount of loops to be made
+ * @returns an array with n amount of entries
  */
 export function range(n: number): number[] {
 	return Array.from({ length: n }, (_, i) => i);
 }
 
 /**
- * Adds up all numbers in a 2D array
+ * Adds up all numbers in a 2D-array.
  * @returns the sum of the numbers
  */
 export function addScores(scores: number[][]): number {

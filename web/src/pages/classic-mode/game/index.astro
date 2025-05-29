@@ -206,14 +206,12 @@ import Layout from "../../../layouts/Layout.astro";
 	async function analyseGameState() {
 		// Correct guess: Win
 		if (currentGame.guesses[currentGame.guessesUsed - 1]?.wasCorrect) {
-			console.log("WIIN");
 			await handleWin();
 			return;
 		}
 
 		// No guesses left: Lose
 		if (currentGame.guessesUsed >= GUESSES) {
-			console.log("LOOOSE");
 			await handleLose();
 			return;
 		}

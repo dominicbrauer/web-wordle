@@ -167,8 +167,9 @@ const userData: User = Astro.locals.user;
 	});
 
 	/**
-	 * 
-	 * @param scores 
+	 * Calculates the current scores and sets all current game information
+	 * inside the scoreboard.
+	 * @param scores 2D-array containing the score for each CharTile
 	 */
 	async function updateScoreBoard(scores: Array<Array<number>>) {
 		// Set round count

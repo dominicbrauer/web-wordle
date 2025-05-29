@@ -39,6 +39,7 @@ import '../../styles/forms.css';
 	let mailInputEmpty: boolean = true;
 	let pwInputEmpty: boolean = true;
 
+	// Activates submit button only if all inputs are filled
 	inputElements?.forEach(input => {
 		input?.addEventListener('input', () => {
 			pwInputEmpty = pwInput.value != "" ? false : true;

@@ -1,5 +1,8 @@
 import { WORD_LENGTH } from "./config";
 
+/**
+ * Represents the word grid cursor where letters are inserted.
+ */
 export class Cursor {
 	public x: number;
 	public y: number;
@@ -29,11 +32,11 @@ export class Cursor {
 		return this.coordToIdx();
 	}
 
-	public addSelection(tiles: NodeListOf<HTMLDivElement>): void {
+	public addSelection(tiles: NodeListOf<HTMLDivElement>) {
 		tiles[this.getPos()]?.classList.add('char-tile-selected');
 	}
 
-	public removeSelection(tiles: NodeListOf<HTMLDivElement>): void {
+	public removeSelection(tiles: NodeListOf<HTMLDivElement>) {
 		tiles[this.getPos()]?.classList.remove('char-tile-selected');
 	}
 }
