@@ -219,7 +219,7 @@ import { GUESSES } from "../../lib/config";
 	 * Updates the character tiles.
 	 */
 	async function updateGrid() {
-		if (currentGame.currentGuess_valid) {
+		if (currentGame.currentGuess_valid || currentGameSession.status == "session_found") {
 			await charHighlighting();
 
 			cursor.x = 0;
