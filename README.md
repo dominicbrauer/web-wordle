@@ -29,6 +29,10 @@ The following main technologies were used for this application:
 
 The database is running on **H2**, which stores data inside a `.db` file in `server/data`. To communicate between SpringBoot and the DB, we use **Spring Data JPA**.
 
+## API
+- [Random Word API](https://random-word-api.vercel.app/) - Used to generate a random five-letter word.
+- [Dictionary API](https://dictionaryapi.dev/) - Used to validate if a word is a valid English word.
+
 ## Features
 The current version of **wordle CHAMPIONS** has the following functionalities:
 
