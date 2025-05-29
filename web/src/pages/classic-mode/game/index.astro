@@ -268,7 +268,7 @@ import Layout from "../../../layouts/Layout.astro";
 		overlay.style.zIndex = '100';
 
 		const popup = document.querySelector<HTMLDivElement>('.game-over-popup');
-		popup!.style.opacity = '1';
+		popup!.style.display = 'block';
 
 		let total: number = 0;
 		currentGameSession.games?.forEach(game => {
