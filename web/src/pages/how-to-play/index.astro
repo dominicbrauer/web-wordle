@@ -1,7 +1,5 @@
 ---
 import Main from '../../layouts/Main.astro';
-import ExampleImage from '../../assets/images/example.png';
-import Image from 'astro/components/Image.astro';
 ---
 
 <Main title="How to Play">
@@ -10,10 +8,21 @@ import Image from 'astro/components/Image.astro';
 			<div class="text-section">
 				<h1>How to Play</h1>
 				<p>
-					play
+					● In Wordle, an English five-letter word is chosen randomly.
+					<br>
+					● You have six chances to guess the word.
+					<br>
+					● After each guess, the letters of that word will be color-coded:
+					<br>
+					&gt; Gray: Solution does not contain that letter.
+					<br>
+					&gt; Yellow: Solution contains that letter, but in another spot.
+					<br>
+					&gt; Green: Solution contains that letter at that exact spot.
+					<br>
+					● Use the color feedback to determine the solution word.
 				</p>
 			</div>
-			<Image src={ ExampleImage } class:list={'example-image'} alt="An example picture of the wordle CHAMPIONS Classic Mode gameplay.">
 		</div>
 	</main>
 </Main>
@@ -43,7 +52,7 @@ import Image from 'astro/components/Image.astro';
 		gap: 2rem;
 		padding-left: 1rem;
 		border-left: 3px solid var(--border);
-		width: 48rem;
+		/* width: 48rem; */
 	}
 
 	.text-section {
@@ -51,13 +60,5 @@ import Image from 'astro/components/Image.astro';
 		flex-direction: column;
 		align-items: flex-start;
 		gap: .5rem;
-	}
-
-	.example-image {
-		aspect-ratio: 1171 / 716;
-		width: 80%;
-		height: auto;
-		box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.5);
-		margin: 0 auto;
 	}
 </style>

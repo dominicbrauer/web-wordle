@@ -47,11 +47,5 @@ The current version of **wordle CHAMPIONS** has the following functionalities:
 - You can create an account to store your game data permanently. On your account page, you can find your personal statistics. If you already have an account, just sign in with your credentials.
 - Session Management: Instead of signing in each time you visit the site, a session will be created after your signin and stored on your device as a cookie. A valid cookie will sign you in automatically.
 
-
-### TODO
-- how to play page
-- beautify
-- comment code
-- remove unnecessary code
-- plan presentation
-- responsive design
+---
+A project by Dominic Brauer
