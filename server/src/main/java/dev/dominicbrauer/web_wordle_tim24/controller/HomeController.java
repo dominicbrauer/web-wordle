@@ -23,7 +23,6 @@ public class HomeController {
 		return ResponseEntity.ok("Welcome to Wordle 🔤");
 	}
 
-
 	@GetMapping("/api")
 	@CrossOrigin(
 		allowedHeaders = "*",

@@ -17,9 +17,9 @@ public class StatisticsService {
 	StatisticsH2Repository statisticsRepository;
 
 	/**
-	 * 
+	 * Initializes new statistics for a user.
 	 * @param userId
-	 * @return
+	 * @return the saved StatisticsEntity
 	 */
 	public StatisticsEntity initStatistics(Long userId) {
 		return statisticsRepository.save(new StatisticsEntity(
@@ -32,17 +32,19 @@ public class StatisticsService {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the StatisticsEntity by a userID.
+	 * @param userId
+	 * @return the StatisticsEntity if found
 	 */
 	public Optional<StatisticsEntity> getByUserId(Long userId) {
 		return statisticsRepository.findById(userId);
 	}
 
 	/**
-	 * 
+	 * Updates the statistics of a user based on a gameSession.
 	 * @param userId
-	 * @return
+	 * @param gameSession the latest gameSession object
+	 * @return the updated StatisticsEntity
 	 */
 	public StatisticsEntity updateStatistics(Long userId, GameSession gameSession) {
 		StatisticsEntity stats = getByUserId(userId).get();
@@ -56,20 +58,20 @@ public class StatisticsService {
 	}
 
 	/**
-	 * 
-	 * @param current
-	 * @param follower
-	 * @return
+	 * Updates the highestGameReached property.
+	 * @param current the current highscore
+	 * @param follower the potential new highscore
+	 * @return which one is higher
 	 */
 	public int updateHighestGameReached(int current, int follower) {
 		return follower > current ? follower : current;
 	}
 
 	/**
-	 * 
-	 * @param current
-	 * @param gameSession
-	 * @return
+	 * Updates the highestScoreTotal property.
+	 * @param current the current highscore
+	 * @param gameSession the potential new highscore
+	 * @return which one is higher
 	 */
 	public Long updateHighestScoreTotal(Long current, GameSession gameSession) {
 		Long follower = 0L;
@@ -80,10 +82,10 @@ public class StatisticsService {
 	}
 
 	/**
-	 * 
-	 * @param current
-	 * @param gameSession
-	 * @return
+	 * Updates the highestScoreGame property.
+	 * @param current the current highscore
+	 * @param gameSession the potential new highscore
+	 * @return which one is higher
 	 */
 	public int updateHighestScoreGame(int current, GameSession gameSession) {
 		int follower = 0;

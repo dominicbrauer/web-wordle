@@ -34,7 +34,9 @@ public class SessionService {
 	}
 
 	/**
-	 * 
+	 * Finds a valid session by the cookieValue of a user.
+	 * @param cookieValue the session token to search
+	 * @return Optional object with session if found
 	 */
 	public Optional<SessionEntity> findSession(String cookieValue) {
 		try {
@@ -47,8 +49,8 @@ public class SessionService {
 	}
 
 	/**
-	 * 
-	 * @param cookieValue
+	 * Invalidates a user session.
+	 * @param cookieValue the session token to be invalidated
 	 */
 	public void invalidateSession(String cookieValue) {
 		sessionRepository.delete(findSession(cookieValue).get());

@@ -21,7 +21,6 @@ public class GameService {
 		this.apiService = apiService;
 	}
 
-
 	/**
 	 * Creates a fresh GameSession object.
 	 * @return a new gameSession
@@ -35,7 +34,6 @@ public class GameService {
 		gameSession.games().add(createNewGame());
 		return gameSession;
 	}
-
 
 	/**
 	 * Creates a fresh Game object.
@@ -51,7 +49,6 @@ public class GameService {
 		);
 	}
 
-
 	/**
 	 * Gets a random Wordle-compatible word.
 	 * @return random word
@@ -63,7 +60,6 @@ public class GameService {
 		} while (!apiService.validWord(word));
 		return word;
 	}
-
 
 	/**
 	 * Evaluates the current guess from the current game.
@@ -114,7 +110,6 @@ public class GameService {
 
 		return responseGame;
 	}
-
 
 	/**
 	 * Compares a guess with the current solution word.

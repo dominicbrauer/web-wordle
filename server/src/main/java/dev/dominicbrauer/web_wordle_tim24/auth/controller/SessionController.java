@@ -37,7 +37,6 @@ public class SessionController {
 		this.statisticsService = statisticsService;
 	}
 
-
 	@PostMapping("/get-user")
 	@CrossOrigin(
 		allowedHeaders = "*",
@@ -69,7 +68,6 @@ public class SessionController {
 	
 		return ResponseEntity.ok(foundUser);
 	}
-
 
 	@PostMapping("/signout")
 	@CrossOrigin(

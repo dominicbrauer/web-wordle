@@ -77,7 +77,6 @@ public class AuthController {
 		return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 	}
 
-
 	@PostMapping(
 		path = "/signin",
 		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE

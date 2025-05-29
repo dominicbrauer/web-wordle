@@ -26,7 +26,6 @@ public class GameController {
 		this.gameService = gameService;
 	}
 
-
 	@GetMapping("/start")
 	@CrossOrigin(
 		allowedHeaders = "*",
@@ -53,7 +52,6 @@ public class GameController {
 		return ResponseEntity.ok(newGameSession);
 	}
 
-
 	@PostMapping("/guess")
 	@CrossOrigin(
 		allowedHeaders = "*",
@@ -76,7 +74,6 @@ public class GameController {
 		session.setAttribute("gameSession", updatedGameSession);
 		return ResponseEntity.ok(updatedGameSession);
 	}
-
 
 	@PostMapping("/next-game")
 	@CrossOrigin(

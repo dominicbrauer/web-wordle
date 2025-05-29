@@ -20,7 +20,6 @@ public class ApiService {
 		this.restTemplate = restTemplate;
 	}
 
-
 	/**
 	 * Checks if a string is a valid English word.
 	 * @param word the word to check
@@ -43,7 +42,6 @@ public class ApiService {
 			return false;
 		}
 	}
-
 
 	/**
 	 * Fetches a random word of a given length.

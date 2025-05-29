@@ -1,6 +1,5 @@
 package dev.dominicbrauer.web_wordle_tim24.auth.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,9 @@ public class AuthService {
 	private UserH2Repository userRepository;
 
 	/**
-	 * 
+	 * Creates a new user in the DB.
+	 * @param signupForm the data from the signupForm
+	 * @return the saved UserEntity
 	 */
 	public UserEntity addUser(SignUpRequest signupForm) {
 		UserEntity userEntity = new UserEntity(
@@ -31,17 +32,12 @@ public class AuthService {
 	}
 
 	/**
-	 * 
+	 * Gets a user by a userID.
+	 * @param userId
+	 * @return Optional object containing the user if found
 	 */
 	public Optional<UserEntity> getUserById(Long userId) {
 		return userRepository.findById(userId);
-	}
-
-	/**
-	 * 
-	 */
-	public List<UserEntity> getAllUsers() {
-		return userRepository.findAll();
 	}
 
 	/**

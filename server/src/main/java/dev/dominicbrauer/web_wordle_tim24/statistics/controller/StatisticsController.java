@@ -32,7 +32,6 @@ public class StatisticsController {
 		this.sessionService = sessionService;
 	}
 
-
 	@PostMapping("/save")
 	@CrossOrigin(
 		allowedHeaders = "*",
