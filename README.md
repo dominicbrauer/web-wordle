@@ -2,19 +2,17 @@
 A Wordle web application. In this version of Wordle, you can earn points and set highscores depending on how well you guess.
 
 ## Getting Started
-The frontend is built on Astro, which needs Node.js to operate.
-The backend uses Java SpringBoot (JDK 21).
+The frontend is built on [Astro](https://astro.build/). You will need the following to run the application:
+- **Node.js** - `v18.20.8` or `v20.3.0`, `v22.0.0` or higher. (`v19` and `v21` are not supported.)
+- **Text Editor** - VS Code with the Official Astro extension is recommended.
+- **Terminal** - Astro is accessed through its command-line interface (CLI).
 
-All Astro-related commands are run from the `/web` directory, from a terminal:
-
-| Command                | Action                                           |
-| :----------------------| :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Now navigate into the `/web` directory and run:
+```sh
+pnpm install # installs dependencies
+pnpm dev # starts local dev server on 'localhost:4321'
+```
+For further information or help on Astro, you can visit the [Astro Documentation](https://docs.astro.build/en/getting-started/).
 
 To run the SpringBoot server, navigate into `/server` and run:
 ```sh
