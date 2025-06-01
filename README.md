@@ -10,7 +10,7 @@ The frontend is built on [Astro](https://astro.build/). You will need the follow
 Now navigate into the `/web` directory and run:
 ```sh
 pnpm install	# installs dependencies
-pnpm dev		# starts local dev server on 'localhost:4321'
+pnpm dev	# starts local dev server on 'localhost:4321'
 ```
 For further information or help on Astro, you can visit the [Astro Documentation](https://docs.astro.build/en/getting-started/).
 
